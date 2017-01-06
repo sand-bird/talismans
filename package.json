@@ -11,6 +11,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "cross-env": "^3.1.4",
     "vue": "^2.1.0"
   },
   "devDependencies": {
