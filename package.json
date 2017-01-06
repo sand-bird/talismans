@@ -6,13 +6,10 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "postinstall": "npm run build",
-    "start": "node server.js"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "cross-env": "^3.1.4",
-    "vue": "^2.1.0"
+    "cross-env": "^3.1.4"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
