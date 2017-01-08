@@ -2,54 +2,72 @@
   {
     "id": 0,
     "name": "",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 1,
     "name": "Poison",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,5],
       [-10,7]
     ],
     "mystery": [
       [1,5],
-      null
+      []
     ]
   },
   {
     "id": 2,
     "name": "Paralysis",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,5],
       [-10,7]
     ],
     "mystery": [
       [1,5],
-      null
+      []
     ]
   },
   {
     "id": 3,
     "name": "Sleep",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,5],
       [-10,7]
     ],
     "mystery": [
       [1,5],
-      null
+      []
     ]
   },
   {
     "id": 4,
     "name": "Stun",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -58,7 +76,7 @@
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
@@ -68,8 +86,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 6,
@@ -80,60 +104,75 @@
     ],
     "shining": [
       [1,4],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 7,
     "name": "Tremor Res",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,7],
       [-10,8]
     ],
     "mystery": [
       [1,7],
-      null
+      []
     ]
   },
   {
     "id": 8,
     "name": "Bind Res",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,7],
       [-10,8]
     ],
     "mystery": [
       [1,7],
-      null
+      []
     ]
   },
   {
     "id": 9,
     "name": "Heat Res",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
     "id": 10,
     "name": "Cold Res",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
@@ -141,45 +180,63 @@
     "name": "ColdBlooded",
     "timeworn": [
       [1,5],
-      null
+      []
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 12,
     "name": "HotBlooded",
     "timeworn": [
       [1,5],
-      null
+      []
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 13,
     "name": "Anti-Theft",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
     "id": 14,
     "name": "Def Lock",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,7],
       [-10,8]
     ],
     "mystery": [
       [1,7],
-      null
+      []
     ]
   },
   {
@@ -187,10 +244,10 @@
     "name": "Frenzy Res",
     "timeworn": [
       [1,5],
-      null
+      []
     ],
     "shining": [
-      null,
+      [],
       [-5,5]
     ],
     "mystery": [
@@ -203,32 +260,38 @@
     "name": "Biology",
     "timeworn": [
       [1,8],
-      null
+      []
     ],
     "shining": [
-      null,
+      [],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 17,
     "name": "Bleeding",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,5],
-      null
+      []
     ]
   },
   {
     "id": 18,
     "name": "Attack",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -237,14 +300,14 @@
     ],
     "mystery": [
       [1,4],
-      null
+      []
     ]
   },
   {
     "id": 19,
     "name": "Defense",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -253,14 +316,14 @@
     ],
     "mystery": [
       [1,4],
-      null
+      []
     ]
   },
   {
     "id": 20,
     "name": "Health",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -269,14 +332,14 @@
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 21,
     "name": "Fire Res",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -285,14 +348,14 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
     "id": 22,
     "name": "Water Res",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -301,14 +364,14 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
     "id": 23,
     "name": "Thunder Res",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -317,14 +380,14 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
     "id": 24,
     "name": "Ice Res",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -333,14 +396,14 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
     "id": 25,
     "name": "Dragon Res",
     "timeworn": [
-      null,
+      [],
       [-10,13]
     ],
     "shining": [
@@ -349,7 +412,7 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
@@ -359,8 +422,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 27,
@@ -371,9 +440,12 @@
     ],
     "shining": [
       [1,7],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 28,
@@ -384,9 +456,12 @@
     ],
     "shining": [
       [1,7],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 29,
@@ -397,9 +472,12 @@
     ],
     "shining": [
       [1,7],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 30,
@@ -410,9 +488,12 @@
     ],
     "shining": [
       [1,7],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 31,
@@ -423,19 +504,28 @@
     ],
     "shining": [
       [1,7],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 32,
     "name": "Elemental",
     "timeworn": [
       [5,1],
-      null
+      []
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 33,
@@ -448,30 +538,42 @@
       [1,4],
       [-4,4]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 34,
     "name": "Sharpener",
     "timeworn": [
-      null,
+      [],
       [-10,8]
     ],
     "shining": [
       [1,4],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 35,
     "name": "Handicraft",
     "timeworn": [
-      null,
+      [],
       [-5,5]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 36,
@@ -480,8 +582,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 37,
@@ -490,54 +598,78 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 38,
     "name": "Grinder",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 39,
     "name": "Blunt",
     "timeworn": [
       [1,6],
-      null
+      []
     ],
     "shining": [
       [1,4],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 40,
     "name": "Crit Draw",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 41,
     "name": "Punish Draw",
     "timeworn": [
-      null,
+      [],
       [-5,8]
     ],
     "shining": [
-      null,
+      [],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 42,
@@ -548,9 +680,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 43,
@@ -561,9 +696,12 @@
     ],
     "shining": [
       [1,4],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 44,
@@ -572,20 +710,29 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 45,
     "name": "Precision",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,6],
       [-10,10]
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
@@ -595,8 +742,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 47,
@@ -605,8 +758,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 48,
@@ -615,8 +774,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 49,
@@ -625,181 +790,238 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 50,
     "name": "Normal S+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,6],
       [-8,8]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 51,
     "name": "Pierce S+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,10],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 52,
     "name": "Pellet S+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,10],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 53,
     "name": "Crag S+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,10],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 54,
     "name": "Clust S+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,10],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 55,
     "name": "Poison C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 56,
     "name": "Para C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 57,
     "name": "Sleep C+",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 58,
     "name": "Power C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,12]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 59,
     "name": "Elem C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,12]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 60,
     "name": "C.Range C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 61,
     "name": "Exhaust C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,10],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 62,
     "name": "Blast C+",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,10],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 63,
     "name": "Rapid Fire",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 64,
@@ -809,32 +1031,44 @@
       [-5,5]
     ],
     "shining": [
-      null,
+      [],
       [-3,3]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 65,
     "name": "Loading",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 66,
     "name": "Haphazard",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,5],
-      null
+      []
     ]
   },
   {
@@ -848,13 +1082,16 @@
       [3,1],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 68,
     "name": "Expert",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -863,7 +1100,7 @@
     ],
     "mystery": [
       [1,4],
-      null
+      []
     ]
   },
   {
@@ -873,54 +1110,78 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 70,
     "name": "Chain Crit",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 71,
     "name": "Crit Status",
     "timeworn": [
       [1,5],
-      null
+      []
     ],
     "shining": [
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 72,
     "name": "Crit Element",
     "timeworn": [
       [1,5],
-      null
+      []
     ],
     "shining": [
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 73,
     "name": "Critical Up",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 74,
@@ -929,8 +1190,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 75,
@@ -939,8 +1206,14 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 76,
@@ -951,9 +1224,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 77,
@@ -964,9 +1240,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 78,
@@ -977,9 +1256,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 79,
@@ -988,18 +1270,30 @@
       [1,6],
       [-3,4]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 80,
     "name": "Bubble",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 81,
@@ -1010,9 +1304,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 82,
@@ -1023,9 +1320,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 83,
@@ -1036,9 +1336,12 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 84,
@@ -1049,15 +1352,18 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 85,
     "name": "Maestro",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -1066,14 +1372,14 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
     "id": 86,
     "name": "Artillery",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -1082,7 +1388,7 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
@@ -1092,14 +1398,20 @@
       [1,5],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 88,
     "name": "Bomb Boost",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -1108,7 +1420,7 @@
     ],
     "mystery": [
       [1,6],
-      null
+      []
     ]
   },
   {
@@ -1118,38 +1430,62 @@
       [1,6],
       [-3,4]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 90,
     "name": "Spirit",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 91,
     "name": "Unscathed",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 92,
     "name": "Chance",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 93,
@@ -1160,21 +1496,27 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 94,
     "name": "Survivor",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,5],
       [-5,5]
     ],
     "mystery": [
       [1,4],
-      null
+      []
     ]
   },
   {
@@ -1188,7 +1530,10 @@
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 96,
@@ -1201,29 +1546,41 @@
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 97,
     "name": "Guts",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 98,
     "name": "Sense",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
@@ -1262,16 +1619,16 @@
     "id": 101,
     "name": "Mounting",
     "timeworn": [
-      null,
+      [],
       [-5,5]
     ],
     "shining": [
-      null,
+      [],
       [-8,8]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
@@ -1285,23 +1642,32 @@
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 103,
     "name": "Insight",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 104,
     "name": "Psychic",
     "timeworn": [
-      null,
+      [],
       [-10,12]
     ],
     "shining": [
@@ -1310,46 +1676,55 @@
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 105,
     "name": "Perception",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 106,
     "name": "Ranger",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 107,
     "name": "Transporter",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,8],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
@@ -1361,19 +1736,28 @@
     ],
     "shining": [
       [1,7],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 109,
     "name": "Hero Shield",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 110,
@@ -1384,41 +1768,50 @@
     ],
     "shining": [
       [1,6],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 111,
     "name": "Rec Speed",
     "timeworn": [
-      null,
+      [],
       [-10,12]
     ],
     "shining": [
       [1,7],
       [-4,4]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 112,
     "name": "Lasting Pwr",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 113,
     "name": "Wide-Range",
     "timeworn": [
-      null,
+      [],
       [-10,12]
     ],
     "shining": [
@@ -1427,14 +1820,14 @@
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 114,
     "name": "Hunger",
     "timeworn": [
-      null,
+      [],
       [-10,10]
     ],
     "shining": [
@@ -1443,20 +1836,23 @@
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 115,
     "name": "Gluttony",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,13]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
@@ -1468,9 +1864,12 @@
     ],
     "shining": [
       [1,4],
-      null
+      []
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 117,
@@ -1483,7 +1882,10 @@
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 118,
@@ -1496,94 +1898,121 @@
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 119,
     "name": "Mycology",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 120,
     "name": "Botany",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,8],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 121,
     "name": "Combo Rate",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,13]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
     "id": 122,
     "name": "Combo Plus",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 123,
     "name": "Speed Setup",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,8],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
     "id": 124,
     "name": "Gathering",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,13]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
     "id": 125,
     "name": "Honey",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
       [1,8],
       [-10,10]
     ],
     "mystery": [
       [1,8],
-      null
+      []
     ]
   },
   {
@@ -1597,211 +2026,361 @@
       [1,3],
       [-5,5]
     ],
-    "mystery": null
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 127,
     "name": "Whim",
-    "timeworn": null,
+    "timeworn": [
+      [],
+      []
+    ],
     "shining": [
-      null,
+      [],
       [-10,13]
     ],
     "mystery": [
       [1,10],
-      null
+      []
     ]
   },
   {
     "id": 128,
     "name": "Fate",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 129,
     "name": "Carving",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 130,
     "name": "Capturer",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 131,
     "name": "Bherna",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 132,
     "name": "Kokoto",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 133,
     "name": "Pokke",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 134,
     "name": "Yukumo",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 135,
     "name": "Redhelm",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 136,
     "name": "Snowbaron",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 137,
     "name": "Stonefist",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 138,
     "name": "Drilltusk",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 139,
     "name": "Dreadqueen",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 140,
     "name": "C.beard",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 141,
     "name": "Silverwind",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 142,
     "name": "Deadeye",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 143,
     "name": "Dreadking",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 144,
     "name": "Thunderlord",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 145,
     "name": "Grimclaw",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 146,
     "name": "Hellblade",
     "timeworn": [
-      null,
+      [],
       [-3,3]
     ],
-    "shining": null,
-    "mystery": null
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 147,
     "name": "D. Fencing",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   },
   {
     "id": 148,
     "name": "Torso Up",
-    "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "timeworn": [
+      [],
+      []
+    ],
+    "shining": [
+      [],
+      []
+    ],
+    "mystery": [
+      [],
+      []
+    ]
   }
 ]

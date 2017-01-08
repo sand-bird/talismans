@@ -22,52 +22,37 @@ export const loadFiles = (data) => {
     console.log("Error! data is not buffer")
     return
   }
-  let names = []
+  let files = []
   // see which names we got
   for (let i = 0; i <= 2; i++) {
     if (data.readUInt8(i+4)) {
       let offset = getOffset(data, i, 0)
-      names[i] = data.toString('utf8', offset, offset + 32)
+      files[i] = data.toString('utf8', offset, offset + 32)
     }
-    else names[i] = null;
+    else files[i] = null;
   }
-  return names
+  return files
 }
 
 export const loadCharms = (data, slot) => {
   let equipOffset = getOffset(data, slot, EQUIPMENT_BOX_OFFSET)
   let charms = []
-  for (let i = 0; i < EQUIPMENT_BOX_SIZE; i++) {
-    let offset = equipOffset + EQUIPMENT_BOX_SLOT_SIZE * i
+  for (let i = 0; i < EQUIPMENT_BOX_SLOTS; i++) {
+    let offset = equipOffset + (EQUIPMENT_BOX_SLOT_SIZE * i)
     if (data.readUInt8(offset) == 6) {
       let charm = {}
       charm.offset = offset
-      charm.data = Buffer.alloc(EQUIPMENT_BOX_SLOT_SIZE)
-      data.copy(charm.data, 0, offset, offset + EQUIPMENT_BOX_SLOT_SIZE)
+      charm.rarity = data.readUInt8(offset + 1)
+      charm.slots = data.readUInt8(offset + 16)
+      charm.skills = [data.readUInt8(offset + 12), data.readUInt8(offset + 13)]
+      charm.skillvalues = [data.readInt8(offset + 14), data.readInt8(offset + 15)]
+      
+      // for debugging:
+      // charm.data = Buffer.alloc(36)
+      // data.copy(charm.data, 0, offset)
+      
       charms.push(charm)
     }
   }
   return charms
 }
-
-export const unpackCharm = (charm) => {
-  charm.rarity = charm.data.readUInt8(1)
-  charm.slots = charm.data.readUInt8(16)
-  charm.skills = [charm.data.readUInt8(12), charm.data.readUInt8(13)]
-  charm.skillvalues = [charm.data.readInt8(14), charm.data.readInt8(15)]
-  return charm
-}
-
-export const processCharm = (charm) => {
-  let processedCharm = {}
-  processedCharm.rarity = charm.data.readUInt8(1)
-  processedCharm.slots = charm.data.readUInt8(16)
-  processedCharm.skills = [charm.data.readUInt8(12), charm.data.readUInt8(13)]
-  processedCharm.skillvalues = [charm.data.readInt8(14), charm.data.readInt8(15)]
-  processedCharm.offset = charm.offset
-  processedCharm.data = charm.data
-  return processedCharm
-}
-
-
-export const test = (input) => { alert(input) }

@@ -12,6 +12,7 @@
         <h3 :class="'name'">{{ name || "(none)" }}</h3>
       </li>
     </ul>
+
     
     <ul id="charms">
       <li class="charms-header">
@@ -19,10 +20,11 @@
           {{ column.name }}
         </div>
       </li>
-      <li v-for="(charm, index) in processedCharms" class="charm">
+      <li v-for="(charm, index) in charms" class="charm">
         
         <div class="rarity styled-select">
-          <select v-model="charm.rarity">
+          <select v-model="charm.rarity"
+                  v-on:change="validateSlots(charm)">
             <option v-for="rarity in rarities" :value="rarity.value">
               {{ rarity.text }}
             </option>
@@ -33,32 +35,45 @@
           <span class="minus-slots" 
                 v-if="charm.slots"
                 v-on:click="charm.slots-=1">-</span> 
-            {{ charm.slots }} 
+            {{ displaySlots(charm) }} 
           <span class="plus-slots" 
-                v-if="charm.slots < 3"
+                v-if="canIncreaseSlots(charm)"
                 v-on:click="charm.slots+=1">+</span>
         </div>
         
         <div class="skill1">
-          <select v-model="charm.skills[0]">
-            <option v-for="skill in skills" :value="skill.id">
-              {{ skill.name }}
+          <select v-model="charm.skills[0]"
+                  v-on:change="">
+            <option v-for="skillId in getAvailableSkills(charm, 0)" :value="skillId">
+              {{ skills[skillId].name }}
             </option>
           </select>
         </div>
         
         <div class="skill1value">
+          <select v-model="charm.skillvalues[0]">
+            <option v-for="value in getSkillLevels(charm, 0)" :value="value">
+              {{ value }}
+            </option>
+          </select>
         </div>
         
         <div class="skill2">
-          <select v-model="charm.skills[1]">
-            <option v-for="skill in skills" :value="skill.id">
-              {{ skill.name }}
+          <select v-model="charm.skills[1]" >
+            <option v-for="skillId in getAvailableSkills(charm, 1)" :value="skillId">
+              {{ skills[skillId].name }}
             </option>
           </select>
         </div>
         
         <div class="skill2value">
+          <select v-model="charm.skillvalues[1]"
+                  v-if="charm.skillvalues[1]" 
+                  v-on:DOMNodeRemoved="charm.skills[1] = 0">
+            <option v-for="value in getSkillLevels(charm, 1)" :value="value">
+              {{ value }}
+            </option>
+          </select>
         </div>
         
       </li>
@@ -79,8 +94,8 @@ export default {
       file: null,
       names: [],
       active: null,
-      rawCharms: [],
-      processedCharms: [],
+      charms: [],
+      values: [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
       columns: [
         { name: 'Rarity', id: 'rarity' },
         { name: 'Slots', id: 'slots' },
@@ -90,18 +105,23 @@ export default {
         { name: '', id: 'skill2value' }
       ],
       rarities: [
-        { text: "Pawn Talisman", value: 1 },
-        { text: "Bishop Talisman", value: 2 },
-        { text: "Knight Talisman", value: 3 },
-        { text: "Rook Talisman", value: 4 },
-        { text: "Queen Talisman", value: 5 },
-        { text: "King Talisman", value: 6 },
-        { text: "Dragon Talisman", value: 7 }
+        { text: "Pawn Talisman", value: 1, source: "mystery", slots: 1 },
+        { text: "Bishop Talisman", value: 2, source: "mystery", slots: 1 },
+        { text: "Knight Talisman", value: 3, source: "shining", slots: 2 },
+        { text: "Rook Talisman", value: 4, source: "shining", slots: 2 },
+        { text: "Queen Talisman", value: 5, source: "timeworn", slots: 3 },
+        { text: "King Talisman", value: 6, source: "timeworn", slots: 3 },
+        { text: "Dragon Talisman", value: 7, source: "timeworn", slots: 3 }
       ],
-      skills: skills
+      skills: skills,
+      availableSkills: {
+        mystery: [[],[]],
+        shining: [[],[]],
+        timeworn: [[],[]]
+      }
     }
   },
-    
+  
   methods: {
   
     init (event) {
@@ -124,12 +144,8 @@ export default {
         let a = vm.names.findIndex((n) => { return n != null })
         console.log(a)
         vm.active = a
-        vm.rawCharms = loadCharms(vm.file, a)
-        vm.rawCharms.forEach((charm) => {
-          vm.processedCharms.push(unpackCharm(charm))
-        })
-        console.log(vm.rawCharms)
-        console.log(vm.processedCharms)
+        vm.charms = loadCharms(vm.file, a)
+        this.generateAvailableSkills()
       }
       
       reader.readAsArrayBuffer(file)
@@ -140,12 +156,12 @@ export default {
     
       if (this.names[index]) {
         this.active = index
-        this.rawCharms = loadCharms(this.file, index)
+        this.charms = loadCharms(this.file, index)
       }
     },
     
     download (event) {
-      alert("download")
+      console.log(event)
     },
     
     displaySlots (charm) {
@@ -153,16 +169,59 @@ export default {
       for (let i = charm.slots; i > 0; i--) {
         slots += "O"
       } 
-      return slots;
+      return slots
     },
     
-    editSlots(charm, index, inc) {
-      let value = charm.slots += inc
-      console.log(this.rawCharms[index].data)
-      let buf = Buffer.alloc(34)
-      this.rawCharms[index].data.copy(buf, 0, 0)
-      buf.writeUInt8(value, 16)
-      this.rawCharms[index].data = buf
+    canIncreaseSlots (charm) {
+      return (charm.slots < this.rarities[charm.rarity-1].slots)
+    },
+    
+    generateAvailableSkills () {
+      ["mystery", "shining", "timeworn"].forEach((source) => {
+        for (let i = 1; i < skills.length; i++) {
+          if (skills[i][source]) {
+            // first step - the skill is available somewhere
+            if (skills[i][source][0]) {
+              this.availableSkills[source][0].push(skills[i].id)
+            }
+            if (skills[i][source][1]) {
+              this.availableSkills[source][1].push(skills[i].id)
+            }
+          }
+        }
+      })
+    },
+    
+    getAvailableSkills (charm, skillSlot) {
+      let source = this.rarities[charm.rarity-1].source
+      return this.availableSkills[source][skillSlot]
+    },
+    
+    getSkillLevels (charm, skillSlot) {
+      let levels = []
+      let source = this.rarities[charm.rarity-1].source
+      let currSkill = charm.skills[skillSlot]
+      let boundSource = skills[currSkill][source]
+      if (boundSource) {
+        let boundSlot = boundSource[skillSlot]
+        if (boundSlot) {
+          for (let i = boundSlot[0]; i <= boundSlot[1]; i++) {
+            levels.push(i)
+          }
+        }
+      }
+      return levels
+    },
+    
+    validateSlots (charm) {
+      let source = this.rarities[charm.rarity-1].source
+      for (let i = 0; i < 2; i++) {
+        if (this.availableSkills[source][i].indexOf(charm.skills[i]) == -1) {
+          charm.skills[i] = 0
+          charm.skillvalues[i] = 0
+        }
+      }
+      console.log(charm.skills)
     }
   }
 }
@@ -360,8 +419,8 @@ select {
   -moz-appearance: none;
 
   background-image:
-    linear-gradient(45deg, transparent 50%, gray 50%),
-    linear-gradient(135deg, gray 50%, transparent 50%);
+    linear-gradient(45deg, transparent 50%, #aaa 50%),
+    linear-gradient(135deg, #aaa 50%, transparent 50%);
   background-position:
     calc(96% - 5px) calc(0.75em),
     calc(96%) calc(0.75em);
@@ -370,6 +429,11 @@ select {
     5px 5px,
     1px 1.5em;
   background-repeat: no-repeat;
+}
+
+.skill1value select, .skill2value select {
+  padding-right: 0;
+  background-image: none;
 }
 
 .styled-select select option {
