@@ -17,7 +17,8 @@
       <a class="minus-slots" 
             v-if="charm.slots"
             v-on:click="charm.slots-=1">➖</a> 
-        {{ displaySlots }} 
+        <span v-for="slot in charm.slots" 
+              class="slot" :class="{ filled: charm.decorations[slot-1] }" />
       <a class="plus-slots" 
             v-if="canIncreaseSlots"
             v-on:click="charm.slots+=1">➕</a>
@@ -204,7 +205,7 @@ html, * {
 
 .charm, .charms-header {
   display: block;
-  width: 650px;
+  width: 680px;
   overflow: hidden;
   margin: 5px auto;
   box-shadow: 0 1px 1px #eee;
@@ -267,7 +268,7 @@ html, * {
 .charm-holder {
   position: relative;
   display: block;
-  width: 650px;
+  width: 680px;
   margin: 0 auto;
 }
 
@@ -290,21 +291,21 @@ html, * {
 }
 
 .slots {
-  width: 15%;
+  width: 17%;
   position: relative;
 }
 
 .skill1, .skill2 {
-  width: 22.5%;
+  width: 21%;
 }
 
 .charms-header .skill1, .charms-header .skill2 {
-  width: 30%;
+  width: 29%;
   margin-left: 0;
 }
 
 .skill1value, .skill2value {
-  width: 7.5%;
+  width: 8%;
 }
 
 .charms-header .skill1value, .charms-header .skill2value {
@@ -384,6 +385,16 @@ select:hover {
   padding: 2px;
   line-height: 46px;
   cursor: pointer;
+}
+
+.slot:before {
+  content: "◯";
+  font-size: 16px;
+}
+
+.slot.filled:before {
+  content: "⬤";
+  color: #555;
 }
 
 </style>

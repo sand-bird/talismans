@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <h1>{{ title }}</h1>
+    <div class="header" :class="{ loaded: file && charms }">
+      <h1>{{ title }}</h1>
+      <div class="download button" v-on:click='download' v-show="file">Save Changes</div>
+    </div>
     
     <div id="upload-holder" v-show="!file">
       Please select your extdata file: 
@@ -8,7 +11,7 @@
       <div id="loading" v-show='loading'>Loading...</div>
     </div>
     
-    <div class="download button" v-on:click='download' v-show="file">Download Save</div>
+    <div class="top-spacer" v-if="file && charms" />
     
     <ul id="files" v-show="file">
       <li v-for="(name, index) in names" v-on:click="setActive(index)"
@@ -19,7 +22,7 @@
         <h3 :class="'name'">{{ name || "(none)" }}</h3>
       </li>
     </ul>
-
+    
     <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Charms</div>
     <div class="button" v-on:click='' v-show="file && charms">Export Charms</div>
     <div class="button" v-on:click='' v-show="file">Import Charms</div>
@@ -270,11 +273,53 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 h1, h2 {
   font-weight: normal;
+}
+
+.header {
+  margin: 70px auto 40px;
+  padding: 0 0 5px;
+  border-bottom: 1px solid #ccc;
+  width: 680px;
+  position: relative;
+}
+
+.header.loaded {
+  width: 100%;
+  margin: 0 0 100px;
+  position: fixed;
+  height: 85px;
+  background-color: rgba(255,255,255,0.5);
+  z-index: 10;
+  top: 0;
+  padding: 0;
+}
+
+.header.loaded h1 {
+  text-align: left;
+  position: absolute;
+  left: 15px;
+  line-height: 85px;
+  top: 1px;
+  margin: 0;
+  font-size: 30px;
+}
+
+.top-spacer {
+  height: 100px;
+}
+
+.button.download {
+  padding: 15px 60px;
+  line-height: 20px;
+  margin-bottom: 15px;
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  margin-top: -25px;
 }
 
 ul {
@@ -416,11 +461,6 @@ a:hover {
   color: #000;
   background-color: #fefefe;
 }
-
-.button.download {
-  padding: 20px 60px;
-}
-
 
 #charms {
   width: auto;

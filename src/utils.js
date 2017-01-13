@@ -18,6 +18,9 @@ const SKILL1_OFFSET = 12
 const SKILL2_OFFSET = 13
 const SKILL1VALUE_OFFSET = 14
 const SKILL2VALUE_OFFSET = 15
+const DECORATION1_OFFSET = 6
+const DECORATION2_OFFSET = 8
+const DECORATION3_OFFSET = 10
 
 
 const getOffset = (data, slot, offset) => {
@@ -66,6 +69,11 @@ export const loadCharms = (data, slot) => {
       charm.skillvalues = [
         data.readInt8(offset + SKILL1VALUE_OFFSET), 
         data.readInt8(offset + SKILL2VALUE_OFFSET)
+      ]
+      charm.decorations = [
+        data.readUInt16LE(offset + DECORATION1_OFFSET), 
+        data.readUInt16LE(offset + DECORATION2_OFFSET), 
+        data.readUInt16LE(offset + DECORATION3_OFFSET)
       ]
       
       // for debugging:
