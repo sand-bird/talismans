@@ -1,9 +1,16 @@
 <template>
   <div id="app">
     <h1>{{ title }}</h1>
-    <input id="upload" type="file" v-on:change='init' v-show="!file" />
-    <div id="save-button" v-on:click='download' v-show="file">Download Save</div>
-    <ul id="files">
+    
+    <div id="upload-holder" v-show="!file">
+      Please select your extdata file: 
+      <input id="upload" type="file" v-on:change='init' v-show="!loading" />
+      <div id="loading" v-show='loading'>Loading...</div>
+    </div>
+    
+    <div class="download button" v-on:click='download' v-show="file">Download Save</div>
+    
+    <ul id="files" v-show="file">
       <li v-for="(name, index) in names" v-on:click="setActive(index)"
           :class="[{ active: active == index}, 
                    { disabled : !name }]"
@@ -13,118 +20,81 @@
       </li>
     </ul>
 
+    <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Charms</div>
+    <div class="button" v-on:click='' v-show="file && charms">Export Charms</div>
+    <div class="button" v-on:click='' v-show="file">Import Charms</div>
     
-    <ul id="charms">
+    <ul id="charms" v-show="file">
       <li class="charms-header">
-        <div v-for="column in columns" :class="column.id">
+        <div v-for="column in columns" :class="column.id" v-on:click="sortCharms(column.id)">
           {{ column.name }}
         </div>
       </li>
-      <li v-for="(charm, index) in charms" class="charm">
-        
-        <div class="rarity styled-select">
-          <select v-model="charm.rarity"
-                  v-on:change="validateSlots(charm)">
-            <option v-for="rarity in rarities" :value="rarity.value">
-              {{ rarity.text }}
-            </option>
-          </select>
-        </div>
-        
-        <div class="slots">
-          <span class="minus-slots" 
-                v-if="charm.slots"
-                v-on:click="charm.slots-=1">-</span> 
-            {{ displaySlots(charm) }} 
-          <span class="plus-slots" 
-                v-if="canIncreaseSlots(charm)"
-                v-on:click="charm.slots+=1">+</span>
-        </div>
-        
-        <div class="skill1">
-          <select v-model="charm.skills[0]"
-                  v-on:change="">
-            <option v-for="skillId in getAvailableSkills(charm, 0)" :value="skillId">
-              {{ skills[skillId].name }}
-            </option>
-          </select>
-        </div>
-        
-        <div class="skill1value">
-          <select v-model="charm.skillvalues[0]">
-            <option v-for="value in getSkillLevels(charm, 0)" :value="value">
-              {{ value }}
-            </option>
-          </select>
-        </div>
-        
-        <div class="skill2">
-          <select v-model="charm.skills[1]" >
-            <option v-for="skillId in getAvailableSkills(charm, 1)" :value="skillId">
-              {{ skills[skillId].name }}
-            </option>
-          </select>
-        </div>
-        
-        <div class="skill2value">
-          <select v-model="charm.skillvalues[1]"
-                  v-if="charm.skillvalues[1]" 
-                  v-on:DOMNodeRemoved="charm.skills[1] = 0">
-            <option v-for="value in getSkillLevels(charm, 1)" :value="value">
-              {{ value }}
-            </option>
-          </select>
-        </div>
-        
+      
+      <charm v-for="offset in charmOffsets" 
+             :charm="charms[offset]" :offset="offset" 
+             :availableSkillsList="availableSkills" 
+             v-on:remove="removeCharm"
+      />
+      <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
+        <span class="add">➕</span> Add Charm
       </li>
     </ul>
-
+    
+    <div id="footer">
+      © 2017 Michelle Saad (<a href="http://github.com/sand-bird">sand bird</a>)
+    </div>
   </div>
 </template>
 
 <script>
-import { loadFiles, loadCharms, processCharm, unpackCharm } from './utils'
+import { loadFiles, loadCharms, saveCharms } from './utils'
+import charm from './Charm.vue'
 import skills from 'json-loader!./skills.json'
+import fileSaver from 'file-saver'
 
 export default {
   name: 'app',
   data () {
     return {
-      title: '☆\'s Talisman Editor',
+      loading: false,
+      title: '☆\'s MHGen Talisman Editor',
       file: null,
       names: [],
       active: null,
-      charms: [],
-      values: [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      charms: {},
+      charmOffsets: [],
+      emptyOffsets: [],
+      lastSortKey: null,
+      sortOrder: 1,
       columns: [
         { name: 'Rarity', id: 'rarity' },
         { name: 'Slots', id: 'slots' },
         { name: 'Skill 1', id: 'skill1' },
-        { name: '', id: 'skill1value' },
-        { name: 'Skill 2', id: 'skill2' },
-        { name: '', id: 'skill2value' }
-      ],
-      rarities: [
-        { text: "Pawn Talisman", value: 1, source: "mystery", slots: 1 },
-        { text: "Bishop Talisman", value: 2, source: "mystery", slots: 1 },
-        { text: "Knight Talisman", value: 3, source: "shining", slots: 2 },
-        { text: "Rook Talisman", value: 4, source: "shining", slots: 2 },
-        { text: "Queen Talisman", value: 5, source: "timeworn", slots: 3 },
-        { text: "King Talisman", value: 6, source: "timeworn", slots: 3 },
-        { text: "Dragon Talisman", value: 7, source: "timeworn", slots: 3 }
+        { name: 'Skill 2', id: 'skill2' }
       ],
       skills: skills,
+      charm: charm,
+      /* available skills are pushed to this 2d array.
+         for 2nd slot skills, we start with id 0 available,
+         as that represents no skill. the 1st slot must
+         have a skill, so id 0 is NOT an option.
+         (this doesn't have to be computed every time --
+         i am just too lazy to make another json file)  */
       availableSkills: {
-        mystery: [[],[]],
-        shining: [[],[]],
-        timeworn: [[],[]]
+        mystery: [[],[0]],
+        shining: [[],[0]],
+        timeworn: [[],[0]]
       }
     }
   },
-  
+  components: {
+    charm
+  },
   methods: {
   
     init (event) {
+      this.loading = true
     
       if (event.target.files[0].size != 4000815) {
         alert("Wrong file size!")
@@ -142,86 +112,140 @@ export default {
         vm.names = loadFiles(vm.file)
         // finds first occupied file and inits it to active
         let a = vm.names.findIndex((n) => { return n != null })
-        console.log(a)
+        if (a == -1) {
+          // no saves on file - edge case but still
+          alert("Error: no saves on file!")
+          event.target.value = null
+          vm.file = null
+          this.loading = false
+          return
+        }
         vm.active = a
+
         vm.charms = loadCharms(vm.file, a)
-        this.generateAvailableSkills()
+        vm.charmOffsets = Object.keys(vm.charms)
+        
+        let empty = Object.keys(vm.charms).filter(key => vm.charms[key] === null)
+        vm.emptyOffsets = empty.reverse()
+        
+        this.initAvailableSkills()
+        this.loading = false
       }
       
       reader.readAsArrayBuffer(file)
     },
     
     setActive (index) {
-      // todo: make sure to save charms if switching file
-    
-      if (this.names[index]) {
+      if (this.names[index] && this.active != index) {
+        saveCharms(this.data, this.active, this.charms)
         this.active = index
         this.charms = loadCharms(this.file, index)
       }
     },
     
     download (event) {
-      console.log(event)
+      saveCharms(this.file, this.active, this.charms)
+      var binaryData = []
+      binaryData.push(this.file)
+      fileSaver.saveAs(new Blob(binaryData, {type: "application/octet-stream"}), 'system', false)
     },
     
-    displaySlots (charm) {
-      let slots = ""
-      for (let i = charm.slots; i > 0; i--) {
-        slots += "O"
-      } 
-      return slots
-    },
-    
-    canIncreaseSlots (charm) {
-      return (charm.slots < this.rarities[charm.rarity-1].slots)
-    },
-    
-    generateAvailableSkills () {
+    initAvailableSkills () {
+
       ["mystery", "shining", "timeworn"].forEach((source) => {
         for (let i = 1; i < skills.length; i++) {
           if (skills[i][source]) {
-            // first step - the skill is available somewhere
-            if (skills[i][source][0]) {
-              this.availableSkills[source][0].push(skills[i].id)
-            }
-            if (skills[i][source][1]) {
-              this.availableSkills[source][1].push(skills[i].id)
+            for (let slot = 0; slot < 2; slot++) {
+              if (skills[i][source][slot]) {
+                this.availableSkills[source][slot].push(skills[i].id)
+              }
             }
           }
         }
       })
+      console.log("initialized skills")
     },
     
-    getAvailableSkills (charm, skillSlot) {
-      let source = this.rarities[charm.rarity-1].source
-      return this.availableSkills[source][skillSlot]
+    removeCharm (offset) {
+      console.log("removed " + offset)
+      this.charms[offset] = null
+      this.emptyOffsets.push(offset)
+      this.charmOffsets[this.charmOffsets.indexOf(offset)] = null
     },
     
-    getSkillLevels (charm, skillSlot) {
-      let levels = []
-      let source = this.rarities[charm.rarity-1].source
-      let currSkill = charm.skills[skillSlot]
-      let boundSource = skills[currSkill][source]
-      if (boundSource) {
-        let boundSlot = boundSource[skillSlot]
-        if (boundSlot) {
-          for (let i = boundSlot[0]; i <= boundSlot[1]; i++) {
-            levels.push(i)
+    // new charms will be placed at the last available place
+    // in the equipment box, then in slots created by deleting
+    // charms as a last resort
+    newCharm () {
+      let newOffset = this.emptyOffsets.shift()
+      this.charms[newOffset] = {
+        rarity: 1,
+        slots: 0,
+        skills: [1, 0],
+        skillvalues: [1, 0]
+      }
+      this.charmOffsets.push(newOffset)
+    },
+    
+    clearCharms () {
+      Object.keys(this.charms).forEach((offset) => {
+        this.charms[offset] = null
+        this.emptyOffsets.push[offset]
+      })
+      this.charmOffsets = []
+    },
+    
+    sortCharms (sortKey) {
+      if (this.lastSortKey == sortKey) this.sortOrder *= -1
+      else this.sortOrder = 1
+      this.lastSortKey = sortKey
+      
+      let offsets = []
+      for (let i = 0; i < this.charmOffsets.length; i++) {
+        if (this.charms[this.charmOffsets[i]]) offsets.push(this.charmOffsets[i])
+      }
+      
+      let sortFn = () => { return 1 }
+      
+      if (sortKey == 'skill1' || sortKey == 'skill2') {
+        let index = parseInt(sortKey.slice(-1)) - 1
+        sortFn = (a, b) => {
+          let charmA = this.charms[a]
+          let charmB = this.charms[b]
+          if (charmA['skills'][index] == charmB['skills'][index]) {
+            if (charmA['skillvalues'][index] == charmB['skillvalues'][index]) {
+              if (charmA['skills'][1 - index] == charmB['skills'][1 - index]) {
+                if (charmA['skillvalues'][1 - index] == charmB['skillvalues'][1 - index]) {
+                  return 0
+                }
+                else if (charmA['skillvalues'][1 - index] > charmB['skillvalues'][1 - index]) {
+                  return 1 * this.sortOrder
+                } else return -1 * this.sortOrder
+              }
+              else if (charmA['skills'][1 - index] > charmB['skills'][1 - index]) {
+                return 1 * this.sortOrder
+              } else return -1 * this.sortOrder          
+            }
+            else if (charmA['skillvalues'][index] > charmB['skillvalues'][index]) {
+              return 1 * this.sortOrder
+            } else return -1 * this.sortOrder
           }
+          else if (charmA['skills'][index] > charmB['skills'][index]) {
+            return 1 * this.sortOrder
+          } else return -1 * this.sortOrder
         }
       }
-      return levels
-    },
-    
-    validateSlots (charm) {
-      let source = this.rarities[charm.rarity-1].source
-      for (let i = 0; i < 2; i++) {
-        if (this.availableSkills[source][i].indexOf(charm.skills[i]) == -1) {
-          charm.skills[i] = 0
-          charm.skillvalues[i] = 0
+      
+      else {
+        sortFn = (a, b) => {
+          a = this.charms[a][sortKey]
+          b = this.charms[b][sortKey]
+          return (a == b ? 0 : a > b ? 1 : -1) * this.sortOrder
         }
       }
-      console.log(charm.skills)
+      
+      offsets = offsets.sort(sortFn)
+      this.charmOffsets = offsets
     }
   }
 }
@@ -229,8 +253,13 @@ export default {
 
 <style>
 html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -262,202 +291,165 @@ a {
   color: #42b983;
 }
 
+a:hover {
+  color: #54de9b;
+}
+
 #files {
   display: block;
-  border-radius: 20px;
-  border: 1px solid #999;
   overflow: hidden;
+  padding-bottom: 5px;
   width: 450px;
   margin: 20px auto;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #ddd;
 }
 
 #files li {
-  background-color: #eee;
+  background-color: #fcfcfc;
   width: 149px;
   margin: 0;
-  border-right: 1px solid #999;
   float: left;
+  border: 1px solid #ccc;
   padding: 10px 5px;
+  box-shadow: inset 1px 1px 0 #fff, inset 0 -1px 0 #ddd, 0 2px 1px #eee;
+  cursor: pointer;
+}
+
+#files li:first-child {
+  border-radius: 20px 0 0 20px;
 }
 
 #files li:last-child {
-  border-right: none;
+  border-radius: 0 20px 20px 0;
   width: 150px;
 }
 
+#upload-holder {
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 500px;
+  margin: 0 auto;
+}
+
 #upload {
-  box-shadow: 0 0 5px #ccc
+  box-shadow: 0 0 5px #ccc;
+}
+
+#upload, #loading {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#loading {
+  animation: load 1.5s infinite;
+}
+
+@keyframes load {
+  0%, 80%, 100% {
+    opacity: 1
+  }
+  40% {
+    opacity: 0.5
+  }
 }
 
 #files li.active {
-  background-color: #fcfcfc;
-  box-shadow: inset 1px 1px #ddd, inset -1px -1px #fff;
+  background-color: #94ebc2;
+  border-color: #25c178;
+  box-shadow: inset 1px 1px 0 #bff3da, inset 0 -1px 0 #54de9b, 0 2px 1px #ddd;  
 }
+
+#files li.active:hover {
+  background-color: #a9efcd;
+  border-color: #21ab68;
+  box-shadow: inset 1px 1px 0 #d4f7e6, inset 0 -1px 0 #69e2a8, 0 2px 1px #ddd;  
+}
+
+#files li:hover {
+  background-color: #fefefe;
+  color: #000;
+  border-color: #aaa;
+}
+
+#files li.disabled, #files li.disabled:hover {
+  color: inherit;
+  background-color: #eee;
+  box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #fafafa, 0 2px 1px #fafafa;
+  border-color: #ccc;
+}
+
 
 .name {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: normal;
   line-height: 30px;
   margin: 5px 0 0;
 }
 
 .disabled .name {
-  font-weight: normal;
   opacity: 0.5;
   font-size:14px;
 }
 
+.active .name {
+  font-weight: bold;
+}
+
+
+.button {
+  display: inline-block;
+  border:1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 40px;
+  box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
+  text-shadow: 0 1px 0 #fff;
+  background-color: #fcfcfc;
+  cursor: pointer;
+  margin: 2px 4px;
+}
+
+.button:hover, .button:active {
+  border-color: #aaa;
+  color: #000;
+  background-color: #fefefe;
+}
+
+.button.download {
+  padding: 20px 60px;
+}
 
 
 #charms {
   width: auto;
-  overflow: hidden;
   display: block;
   text-align: center;
+  margin: 20px auto;
 }
 
-.charm, .charms-header {
-  display: block;
+.add-charm {
   width: 650px;
-  border: 1px solid #ccc;
-  overflow: hidden;
-  margin: 4px auto;
+  height: 40px;
+  border: 1px solid #eee;
   border-radius: 5px;
-  box-shadow: 0 1px 1px #eee;
-}
-
-.charm div, .charms-header div {
-  display: inline-block;
-  padding: 1px;
-  float: left;
-  height: 50px;
-  line-height: 50px;
-}
-
-.charms-header div {
-  border-right: 1px solid #ccc;
-}
-
-.charms-header div.skill2 {
-  border-right: none;
-}
-
-.charm div {
-  border-right: 1px solid #eee;
-}
-
-.charm div.skill2value {
-  border-right: none;
-}
-
-.rarity {
-  width: 25%;
-}
-
-.slots {
-  width: 15%;
-}
-
-.skill1, .skill2 {
-  width: 22.5%;
-}
-
-.charms-header .skill1, .charms-header .skill2 {
-  width: 30%;
-  margin-left: 0;
-}
-
-.skill1value, .skill2value {
-  width: 7.5%;
-}
-
-.charms-header .skill1value, .charms-header .skill2value {
-  display: none;
-}
-
-
-#save-button {
-  display: inline-block;
-  border:1px solid #bfbfbf;
-  color: #8c8c8c;
-  border-radius: 5px;
-  font-size: 16px;
-  padding: 10px 40px;
-  box-shadow: inset 0 1px 0 0 #fff,inset 0 -1px 0 0 #d9d9d9,inset 0 0 0 1px #f2f2f2,0 2px 4px 0 #f2f2f2;
-  text-shadow: 0 1px 0 #fff;
-  background-color: #f9f9f9;
+  color: #42b983;
+  line-height: 40px;
   cursor: pointer;
 }
 
-#save-button:hover, #save-button:active {
-  border:1px solid #8c8c8c;
-  color: #8c8c8c;
-  box-shadow: inset 0 1px 0 0 #ffffff,inset 0 -1px 0 0 #d9d9d9,inset 0 0 0 1px #f2f2f2;
-  background-color: #f2f2f2;
+.add-charm .add {
+  margin-right: 5px;
 }
 
-select {
-
-  /* styling */
-  background-color: #fff;
-  display: inline-block;
-  font: inherit;
-  line-height: 1em;
-  padding: 5px 25px 5px 5px;
-  border-radius: 5px;
-  border: 0;
-  
-
-  /* reset */
-
-  margin: 0;      
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-image:
-    linear-gradient(45deg, transparent 50%, #aaa 50%),
-    linear-gradient(135deg, #aaa 50%, transparent 50%);
-  background-position:
-    calc(96% - 5px) calc(0.75em),
-    calc(96%) calc(0.75em);
-  background-size:
-    5px 5px,
-    5px 5px,
-    1px 1.5em;
-  background-repeat: no-repeat;
+.add-charm:hover {
+  color: #54de9b;
 }
 
-.skill1value select, .skill2value select {
-  padding-right: 0;
-  background-image: none;
-}
-
-.styled-select select option {
-  
-   text-align: right;
-}
-
-.slots {
+#footer {
   position: relative;
-}
-
-.minus-slots {
-  left: 8px;
-}
-
-.plus-slots {
-  right: 8px;
-}
-
-.plus-slots, .minus-slots {
-  position: absolute;
-  padding: 2px;
-  line-height: 46px;
-  cursor: pointer;
+  margin: 40px auto;
 }
 
 </style>

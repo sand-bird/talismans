@@ -12,6 +12,13 @@ const EQUIPMENT_BOX_SIZE = 50415
 const EQUIPMENT_BOX_SLOTS = 1400 
 const EQUIPMENT_BOX_SLOT_SIZE = 36
 
+const RARITY_OFFSET = 1
+const SLOTS_OFFSET = 16
+const SKILL1_OFFSET = 12
+const SKILL2_OFFSET = 13
+const SKILL1VALUE_OFFSET = 14
+const SKILL2VALUE_OFFSET = 15
+
 
 const getOffset = (data, slot, offset) => {
   return data.readUIntLE(0x10 + (4 * slot), 4) + offset
@@ -34,25 +41,66 @@ export const loadFiles = (data) => {
   return files
 }
 
+/* we return an object whose keys are the offsets for
+   _both_ charms and empty spaces. this is so that vue won't
+   re-render the entire charms list each time we add or remove
+   a charm from it. modifying an element in an array counts
+   as modifying the array itself, and will cause v-for to
+   re-render, but modifying a property of an object does not.  */
 export const loadCharms = (data, slot) => {
   let equipOffset = getOffset(data, slot, EQUIPMENT_BOX_OFFSET)
-  let charms = []
+  let charms = {}
   for (let i = 0; i < EQUIPMENT_BOX_SLOTS; i++) {
     let offset = equipOffset + (EQUIPMENT_BOX_SLOT_SIZE * i)
-    if (data.readUInt8(offset) == 6) {
+    let equipType = data.readUInt8(offset)
+    if (equipType == 6) {
+      // found charm, process it
       let charm = {}
       charm.offset = offset
-      charm.rarity = data.readUInt8(offset + 1)
-      charm.slots = data.readUInt8(offset + 16)
-      charm.skills = [data.readUInt8(offset + 12), data.readUInt8(offset + 13)]
-      charm.skillvalues = [data.readInt8(offset + 14), data.readInt8(offset + 15)]
+      charm.rarity = data.readUInt8(offset + RARITY_OFFSET)
+      charm.slots = data.readUInt8(offset + SLOTS_OFFSET)
+      charm.skills = [
+        data.readUInt8(offset + SKILL1_OFFSET), 
+        data.readUInt8(offset + SKILL2_OFFSET)
+      ]
+      charm.skillvalues = [
+        data.readInt8(offset + SKILL1VALUE_OFFSET), 
+        data.readInt8(offset + SKILL2VALUE_OFFSET)
+      ]
       
       // for debugging:
       // charm.data = Buffer.alloc(36)
       // data.copy(charm.data, 0, offset)
       
-      charms.push(charm)
+      charms[offset] = charm
+    }
+    else if (equipType == 0) {
+      // found empty space - save offset so we can add charms
+      charms[offset] = null
     }
   }
   return charms
+}
+
+export const saveCharms = (data, slot, charms) => {
+  let offsets = Object.keys(charms)
+  for (let i = 0; i < offsets.length; i++) {
+    let offset = parseInt(offsets[i])
+    let charm = charms[offset]
+    if (charm) {
+      console.log(charm)
+      data.writeUInt8(6, offset)
+      data.writeUInt8(charm.rarity, offset + RARITY_OFFSET)
+      data.writeUInt8(charm.slots, offset + SLOTS_OFFSET)
+      
+      data.writeUInt8(charm.skills[0], offset + SKILL1_OFFSET)
+      data.writeUInt8(charm.skills[1], offset + SKILL2_OFFSET)
+
+      data.writeInt8(charm.skillvalues[0], offset + SKILL1VALUE_OFFSET)
+      data.writeInt8(charm.skillvalues[1], offset + SKILL2VALUE_OFFSET)
+    }
+    else {
+      data.fill(0, offset, offset + 35)
+    }
+  }
 }

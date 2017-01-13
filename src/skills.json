@@ -431,7 +431,7 @@
     "id": 32,
     "name": "Elemental",
     "timeworn": [
-      [5,1],
+      [1,5],
       null
     ],
     "shining": null,
@@ -723,8 +723,14 @@
     "id": 57,
     "name": "Sleep C+",
     "timeworn": null,
-    "shining": null,
-    "mystery": null
+    "shining": [
+      null,
+      [-10, 12]
+    ],
+    "mystery": [
+      [1,8],
+      null
+    ]
   },
   {
     "id": 58,
