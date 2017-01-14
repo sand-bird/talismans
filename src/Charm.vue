@@ -373,11 +373,11 @@ select:hover {
 }
 
 .minus-slots {
-  left: 8px;
+  left: 7px;
 }
 
 .plus-slots {
-  right: 8px;
+  right: 7px;
 }
 
 .plus-slots, .minus-slots {

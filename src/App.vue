@@ -23,8 +23,8 @@
     </ul>
     
     <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Charms</div>
-    <div class="button" v-on:click='' v-show="file && charms">Export Charms</div>
-    <div class="button" v-on:click='' v-show="file">Import Charms</div>
+    <div class="button disabled" v-on:click='' v-show="file && charms">Export Charms</div>
+    <div class="button disabled" v-on:click='' v-show="file">Import Charms</div>
     
     <ul id="charms" v-show="file">
       <li class="charms-header">
@@ -44,7 +44,7 @@
     </ul>
     
     <div id="footer">
-      © 2017 Michelle Saad (<a href="http://github.com/sand-bird">sand bird</a>)
+      © 2017 <a href="http://github.com/sand-bird">sand bird</a>
     </div>
   </div>
 </template>
@@ -388,16 +388,16 @@ a:hover {
   }
 }
 
-#files li.active {
-  background-color: #94ebc2;
-  border-color: #25c178;
-  box-shadow: inset 1px 1px 0 #bff3da, inset 0 -1px 0 #54de9b, 0 2px 1px #ddd;  
+.active {
+  background-color: #94ebc2 !important;
+  border-color: #25c178 !important;
+  box-shadow: inset 1px 1px 0 #bff3da, inset 0 -1px 0 #54de9b, 0 2px 1px #ddd !important;  
 }
 
-#files li.active:hover {
-  background-color: #a9efcd;
-  border-color: #21ab68;
-  box-shadow: inset 1px 1px 0 #d4f7e6, inset 0 -1px 0 #69e2a8, 0 2px 1px #ddd;  
+.active:hover {
+  background-color: #a9efcd !important;
+  border-color: #21ab68 !important;
+  box-shadow: inset 1px 1px 0 #d4f7e6, inset 0 -1px 0 #69e2a8, 0 2px 1px #ddd !important;  
 }
 
 #files li:hover {
@@ -406,11 +406,11 @@ a:hover {
   border-color: #aaa;
 }
 
-#files li.disabled, #files li.disabled:hover {
-  color: inherit;
-  background-color: #eee;
-  box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #fafafa, 0 2px 1px #fafafa;
-  border-color: #ccc;
+.disabled, .disabled:hover {
+  color: inherit !important;
+  background-color: #eee !important;
+  box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #fafafa, 0 2px 1px #fafafa !important;
+  border-color: #ccc !important;
 }
 
 
@@ -458,7 +458,7 @@ a:hover {
 }
 
 .add-charm {
-  width: 650px;
+  width: 680px;
   height: 40px;
   border: 1px solid #eee;
   border-radius: 5px;
