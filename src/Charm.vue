@@ -338,10 +338,10 @@ select {
     linear-gradient(45deg, transparent 50%, #42b983 50%),
     linear-gradient(135deg, #42b983 50%, transparent 50%);
   background-position:
-    calc(96% - 5px) calc(0.75em),
-    calc(96%) calc(0.75em);
+    calc(100% - 10px) calc(0.75em),
+    calc(100% - 5px) calc(0.75em);
   background-size:
-    5px 5px,
+    5px 4px,
     5px 5px;
   background-repeat: no-repeat;
 }
