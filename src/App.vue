@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div class="header" :class="{ loaded: file && charms }">
+    <div class="header" :class="{ loaded: file && charms }" 
+         v-on:scroll="alert('abcd')" >
       <h1>{{ title }}</h1>
       <div class="download button" v-on:click='download' v-show="file">Save Changes</div>
     </div>
@@ -10,8 +11,6 @@
       <input id="upload" type="file" v-on:change='init' v-show="!loading" />
       <div id="loading" v-show='loading'>Loading...</div>
     </div>
-    
-    <div class="top-spacer" v-if="file && charms" />
     
     <ul id="files" v-show="file">
       <li v-for="(name, index) in names" v-on:click="setActive(index)"
@@ -277,6 +276,7 @@ html {
 
 h1, h2 {
   font-weight: normal;
+  margin: 20px 0;
 }
 
 .header {
@@ -287,40 +287,28 @@ h1, h2 {
   position: relative;
 }
 
-.header.loaded {
-  width: 100%;
-  margin: 0 0 100px;
-  position: fixed;
-  height: 85px;
-  background-color: rgba(255,255,255,0.5);
-  z-index: 10;
-  top: 0;
-  padding: 0;
-}
-
 .header.loaded h1 {
   text-align: left;
-  position: absolute;
-  left: 15px;
-  line-height: 85px;
-  top: 1px;
-  margin: 0;
-  font-size: 30px;
-}
-
-.top-spacer {
-  height: 100px;
 }
 
 .button.download {
-  padding: 15px 60px;
+  padding: 10px 50px;
   line-height: 20px;
-  margin-bottom: 15px;
   position: absolute;
-  right: 30px;
-  top: 50%;
-  margin-top: -25px;
+  right: 0;
+  bottom: 20px;
+  border-color: #42b983;
+  color: #25c178;
+  box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
 }
+
+.button.download:hover {
+  background-color: #fff;
+  border-color: #1c975b;
+  color: #146c41;
+  box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #ddd, 0 1px 2px #eaeaea;
+}
+
 
 ul {
   list-style-type: none;
