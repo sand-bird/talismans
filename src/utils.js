@@ -14,6 +14,7 @@ const EQUIPMENT_BOX_SLOT_SIZE = 36
 
 const RARITY_OFFSET = 1
 const SLOTS_OFFSET = 16
+const TYPE_OFFSET = 18
 const SKILL1_OFFSET = 12
 const SKILL2_OFFSET = 13
 const SKILL1VALUE_OFFSET = 14
@@ -62,6 +63,8 @@ export const loadCharms = (data, slot) => {
       charm.offset = offset
       charm.rarity = data.readUInt8(offset + RARITY_OFFSET)
       charm.slots = data.readUInt8(offset + SLOTS_OFFSET)
+      charm.type = data.readUInt16LE(offset + TYPE_OFFSET)
+      
       charm.skills = [
         data.readUInt8(offset + SKILL1_OFFSET), 
         data.readUInt8(offset + SKILL2_OFFSET)
@@ -100,6 +103,7 @@ export const saveCharms = (data, slot, charms) => {
       data.writeUInt8(6, offset)
       data.writeUInt8(charm.rarity, offset + RARITY_OFFSET)
       data.writeUInt8(charm.slots, offset + SLOTS_OFFSET)
+      data.writeUInt16LE(charm.type, offset + TYPE_OFFSET)
       
       data.writeUInt8(charm.skills[0], offset + SKILL1_OFFSET)
       data.writeUInt8(charm.skills[1], offset + SKILL2_OFFSET)

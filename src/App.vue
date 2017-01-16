@@ -1,9 +1,18 @@
 <template>
   <div id="app">
+    <modal v-if="showModal">    
+      <h3 slot="header">Decoration Warning</h3>
+      <div slot="body">This action will delete a talisman with decorations. Decorations will be lost.</div>
+      <div slot="footer">
+        <button class="button" @click="showModal = false; doRemoveCharm(charmToRemove)">OK</button>
+        <button class="button" @click="showModal = false; charmToRemove = null">Cancel</button> 
+      </div>
+    </modal>
+    
     <div class="header" :class="{ loaded: file && charms }" 
          v-on:scroll="alert('abcd')" >
       <h1>{{ title }}</h1>
-      <div class="download button" v-on:click='download' v-show="file">Save Changes</div>
+      <div class="download button" v-on:click="showModal = true" v-show="file">Save Changes</div>
     </div>
     
     <div id="upload-holder" v-show="!file">
@@ -27,17 +36,19 @@
     <div class="button disabled" v-on:click='' v-show="file">Import Charms</div>
     
     <ul id="charms" v-show="file">
+      
       <li class="charms-header">
         <div v-for="column in columns" :class="column.id" v-on:click="sortCharms(column.id)">
           {{ column.name }}
         </div>
       </li>
       
-      <charm v-for="offset in charmOffsets" 
+      <charm v-for="offset in charmOffsets"
              :charm="charms[offset]" :offset="offset" 
              :availableSkillsList="availableSkills" 
              v-on:remove="removeCharm"
       />
+    
       <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
         <span class="add">➕</span> Add Charm
       </li>
@@ -52,6 +63,7 @@
 <script>
 import { loadFiles, loadCharms, saveCharms } from './utils'
 import charm from './Charm.vue'
+import modal from './Modal.vue'
 import skills from 'json-loader!./skills.json'
 import fileSaver from 'file-saver'
 
@@ -60,6 +72,8 @@ export default {
   data () {
     return {
       loading: false,
+      showModal: false,
+      charmToRemove: null,
       title: '☆\'s MHGen Talisman Editor',
       file: null,
       names: [],
@@ -75,7 +89,6 @@ export default {
         { name: 'Skill 1', id: 'skill1' },
         { name: 'Skill 2', id: 'skill2' }
       ],
-      skills: skills,
       charm: charm,
       /* available skills are pushed to this 2d array.
          for 2nd slot skills, we start with id 0 available,
@@ -91,7 +104,7 @@ export default {
     }
   },
   components: {
-    charm
+    charm, modal
   },
   methods: {
   
@@ -125,7 +138,7 @@ export default {
         vm.active = a
 
         vm.charms = loadCharms(vm.file, a)
-        vm.charmOffsets = Object.keys(vm.charms)
+        vm.charmOffsets = Object.keys(vm.charms).filter(key => vm.charms[key] !== null)
         
         let empty = Object.keys(vm.charms).filter(key => vm.charms[key] === null)
         vm.emptyOffsets = empty.reverse()
@@ -168,7 +181,19 @@ export default {
       console.log("initialized skills")
     },
     
+    /* pops up the decoration warning modal if the charm to be
+       removed has decorations equipped, then stores the offset
+       so the modal button can access it. clunky, but works
+    */
     removeCharm (offset) {
+      if (this.charms[offset].filledSlots) {
+        this.showModal = true
+        this.charmToRemove = offset
+      }
+      else this.doRemoveCharm(offset)
+    },
+    
+    doRemoveCharm (offset) {
       console.log("removed " + offset)
       this.charms[offset] = null
       this.emptyOffsets.push(offset)
@@ -181,20 +206,30 @@ export default {
     newCharm () {
       let newOffset = this.emptyOffsets.shift()
       this.charms[newOffset] = {
+        offset: newOffset,
         rarity: 1,
         slots: 0,
+        type: 325,
         skills: [1, 0],
-        skillvalues: [1, 0]
+        skillvalues: [1, 0],
+        decorations: [0, 0, 0]
       }
       this.charmOffsets.push(newOffset)
     },
     
     clearCharms () {
-      Object.keys(this.charms).forEach((offset) => {
-        this.charms[offset] = null
-        this.emptyOffsets.push[offset]
+      let filledCharmOffsets = []
+      this.charmOffsets.forEach((offset) => {
+        if (this.charms[offset].filledSlots) {
+          filledCharmOffsets.push(offset)
+        }
+        else {
+          this.charms[offset] = null
+          this.emptyOffsets.push(offset)
+        }
       })
-      this.charmOffsets = []
+      console.log(filledCharmOffsets)
+      this.charmOffsets = filledCharmOffsets
     },
     
     sortCharms (sortKey) {
@@ -214,25 +249,25 @@ export default {
         sortFn = (a, b) => {
           let charmA = this.charms[a]
           let charmB = this.charms[b]
-          if (charmA['skills'][index] == charmB['skills'][index]) {
-            if (charmA['skillvalues'][index] == charmB['skillvalues'][index]) {
-              if (charmA['skills'][1 - index] == charmB['skills'][1 - index]) {
-                if (charmA['skillvalues'][1 - index] == charmB['skillvalues'][1 - index]) {
+          if (charmA.skills[index] == charmB.skills[index]) {
+            if (charmA.skillvalues[index] == charmB.skillvalues[index]) {
+              if (charmA.skills[1 - index] == charmB.skills[1 - index]) {
+                if (charmA.skillvalues[1 - index] == charmB.skillvalues[1 - index]) {
                   return 0
                 }
-                else if (charmA['skillvalues'][1 - index] > charmB['skillvalues'][1 - index]) {
+                else if (charmA.skillvalues[1 - index] > charmB.skillvalues[1 - index]) {
                   return 1 * this.sortOrder
                 } else return -1 * this.sortOrder
               }
-              else if (charmA['skills'][1 - index] > charmB['skills'][1 - index]) {
+              else if (charmA.skills[1 - index] > charmB.skills[1 - index]) {
                 return 1 * this.sortOrder
               } else return -1 * this.sortOrder          
             }
-            else if (charmA['skillvalues'][index] > charmB['skillvalues'][index]) {
+            else if (charmA.skillvalues[index] > charmB.skillvalues[index]) {
               return 1 * this.sortOrder
             } else return -1 * this.sortOrder
           }
-          else if (charmA['skills'][index] > charmB['skills'][index]) {
+          else if (charmA.skills[index] > charmB.skills[index]) {
             return 1 * this.sortOrder
           } else return -1 * this.sortOrder
         }
