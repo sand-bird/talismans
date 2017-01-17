@@ -12,7 +12,7 @@
     <div class="header" :class="{ loaded: file && charms }" 
          v-on:scroll="alert('abcd')" >
       <h1>{{ title }}</h1>
-      <div class="download button" v-on:click="showModal = true" v-show="file">Save Changes</div>
+      <div class="download button" v-on:click="download" v-show="file">Save Changes</div>
     </div>
     
     <div id="upload-holder" v-show="!file">
