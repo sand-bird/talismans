@@ -6,7 +6,7 @@
   <div class="charm">
     <div class="rarity styled-select">
       <select v-model="charm.rarity"
-              v-on:change="validateCharm()">
+              v-on:change="blur($event); validateCharm()">
         <option v-for="rarity in 7" v-if="rarity >= charm.minRarity" :value="rarities[rarity-1].value">
           {{ rarities[rarity-1].text }}
         </option>
@@ -34,7 +34,7 @@
     </div>
     
     <div class="skill1value">
-      <select v-model="charm.skillvalues[0]">
+      <select v-model="charm.skillvalues[0]" @change="blur">
         <option v-for="value in charm.skillLevels[0]" :value="value">
           {{ value }}
         </option>
@@ -52,8 +52,7 @@
     
     <div class="skill2value">
       <select v-model="charm.skillvalues[1]"
-              v-if="charm.skillvalues[1]"
-              v-on:DOMNodeRemoved="charm.skills[1] = 0">
+              v-show="charm.skillvalues[1]" v-on:change="blur($event); validateSkillTwo()">
         <option v-for="value in charm.skillLevels[1]" :value="value">
           {{ value }}
         </option>
@@ -199,26 +198,6 @@ export default {
         }
       }
       
-      /* SKILLS ------
-         validates the skills appearing in each slot
-         based on what is available for the selected charm type */
-         
-      //console.log("validating skills for charm " + this.offset)
-      
-      //for (let slot = 0; slot < 2; slot++) {
-      //  let availSkillsForSlot = this.availableSkillsList[source][slot]
-      //  if (availSkillsForSlot.indexOf(this.charm.skills[slot]) == -1) {
-        
-          /* first entry in availSkillsForSlot should always be a
-             skill in slot0 and no skill in slot1. first skillValue
-             should be 1 if slot0 (skill must have positive value), 
-             or 0 if slot1 (the 2nd slot is empty by default).  */
-      //    this.charm.skills[slot] = availSkillsForSlot[0]
-      //    this.charm.skillvalues[slot] = 1 - slot
-      //  }
-      //}
-      
-      
       /* SLOTS -------
          validates the number of slots in the charm
          based on max available for the selected charm type */
@@ -232,6 +211,12 @@ export default {
       }
       
       
+    },
+    
+    validateSkillTwo () {
+      if (this.charm.skillvalues[1] == 0) {
+        this.charm.skills[1] = 0
+      }
     },
     
     doGetSkillLevels (slot) {
