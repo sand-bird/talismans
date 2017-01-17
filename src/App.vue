@@ -31,9 +31,9 @@
       </li>
     </ul>
     
-    <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Charms</div>
-    <div class="button disabled" v-on:click='' v-show="file && charms">Export Charms</div>
-    <div class="button disabled" v-on:click='' v-show="file">Import Charms</div>
+    <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Talismans</div>
+    <div class="button disabled" v-on:click='' v-show="file && charms">Export Talismans</div>
+    <div class="button disabled" v-on:click='' v-show="file">Import Talismans</div>
     
     <ul id="charms" v-show="file">
       
@@ -50,7 +50,7 @@
       />
     
       <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
-        <span class="add">➕</span> Add Charm
+        <span class="add">➕</span> Add Talisman
       </li>
     </ul>
     

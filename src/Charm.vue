@@ -350,7 +350,6 @@ html, * {
 
 .charm div, .charms-header div {
   display: inline-block;
-  padding: 1px;
   float: left;
   height: 50px;
   line-height: 50px;
@@ -404,14 +403,9 @@ html, * {
   position: absolute;
   left: -30px;
   font-size: 24px;
-  height:50px;
   line-height: 50px;
-  top: 6px;
+  top: 2px;
   cursor: pointer;
-}
-
-.remove:hover {
-  color: 
 }
 
 .rarity {
