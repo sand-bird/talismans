@@ -27,7 +27,9 @@
     <div class="skill1">
       <select v-model="charm.skills[0]"
               v-on:change="blur($event); validateSkillValues(0)">
-        <option v-for="skillId in charm.availableSkills[0]" :value="skillId">
+        <option v-for="skillId in charm.availableSkills[0]" 
+                v-if="skillId != charm.skills[1]"
+                :value="skillId">
           {{ skillName(skillId) }}
         </option>
       </select>
@@ -44,7 +46,9 @@
     <div class="skill2">
       <select v-model="charm.skills[1]"
               v-on:change="blur($event); validateSkillValues(1)">
-        <option v-for="skillId in charm.availableSkills[1]" :value="skillId">
+        <option v-for="skillId in charm.availableSkills[1]" 
+                v-if="skillId != charm.skills[0]"
+                :value="skillId">
           {{ skillName(skillId) }}
         </option>
       </select>
@@ -248,8 +252,7 @@ export default {
     
     validateSkillValues (slot) {
       console.log("validating skill values for charm " + this.offset)
-      console.log(slot)
-      console.log(this.charm.skillLevels)
+      
       this.charm.skillLevels[slot] = this.doGetSkillLevels(slot)
       
       console.log(this.charm.skillLevels[slot])
@@ -281,8 +284,6 @@ export default {
       else if (this.charm.skillvalues[slot] < minLevel) {
         this.charm.skillvalues[slot] = minLevel
       }
-      
-      
     },
     
     removeCharm (event) {
