@@ -43,11 +43,15 @@
         </div>
       </li>
       
-      <charm v-for="offset in charmOffsets"
-             :charm="charms[offset]" :offset="offset" 
+      <div v-for="offset in charmOffsets" :class="{'active-charm': (activeCharm && activeCharm == offset)}">
+      <charm 
+             :charm="charms[offset]" 
+             :offset="offset"
              :availableSkillsList="availableSkills" 
              v-on:remove="removeCharm"
+             v-on:active="setActiveCharm"
       />
+      </div>
     
       <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
         <span class="add">➕</span> Add Talisman
@@ -79,6 +83,7 @@ export default {
       names: [],
       active: null,
       charms: {},
+      activeCharm: null,
       charmOffsets: [],
       emptyOffsets: [],
       lastSortKey: null,
@@ -200,12 +205,27 @@ export default {
       this.charmOffsets[this.charmOffsets.indexOf(offset)] = null
     },
     
+    setActiveCharm (offset) {
+      if (this.activeCharm && this.activeCharm == offset) this.activeCharm = null
+      else this.activeCharm = offset
+    },
+    
     // new charms will be placed at the last available place
     // in the equipment box, then in slots created by deleting
     // charms as a last resort
     newCharm () {
       let newOffset = this.emptyOffsets.shift()
-      this.charms[newOffset] = {
+      let newCharm = {}
+      if (this.activeCharm && this.charms[this.activeCharm]) newCharm = { 
+        offset: newOffset,
+        rarity: this.charms[this.activeCharm].rarity,
+        slots: this.charms[this.activeCharm].slots,
+        type: this.charms[this.activeCharm].type,
+        skills: this.charms[this.activeCharm].skills,
+        skillvalues: this.charms[this.activeCharm].skillvalues,
+        decorations: [0, 0, 0]
+      }
+      else newCharm = {
         offset: newOffset,
         rarity: 1,
         slots: 0,
@@ -214,13 +234,14 @@ export default {
         skillvalues: [1, 0],
         decorations: [0, 0, 0]
       }
+      this.charms[newOffset] = newCharm
       this.charmOffsets.push(newOffset)
     },
     
     clearCharms () {
       let filledCharmOffsets = []
       this.charmOffsets.forEach((offset) => {
-        if (this.charms[offset].filledSlots) {
+        if (offset && this.charms[offset].filledSlots) {
           filledCharmOffsets.push(offset)
         }
         else {

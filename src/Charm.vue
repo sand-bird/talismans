@@ -65,6 +65,8 @@
     
   </div>
   
+  <a class="active-charm-button" v-on:click="setActive">᳃</a>
+  
   <div v-if="charm.data">{{ offset }}<br>{{ charm.data }}<br>{{ charm.type }}</div>
 </li> 
 </transition>
@@ -101,6 +103,11 @@ export default {
     this.getMinRarity()
     this.getAvailableSkills()
     this.getSkillLevels()
+  },
+  
+  updated () {
+  
+    console.log("updated charm " + this.offset)
   },
   
   computed: {
@@ -290,6 +297,10 @@ export default {
       this.$emit('remove', this.offset)
     },
     
+    setActive (event) {
+      this.$emit('active', this.offset)
+    },
+    
     blur (e) {
       e.target.blur()
     }
@@ -349,6 +360,15 @@ html, * {
   background-color: #fcfcfc;
 }
 
+.active-charm .charm {
+  border-color: #54de9b !important;
+  box-shadow: 0 0 3px #54de9b;
+}
+
+.active-charm .charm div {
+  border-color: #bff3da !important;
+}
+
 .charm div, .charms-header div {
   display: inline-block;
   float: left;
@@ -403,6 +423,15 @@ html, * {
 .remove {
   position: absolute;
   left: -30px;
+  font-size: 24px;
+  line-height: 50px;
+  top: 2px;
+  cursor: pointer;
+}
+
+.active-charm-button {
+  position: absolute;
+  right: -25px;
   font-size: 24px;
   line-height: 50px;
   top: 2px;
