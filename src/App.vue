@@ -228,11 +228,11 @@ export default {
       }
       else newCharm = {
         offset: newOffset,
-        rarity: 1,
-        slots: 0,
-        type: 325,
-        skills: [1, 0],
-        skillvalues: [1, 0],
+        rarity: 7,
+        slots: 3,
+        type: 327,
+        skills: [36, 18],
+        skillvalues: [5, 10],
         decorations: [0, 0, 0]
       }
       this.charms[newOffset] = newCharm

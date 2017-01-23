@@ -26,7 +26,7 @@
     
     <div class="skill1">
       <select v-model="charm.skills[0]"
-              v-on:change="blur($event); validateSkillValues(0)">
+              v-on:change="blur($event); handleSkillChange(0)">
         <option v-for="skillId in charm.availableSkills[0]" 
                 v-if="skillId != charm.skills[1]"
                 :value="skillId">
@@ -45,7 +45,7 @@
     
     <div class="skill2">
       <select v-model="charm.skills[1]"
-              v-on:change="blur($event); validateSkillValues(1)">
+              v-on:change="blur($event); handleSkillChange(1)">
         <option v-for="skillId in charm.availableSkills[1]" 
                 v-if="skillId != charm.skills[0]"
                 :value="skillId">
@@ -201,7 +201,7 @@ export default {
               console.log("current skill not found! setting new skill...")
               
               this.charm.skills[slot] = this.charm.availableSkills[slot][0]
-              this.validateSkillValues(slot)
+              this.handleSkillChange(slot)
               
               console.log(this.charm.skills)
               console.log(this.charm.skillvalues)
@@ -258,13 +258,20 @@ export default {
       else return [0]
     },
     
-    validateSkillValues (slot) {
-      console.log("validating skill values for charm " + this.offset)
+    handleSkillChange (slot) {
+      console.log("skill " + (slot+1) + " changed for charm " + this.offset + ", validating skill values")
       
       this.charm.skillLevels[slot] = this.doGetSkillLevels(slot)
       
       console.log(this.charm.skillLevels[slot])
       
+      /* if-else chain to decide what to do with the skillvalue
+         when the skill is changed. since we are now forcing it
+         to the max available level by default, a couple of these
+         cases are obsolete, but i'll leave them in just in ~case~  */
+      
+      // because we want to show the largest numbers on top in the 
+      // select dropdown, the skillLevels array goes from max to min
       let minLevel = this.charm.skillLevels[slot].slice(-1)[0]
       let maxLevel = this.charm.skillLevels[slot][0]
       
@@ -273,12 +280,19 @@ export default {
         console.log("found 0 skill in slot " + slot + " of charm " + this.offset)
         this.charm.skillvalues[slot] = 0
       }
-      // force skillvalue to skillLevels.last 
-      // when current skillvalue exceeds skillLevels for newSkill
+      // for negative skillvalues in excess of new skillLevels,
+      // force skillvalue to minLevel
+      // (should only happen in 2nd slot)
+      else if (this.charm.skillvalues[slot] < minLevel) {
+        this.charm.skillvalues[slot] = minLevel
+      }
+      // when current skillvalue exceeds skillLevels for newSkill,
+      // force skillvalue to maxLevel
       else if (this.charm.skillvalues[slot] > maxLevel) {
         this.charm.skillvalues[slot] = maxLevel
       }
-      // force skillvalue to max when allocating a new skill
+      // when allocating a new skill,
+      // force skillvalue to maxLevel
       // (because of the if-else chain we already know that
       // the skill for this slot is nonzero)
       // (should also only happen in 2nd slot)
@@ -286,12 +300,8 @@ export default {
         console.log("new skill, forcing to max")
         this.charm.skillvalues[slot] = maxLevel
       }
-      // force skillvalue to skillLevels.first 
-      // for negative skillvalues in excess of new skillLevels
-      // (should only happen in 2nd slot)
-      else if (this.charm.skillvalues[slot] < minLevel) {
-        this.charm.skillvalues[slot] = minLevel
-      }
+      // force skillvalue to maxLevel by default
+      else this.charm.skillvalues[slot] = maxLevel
     },
     
     removeCharm (event) {
