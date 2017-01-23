@@ -1,4 +1,4 @@
-export const DEBUG = true
+export const DEBUG = false
 
 const FIRST_CHAR_SLOT_USED = 0x04
 const CHAR_SLOT_USED_SIZE = 1
