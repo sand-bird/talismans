@@ -221,8 +221,9 @@ export default {
         rarity: this.charms[this.activeCharm].rarity,
         slots: this.charms[this.activeCharm].slots,
         type: this.charms[this.activeCharm].type,
-        skills: this.charms[this.activeCharm].skills,
-        skillvalues: this.charms[this.activeCharm].skillvalues,
+        // why does js default to passing arrays by reference this is dumb
+        skills: this.charms[this.activeCharm].skills.slice(),
+        skillvalues: this.charms[this.activeCharm].skillvalues.slice(),
         decorations: [0, 0, 0]
       }
       else newCharm = {
@@ -533,7 +534,7 @@ a:hover {
 
 #footer {
   position: relative;
-  margin: 40px auto;
+  margin: 100px auto 40px;
 }
 
 </style>

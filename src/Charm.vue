@@ -67,7 +67,7 @@
   
   <a class="active-charm-button" v-on:click="setActive">᳃</a>
   
-  <div v-if="charm.data">{{ offset }}<br>{{ charm.data }}<br>{{ charm.type }}</div>
+  <div v-if="debug">{{ offset }}<br>{{ charm.data || "new charm" }}</div>
 </li> 
 </transition>
 </template>
@@ -75,6 +75,7 @@
 <script>
 import skills from 'json-loader!./skills.json'
 import decorations from 'json-loader!./decorations.json'
+import { DEBUG } from './utils'
 
 export default {
   name: 'charm',
@@ -94,7 +95,8 @@ export default {
         "325": { name: "mystery", slots: 1 },
         "326": { name: "shining", slots: 2 },
         "327": { name: "timeworn", slots: 3 }
-      }
+      },
+      debug: DEBUG
     }
   },
   
@@ -115,7 +117,6 @@ export default {
     canIncreaseSlots () {
       return (this.charm.slots < this.types[this.charm.type.toString()].slots)
     },
-    
     canDecreaseSlots () {
       return (this.charm.slots > this.charm.filledSlots)
     }

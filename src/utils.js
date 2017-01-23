@@ -1,3 +1,5 @@
+export const DEBUG = true
+
 const FIRST_CHAR_SLOT_USED = 0x04
 const CHAR_SLOT_USED_SIZE = 1
 
@@ -79,9 +81,10 @@ export const loadCharms = (data, slot) => {
         data.readUInt16LE(offset + DECORATION3_OFFSET)
       ]
       
-      // for debugging:
-      // charm.data = Buffer.alloc(36)
-      // data.copy(charm.data, 0, offset)
+      if (DEBUG) {
+        charm.data = Buffer.alloc(36)
+        data.copy(charm.data, 0, offset)
+      }
       
       charms[offset] = charm
     }
