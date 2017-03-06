@@ -1,0 +1,13 @@
+charm needs to know:
+
+- all rarity names and values
+- can increase or decrease slots
+- available skills for TYPE and SLOT
+- available skill values for SKILL
+
+- charm props:
+  - filled slots
+  - slots
+  - rarity
+  - skills
+  - skillvalues
