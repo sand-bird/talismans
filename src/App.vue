@@ -4,55 +4,72 @@
       <h3 slot="header">Decoration Warning</h3>
       <div slot="body">This action will delete a talisman with decorations. Decorations will be lost.</div>
       <div slot="footer">
-        <button class="button" @click="showModal = false; doRemoveCharm(charmToRemove)">OK</button>
+        <button class="button" @click="showModal = false; removeCharm(charmToRemove)">OK</button>
         <button class="button" @click="showModal = false; charmToRemove = null">Cancel</button> 
       </div>
     </modal>
     
-    <div class="header" :class="{ loaded: file && charms }" 
+    <div class="header" :class="{ loaded: renderFinished }"
          v-on:scroll="alert('abcd')" >
-      <h1>{{ title }}</h1>
-      <div class="download button" v-on:click="download" v-show="file">Save Changes</div>
+      <div class="outer"><h1>☆'s MHGen Talisman Editor</h1></div>
+      <transition name="download">
+        <div class="download button" v-on:click="download" v-if="renderFinished">Save Changes</div>
+      </transition>
     </div>
     
-    <div id="upload-holder" v-show="!file">
+    <div id="upload-holder" v-show="renderDelay">
+      <div class="font-test"></div>
       Please select your extdata file: 
       <input id="upload" type="file" v-on:change='init' v-show="!loading" />
-      <div id="loading" v-show='loading'>Loading...</div>
+      <div id="loading" v-show="loading">Loading...</div>
     </div>
     
-    <ul id="files" v-show="file">
-      <li v-for="(name, index) in names" v-on:click="setActive(index)"
-          :class="[{ active: active == index}, 
-                   { disabled : !name }]"
-      >
-        <span>File {{ index + 1 }}:</span>
-        <h3 :class="'name'">{{ name || "(none)" }}</h3>
-      </li>
-    </ul>
-    
-    <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Charms</div>
-    <div class="button disabled" v-on:click='' v-show="file && charms">Export Charms</div>
-    <div class="button disabled" v-on:click='' v-show="file">Import Charms</div>
-    
-    <ul id="charms" v-show="file">
+    <transition name="app-transition" v-on:after-enter="setRenderFinished">
+    <div v-if="!renderDelay">
+      <ul id="files">
+        <li v-for="(save, index) in saves" v-on:click="setActive(index)"
+            :class="[{ active: $store.state.active == index}, 
+                     { disabled : !save }]"
+        >
+          <span>File {{ index + 1 }}:</span>
+          <h3 :class="'name'">{{ save || "(none)" }}</h3>
+        </li>
+      </ul>
       
-      <li class="charms-header">
-        <div v-for="column in columns" :class="column.id" v-on:click="sortCharms(column.id)">
-          {{ column.name }}
-        </div>
-      </li>
       
-      <charm v-for="offset in charmOffsets"
-             :charm="charms[offset]" :offset="offset" 
-             :availableSkillsList="availableSkills" 
-             v-on:remove="removeCharm"
-      />
+      <div class="button" v-on:click='clearCharms' v-show="charms">Clear Talismans</div>
+      <div class="button" v-on:click='save' v-show="charms">Save</div>
+      <!--
+      <div class="button disabled" v-on:click='' v-show="file && charms">Export Charms</div>
+      <div class="button disabled" v-on:click='' v-show="file">Import Charms</div>
+      -->
+      
+      <ul id="charms">
+        
+        <li class="charms-header">
+          <div v-for="column in columns" 
+               :class="[column.id, 
+                   {'sort-down': column.id == lastSortKey && sortOrder == 1 },
+                   {'sort-up': column.id == lastSortKey && sortOrder == -1 }]" 
+               v-on:click="sortCharms(column.id)">
+            {{ column.name }}
+          </div>
+        </li>
+        
+        <charm v-for="offset in charmOffsets" :offset="offset" :key="offset"
+               :class="{'active-charm': (activeCharm && activeCharm == offset)}"
+               v-if="offset"
+               v-on:remove="tryRemoveCharm"
+               v-on:active="setActiveCharm"
+        />
+      
+        <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
+          <span class="add">➕</span> Add Talisman
+        </li>
+      </ul>
+    </div>
+    </transition>
     
-      <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
-        <span class="add">➕</span> Add Charm
-      </li>
-    </ul>
     
     <div id="footer">
       © 2017 <a href="http://github.com/sand-bird">sand bird</a>
@@ -61,185 +78,248 @@
 </template>
 
 <script>
-import { loadFiles, loadCharms, saveCharms } from './utils'
+import { loadSaves, loadOffsets, loadCharms, saveCharms, getRawCharm } from './utils'
 import charm from './Charm.vue'
 import modal from './Modal.vue'
-import skills from 'json-loader!./skills.json'
 import fileSaver from 'file-saver'
 
 export default {
   name: 'app',
   data () {
     return {
-      loading: false,
+      /* render control flags */
+      
       showModal: false,
+      // controls display of "loading..." animation
+      loading: false,
+      // ensures nothing is rendered until charms are
+      // loaded in the store
+      renderDelay: true,
+      // when the charms are done rendering we animate
+      // the header (otherwise it's choppy)
+      renderFinished: false,
+      
+      /* saved offsets */
+ 
+      // offset of charm in "clipboard"
+      activeCharm: null,
+      // used by the delete warning modal
       charmToRemove: null,
-      title: '☆\'s MHGen Talisman Editor',
-      file: null,
-      names: [],
-      active: null,
-      charms: {},
-      charmOffsets: [],
-      emptyOffsets: [],
+      
+      /* sorting state info */
+ 
+      // if same as next sortKey, flip sort order
       lastSortKey: null,
       sortOrder: 1,
+      
+      /* display strings */
+      
+      saves: [],
       columns: [
         { name: 'Rarity', id: 'rarity' },
         { name: 'Slots', id: 'slots' },
         { name: 'Skill 1', id: 'skill1' },
         { name: 'Skill 2', id: 'skill2' }
-      ],
-      charm: charm,
-      /* available skills are pushed to this 2d array.
-         for 2nd slot skills, we start with id 0 available,
-         as that represents no skill. the 1st slot must
-         have a skill, so id 0 is NOT an option.
-         (this doesn't have to be computed every time --
-         i am just too lazy to make another json file)  */
-      availableSkills: {
-        mystery: [[],[0]],
-        shining: [[],[0]],
-        timeworn: [[],[0]]
-      }
+      ]
     }
   },
   components: {
     charm, modal
   },
+  computed: {
+    // store sets this when it's done initializing
+    loaded () { return this.$store.state.loaded },
+    
+    // used by "clear charms" button
+    charms () { return this.charmOffsets && this.charmOffsets.length  },
+    
+    charmOffsets () { 
+      return this.$store.state.charmOffsets[this.$store.state.active]
+    },
+    emptyOffsets () { return this.$store.getters.emptyOffsets }
+  },
+  
+  watch: {
+    loaded (val) {
+      if (val && this.renderDelay) {
+        setTimeout(() => {
+          this.renderDelay = false
+          console.log("ready to render")
+        }, 0)
+      }
+    }
+  },
+  
   methods: {
   
+    setRenderFinished () {
+      setTimeout(() => {
+        console.log("render finished")
+        this.renderFinished = true
+      }, 0)
+    },
+  
     init (event) {
-      this.loading = true
     
       if (event.target.files[0].size != 4000815) {
-        alert("Wrong file size!")
+        alert("Error: wrong file size!")
         event.target.value = null
         return
       }
+
+      console.log("loading: true")
+      this.loading = true
       
       let file = event.target.files[0]
 
       let reader = new FileReader()
-      let vm = this
       
-      reader.onload = (e) => {
-        vm.file = Buffer.from(e.target.result)
-        vm.names = loadFiles(vm.file)
+      reader.onload = function (e) {
+        let file = Buffer.from(e.target.result)
+        
+        console.log("file: true")
+        this.file = true
+        
+        console.log(this)
+        
+        this.saves = loadSaves(file)
         // finds first occupied file and inits it to active
-        let a = vm.names.findIndex((n) => { return n != null })
+        let a = this.saves.findIndex((n) => { return n != null })
         if (a == -1) {
           // no saves on file - edge case but still
           alert("Error: no saves on file!")
           event.target.value = null
-          vm.file = null
+          this.file = false
           this.loading = false
           return
         }
-        vm.active = a
 
-        vm.charms = loadCharms(vm.file, a)
-        vm.charmOffsets = Object.keys(vm.charms).filter(key => vm.charms[key] !== null)
+        this.$store.dispatch('init', {
+          charms: loadCharms(file),
+          offsets: loadOffsets(file),
+          active: a
+        })
         
-        let empty = Object.keys(vm.charms).filter(key => vm.charms[key] === null)
-        vm.emptyOffsets = empty.reverse()
-        
-        this.initAvailableSkills()
-        this.loading = false
-      }
+        this.$store.dispatch('loadFile', file)
+
+      }.bind(this)
       
       reader.readAsArrayBuffer(file)
     },
     
     setActive (index) {
-      if (this.names[index] && this.active != index) {
-        saveCharms(this.data, this.active, this.charms)
-        this.active = index
-        this.charms = loadCharms(this.file, index)
+      if (this.saves[index] && this.$store.state.active != index) {
+        this.$store.commit('SET_ACTIVE', index)
       }
     },
     
     download (event) {
-      saveCharms(this.file, this.active, this.charms)
+      this.$store.commit('SAVE_CHARMS')
       var binaryData = []
-      binaryData.push(this.file)
+      binaryData.push(this.$store.state.file)
       fileSaver.saveAs(new Blob(binaryData, {type: "application/octet-stream"}), 'system', false)
     },
     
-    initAvailableSkills () {
-
-      ["mystery", "shining", "timeworn"].forEach((source) => {
-        for (let i = 1; i < skills.length; i++) {
-          if (skills[i][source]) {
-            for (let slot = 0; slot < 2; slot++) {
-              if (skills[i][source][slot]) {
-                this.availableSkills[source][slot].push(skills[i].id)
-              }
-            }
-          }
-        }
-      })
-      console.log("initialized skills")
+    save () {
+      let deletedCharms = []
+      for (let i = 0; i < 5; i++) {
+        let index = Math.floor(Math.random() * (this.charmOffsets.length))
+        let charm = this.charmOffsets[index]
+        deletedCharms.push(charm)
+        this.removeCharm(charm)
+      }
+      console.log(deletedCharms)
+      
+      for (let i = 0; i < 5; i++) {
+        console.log(getRawCharm(this.$store.state.file, deletedCharms[i]))
+      }
+      
+      this.$store.commit('SAVE_CHARMS')
+      
+      for (let i = 0; i < 5; i++) {
+        console.log(getRawCharm(this.$store.state.file, deletedCharms[i]))
+      }
     },
     
     /* pops up the decoration warning modal if the charm to be
        removed has decorations equipped, then stores the offset
        so the modal button can access it. clunky, but works
     */
-    removeCharm (offset) {
-      if (this.charms[offset].filledSlots) {
+    tryRemoveCharm (offset) {
+      if (this.$store.state.charms[offset].filledSlots) {
         this.showModal = true
         this.charmToRemove = offset
       }
-      else this.doRemoveCharm(offset)
+      else this.removeCharm(offset)
     },
     
-    doRemoveCharm (offset) {
+    removeCharm (offset) {
+      this.charmOffsets.splice(this.charmOffsets.indexOf(offset), 1)
       console.log("removed " + offset)
-      this.charms[offset] = null
+      this.$store.dispatch('remove', offset)
       this.emptyOffsets.push(offset)
-      this.charmOffsets[this.charmOffsets.indexOf(offset)] = null
+    },
+    
+    setActiveCharm (offset) {
+      if (this.activeCharm && this.activeCharm == offset) this.activeCharm = null
+      else this.activeCharm = offset
     },
     
     // new charms will be placed at the last available place
     // in the equipment box, then in slots created by deleting
     // charms as a last resort
     newCharm () {
-      let newOffset = this.emptyOffsets.shift()
-      this.charms[newOffset] = {
+      let newOffset = this.emptyOffsets.pop()
+      let newCharm = {}
+      let sourceCharm = this.$store.state.charms[this.activeCharm] || null
+      if (this.activeCharm && sourceCharm) newCharm = { 
         offset: newOffset,
-        rarity: 1,
-        slots: 0,
-        type: 325,
-        skills: [1, 0],
-        skillvalues: [1, 0],
-        decorations: [0, 0, 0]
+        rarity: sourceCharm.rarity,
+        slots: sourceCharm.slots,
+        type: sourceCharm.type,
+        // why does js default to passing arrays by reference this is dumb
+        skills: sourceCharm.skills.slice(),
+        skillValues: sourceCharm.skillValues.slice(),
+        decorations: [0, 0, 0],
+        minRarity: 1,
+        filledSlots: 0
       }
-      this.charmOffsets.push(newOffset)
+      else newCharm = {
+        offset: newOffset,
+        rarity: 7,
+        slots: 3,
+        type: 327,
+        skills: [36, 18],
+        skillValues: [5, 10],
+        decorations: [0, 0, 0],
+        minRarity: 1,
+        filledSlots: 0
+      }
+      this.$store.dispatch('add', {offset: newOffset, charm: newCharm})
     },
     
     clearCharms () {
+      let offsetsToRemove = []
       let filledCharmOffsets = []
       this.charmOffsets.forEach((offset) => {
-        if (this.charms[offset].filledSlots) {
+        if (this.$store.state.charms[offset].filledSlots)
           filledCharmOffsets.push(offset)
-        }
-        else {
-          this.charms[offset] = null
-          this.emptyOffsets.push(offset)
-        }
+        else
+          offsetsToRemove.push(offset)
       })
-      console.log(filledCharmOffsets)
+      this.$store.dispatch('remove', offsetsToRemove)
       this.charmOffsets = filledCharmOffsets
     },
     
     sortCharms (sortKey) {
+    
       if (this.lastSortKey == sortKey) this.sortOrder *= -1
       else this.sortOrder = 1
       this.lastSortKey = sortKey
       
       let offsets = []
       for (let i = 0; i < this.charmOffsets.length; i++) {
-        if (this.charms[this.charmOffsets[i]]) offsets.push(this.charmOffsets[i])
+        if (this.$store.state.charms[this.charmOffsets[i]]) offsets.push(this.charmOffsets[i])
       }
       
       let sortFn = () => { return 1 }
@@ -247,15 +327,15 @@ export default {
       if (sortKey == 'skill1' || sortKey == 'skill2') {
         let index = parseInt(sortKey.slice(-1)) - 1
         sortFn = (a, b) => {
-          let charmA = this.charms[a]
-          let charmB = this.charms[b]
+          let charmA = this.$store.state.charms[a]
+          let charmB = this.$store.state.charms[b]
           if (charmA.skills[index] == charmB.skills[index]) {
-            if (charmA.skillvalues[index] == charmB.skillvalues[index]) {
+            if (charmA.skillValues[index] == charmB.skillValues[index]) {
               if (charmA.skills[1 - index] == charmB.skills[1 - index]) {
-                if (charmA.skillvalues[1 - index] == charmB.skillvalues[1 - index]) {
+                if (charmA.skillValues[1 - index] == charmB.skillValues[1 - index]) {
                   return 0
                 }
-                else if (charmA.skillvalues[1 - index] > charmB.skillvalues[1 - index]) {
+                else if (charmA.skillValues[1 - index] > charmB.skillValues[1 - index]) {
                   return 1 * this.sortOrder
                 } else return -1 * this.sortOrder
               }
@@ -263,7 +343,7 @@ export default {
                 return 1 * this.sortOrder
               } else return -1 * this.sortOrder          
             }
-            else if (charmA.skillvalues[index] > charmB.skillvalues[index]) {
+            else if (charmA.skillValues[index] > charmB.skillValues[index]) {
               return 1 * this.sortOrder
             } else return -1 * this.sortOrder
           }
@@ -275,13 +355,16 @@ export default {
       
       else {
         sortFn = (a, b) => {
-          a = this.charms[a][sortKey]
-          b = this.charms[b][sortKey]
+          a = this.$store.state.charms[a][sortKey]
+          b = this.$store.state.charms[b][sortKey]
           return (a == b ? 0 : a > b ? 1 : -1) * this.sortOrder
         }
       }
       
       offsets = offsets.sort(sortFn)
+      //this.charmOffsets = []
+      
+      
       this.charmOffsets = offsets
     }
   }
@@ -289,12 +372,41 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'icons';
+  src: url('icons.ttf?67942823') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-test:before {
+  content: '\e800 \e801 \e802 \e803 \e804 \e805 \e806 \f02e \f0c5 \f10c \f192';
+  display: none;
+  font-family: 'icons';
+}
+
+.icon-ok-circled2:before { content: '\e800'; } /* '' */
+.icon-ok-circled:before { content: '\e801'; } /* '' */
+.icon-doc:before { content: '\e802'; } /* '' */
+.icon-doc-inv:before { content: '\e803'; } /* '' */
+.icon-attach:before { content: '\e804'; } /* '' */
+.icon-clipboard:before { content: '\e805'; } /* '' */
+.icon-attach-1:before { content: '\e806'; } /* '' */
+.icon-download:before { content: '\f02e'; } /* '' */
+.icon-docs:before { content: '\f0c5'; } /* '' */
+.icon-circle-empty:before { content: '\f10c'; } /* '' */
+.icon-dot-circled:before { content: '\f192'; } /* '' */
+
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+body {
+  overflow-y: scroll;
 }
 
 *, *:before, *:after {
@@ -309,39 +421,91 @@ html {
   color: #2c3e50;
 }
 
+.app-transition-enter {
+  opacity: 0;
+}
+
+.app-transition-enter-active {
+  transition: opacity 0.5s ease;
+  transition-delay: 0s;
+}
+
 h1, h2 {
   font-weight: normal;
   margin: 20px 0;
 }
 
 .header {
-  margin: 70px auto 40px;
+  margin: 50px auto 40px;
   padding: 0 0 5px;
   border-bottom: 1px solid #ccc;
   width: 680px;
   position: relative;
+  overflow: hidden;
 }
 
-.header.loaded h1 {
-  text-align: left;
+.header .outer {
+  border: 0px dashed #0FF;
+  float: left;
+  width: 100%;
+  transform: translate3d(50%, 0, 0);
+  position: relative;
+  will-change: transform;
+}
+
+.header h1 {
+  border: 0px solid #F0F;
+  float: left;
+  transform: translate3d(-50%, 0, 0);
+  position: relative;
+  will-change: transform;
+}
+
+.header.loaded .outer, .header.loaded h1 {
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.75s ease;
+  will-change: transform;
+}
+
+.download-enter {
+  opacity: 0;
+  -webkit-transform: scale(0.95);
+  transform: scale(0.95);
+}
+
+.download:before {
+  content: '\f02e';
+  font-family: 'icons';
+  margin-right: 0.75em;
+  font-weight: 100;
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.download-enter-active {
+  transition: all 1s ease;
+  transition-delay: 0s;
 }
 
 .button.download {
-  padding: 10px 50px;
+  padding: 10px 40px;
   line-height: 20px;
   position: absolute;
   right: 0;
   bottom: 20px;
-  border-color: #42b983;
-  color: #25c178;
-  box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
+  background-color: #fefefe;
+  border-color: #25c178;
+  color: #25c178; /* 17a563; */
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
+  transition: all 0.25s;
 }
 
 .button.download:hover {
-  background-color: #fff;
   border-color: #1c975b;
   color: #146c41;
-  box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #ddd, 0 1px 2px #eaeaea;
+  background-color: #b8f5d8;
+  box-shadow: inset 1px 1px 0 #e9fffa, inset -1px -1px 0 #94ebc2, 0 1px 2px #eee;
+  transition: all 0.25s;
 }
 
 
