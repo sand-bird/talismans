@@ -131,35 +131,37 @@ export const loadSaves = (file) => {
    change it to run once on init and store all offsets for all 
    saves in one 2d array (speed at the cost of memory)  */
 export const loadOffsets = (file) => {
-  let offsets = [null, null, null]
+  
+  let emptyOffsets = {}
+  let charmOffsets = {}
+  
   for (let slot = 0; slot < 3; slot++) {
   
     // skips this iteration if slot is empty (!0 == true)
     if (!checkSave(file, slot)) continue
     
+    let emptyOffsForSlot = []
+    let charmOffsForSlot = []
     let equipOffset = getOffset(file, slot, EQUIPMENT_BOX_OFFSET)
-    let emptyOffsets = []
-    let charmOffsets = []
-    let data = {}
+
     for (let i = 0; i < EQUIPMENT_BOX_SLOTS; i++) {
       let offset = equipOffset + (EQUIPMENT_BOX_SLOT_SIZE * i)
       let equipType = file.readUInt8(offset)
+      
       if (equipType == 6) {
         // found a charm
-        charmOffsets.push(offset)
+        charmOffsForSlot.push(offset)
       }
       else if (equipType == 0) {
         // found empty space - save offset so we can add charms
-        emptyOffsets.push(offset)
+        emptyOffsForSlot.push(offset)
       }
     }
-    data.emptyOffsets = emptyOffsets
-    data.charmOffsets = charmOffsets
-    
-    offsets[slot] = data
+    emptyOffsets[slot] = emptyOffsForSlot
+    charmOffsets[slot] = charmOffsForSlot    
   }
   
-  return offsets
+  return { emptyOffsets: emptyOffsets, charmOffsets: charmOffsets }
 }
 
 /* gathers every charm on every save and returns 
