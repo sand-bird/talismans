@@ -92,8 +92,8 @@ export default {
       showModal: false,
       // controls display of "loading..." animation
       loading: false,
-      // ensures nothing is rendered until charms are
-      // loaded in the store
+      // ensures nothing is rendered until charms 
+      // are loaded in the store
       renderDelay: true,
       // when the charms are done rendering we animate
       // the header (otherwise it's choppy)
@@ -108,9 +108,19 @@ export default {
       
       /* sorting state info */
  
+      sortOrder: 1,
       // if same as next sortKey, flip sort order
       lastSortKey: null,
-      sortOrder: 1,
+
+      /* offset info (todo: move back into state??) */
+      
+      // these are OBJECTS with keys 0, 1, 2 corresponding 
+      // to save slot ids where those offsets can be found.
+      // they can't be arrays because of spooky vue action
+      // when watched arrays are updated/accessed by index.
+      allCharmOffsets: {},
+      allEmptyOffsets: {},
+      active: null,
       
       /* display strings */
       
@@ -127,16 +137,21 @@ export default {
     charm, modal
   },
   computed: {
-    // store sets this when it's done initializing
+    // flag that store sets when it's done initializing
     loaded () { return this.$store.state.loaded },
     
-    // used by "clear charms" button
-    charms () { return this.charmOffsets && this.charmOffsets.length  },
+    // flag used by "clear charms" button
+    charms () { return this.charmOffsets && this.charmOffsets.length },
     
     charmOffsets () { 
-      return this.$store.state.charmOffsets[this.$store.state.active]
+      console.log("charmOffsets")
+      return this.allCharmOffsets[this.active]
     },
-    emptyOffsets () { return this.$store.getters.emptyOffsets }
+    
+    emptyOffsets () { 
+      console.log("charmOffsets")
+      return this.allEmptyOffsets[this.active]
+    }
   },
   
   watch: {
@@ -193,11 +208,16 @@ export default {
           this.loading = false
           return
         }
+        
+        this.active = a
+        let offsets = loadOffsets(file)
+        this.allCharmOffsets = offsets.charmOffsets
+        this.allEmptyOffsets = offsets.emptyOffsets
 
         this.$store.dispatch('init', {
-          charms: loadCharms(file),
-          offsets: loadOffsets(file),
-          active: a
+          charms: loadCharms(file) //,
+          //offsets: loadOffsets(file),
+          //active: a
         })
         
         this.$store.dispatch('loadFile', file)
@@ -208,8 +228,9 @@ export default {
     },
     
     setActive (index) {
-      if (this.saves[index] && this.$store.state.active != index) {
-        this.$store.commit('SET_ACTIVE', index)
+      if (this.saves[index] && this.active != index) {
+        this.active = index
+        this.activeCharm = null
       }
     },
     
@@ -295,7 +316,9 @@ export default {
         minRarity: 1,
         filledSlots: 0
       }
-      this.$store.dispatch('add', {offset: newOffset, charm: newCharm})
+      this.$store.dispatch('add', {offset: newOffset, charm: newCharm}).then(() => {
+        this.charmOffsets.splice(this.charmOffsets.length, 0, newOffset)
+      })
     },
     
     clearCharms () {
@@ -306,9 +329,11 @@ export default {
           filledCharmOffsets.push(offset)
         else
           offsetsToRemove.push(offset)
+          this.emptyOffsets.push(offset)
       })
-      this.$store.dispatch('remove', offsetsToRemove)
-      this.charmOffsets = filledCharmOffsets
+      // this.$store.dispatch('remove', offsetsToRemove)
+      console.log(filledCharmOffsets) 
+      this.$set(this.allCharmOffsets, this.active, filledCharmOffsets)
     },
     
     sortCharms (sortKey) {

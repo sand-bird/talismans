@@ -8,11 +8,12 @@ export default new Vuex.Store({
   state: {
     file: null,
     charms: {},
-    charmOffsets: [null, null, null],
-    emptyOffsets: [null, null, null],
-    active: null,
+    //charmOffsets: [null, null, null],
+    //emptyOffsets: [null, null, null],
+    //active: null,
     loaded: false
   },
+  /*
   getters: {
     charmOffsets: (state) => {
       return state.charmOffsets[state.active]
@@ -21,6 +22,7 @@ export default new Vuex.Store({
       return state.emptyOffsets[state.active]
     }
   },
+  */
   mutations: {
     LOAD_FILE (state, file) {
       state.file = file
@@ -31,7 +33,7 @@ export default new Vuex.Store({
       console.log("state.loadedCharms: true")
       state.loaded = true
     },
-    
+    /*
     LOAD_OFFSETS (state, offsets) {
       for (let slot = 0; slot < 3; slot++) {
         if (offsets[slot]) {
@@ -41,10 +43,11 @@ export default new Vuex.Store({
       }
     },
     
+    
     SET_ACTIVE (state, a) {
       state.active = a
     },
-    
+    */
     EDIT_CHARM (state, data) {
       let charm = state.charms[data.offset]
       charm[data.key] = data.value
@@ -62,10 +65,12 @@ export default new Vuex.Store({
     
     ADD_CHARM (state, data) {
       state.charms[data.offset] = data.charm
+      /*
       state.charmOffsets[state.active].splice(
         state.charmOffsets[state.active].length,
-        null, data.offset
+        0, data.offset
       )
+      */
     },
     
     SAVE_CHARMS (state) {
@@ -76,8 +81,8 @@ export default new Vuex.Store({
     
     init ({ commit, state }, data) {
       commit('LOAD_CHARMS', data.charms)
-      commit('LOAD_OFFSETS', data.offsets)
-      commit('SET_ACTIVE', data.active)
+      //commit('LOAD_OFFSETS', data.offsets)
+      //commit('SET_ACTIVE', data.active)
     },
     
     loadFile ({ commit, state }, file) {
