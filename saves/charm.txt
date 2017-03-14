@@ -1,0 +1,1 @@
+{"offset":2106707,"rarity":7,"slots":3,"type":327,"skills":[36,21],"skillValues":[4,-8],"decorations":[1693,0,0],"filledSlots":3,"minRarity":1}

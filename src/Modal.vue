@@ -2,9 +2,9 @@
 
 <template>
   <transition name="modal">
-    <div class="modal-mask">
+    <div class="modal-mask" @click="close">
       <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container" @click.stop>
 
           <div class="modal-header">
             <slot name="header"></slot>
@@ -32,6 +32,10 @@ export default {
     }
   },
   methods: {
+    close () {
+      console.log("close modal")
+      this.$emit('close')
+    }
   }
 }
 </script>
@@ -57,7 +61,7 @@ export default {
 .modal-container {
   width: 400px;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 20px 20px;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .33);
@@ -66,16 +70,115 @@ export default {
 }
 
 .modal-header h3 {
-  margin-top: 0;
+  margin-top: 0.25em;
   color: #42b983;
 }
 
 .modal-body {
   margin: 20px 0;
+  padding: 0 10px;
+  max-height: calc(80vh - 125px);
+  overflow-y: auto;
+}
+
+.modal-body *:first-child:not(div):not(input) {
+  padding-top: 0;
+  margin-top: 0.5em;
 }
 
 .modal-default-button {
   float: right;
+}
+
+.about .modal-container {
+  width: 540px;
+}
+
+.faq .modal-container {
+  width: 680px;
+}
+
+.contact .modal-container {
+  width: 480px;
+}
+
+.import .modal-container {
+  width: 560px;
+}
+
+.import .upload, .import-text {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  height: 21px;
+}
+
+.modal a:hover {
+  cursor: pointer;
+}
+
+.modal p {
+  text-align: left;
+  margin: 1.15em 0;
+}
+
+.modal ul {
+  margin: 0.5em;
+  list-style-type: disc;
+}
+
+.modal ol {
+  margin: 0.5em;
+  padding: 0;
+  list-style-type: decimal;
+}
+
+.modal li {
+  display: list-item;
+  text-align: left;
+  padding-left: 0.25em;
+  margin: 0.25em 10px;
+}
+
+.about.modal li {
+  margin: 0.1em 10px;
+}
+
+.modal p, .modal li {
+  line-height: 1.25em;
+}
+
+.modal-body::-webkit-scrollbar {
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-track
+{
+	border-radius: 4px;
+	background-color: #eee;
+}
+
+.modal-body::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+.modal-body::-webkit-scrollbar-thumb
+{
+	border-radius: 4px;
+	background-color: #ccc;
+}
+
+.modal h4 {
+  text-align: left;
+  font-size: 1.05em;
+  padding-top: 0.5em;
+}
+
+.inline-mono {
+  font-family:monospace;
+  font-size:1.1em;
+  padding:0 0.2em;
 }
 
 /*

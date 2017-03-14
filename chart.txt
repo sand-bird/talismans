@@ -1,0 +1,21 @@
+check charms:
+
+rarity -> type -> maxSlots -> slots
+            |
+            ----> availableSkills -> skills -> skillLevels -> skillValues
+            
+            
+
+  filledSlots ---------------------------------> canIncreaseSlots 
+                                             |
+                                ,--> slots --+       
+  rarity        ,--> maxSlots --|            |
+    |           |               '---------------> canIncreaseSlots
+    |           |
+    '--> type --+----------------------,                        
+                |                      |
+                '--> availableSkills   |--> skillLevels
+                         |             |       |
+  minRarity              '--> skills --'       '--> skillValues
+                                 ^                      |
+                                 '----------------------'
