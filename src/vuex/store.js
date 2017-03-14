@@ -4,16 +4,24 @@ import { saveCharms } from '../utils'
 
 Vue.use(Vuex)
 
+const addTo = (arr, val) => {
+  arr.splice(arr.length, 0, val)
+}
+
+const removeFrom = (arr, val) => {
+  arr.splice(arr.indexOf(val), 1)
+}
+
 export default new Vuex.Store({
   state: {
     file: null,
     charms: {},
-    //charmOffsets: [null, null, null],
-    //emptyOffsets: [null, null, null],
-    //active: null,
+    charmOffsets: {},
+    emptyOffsets: {},
+    active: null,
     loaded: false
   },
-  /*
+  
   getters: {
     charmOffsets: (state) => {
       return state.charmOffsets[state.active]
@@ -22,7 +30,7 @@ export default new Vuex.Store({
       return state.emptyOffsets[state.active]
     }
   },
-  */
+  
   mutations: {
     LOAD_FILE (state, file) {
       state.file = file
@@ -33,21 +41,16 @@ export default new Vuex.Store({
       console.log("state.loadedCharms: true")
       state.loaded = true
     },
-    /*
-    LOAD_OFFSETS (state, offsets) {
-      for (let slot = 0; slot < 3; slot++) {
-        if (offsets[slot]) {
-          state.charmOffsets[slot] = offsets[slot].charmOffsets
-          state.emptyOffsets[slot] = offsets[slot].emptyOffsets
-        }
-      }
-    },
     
+    LOAD_OFFSETS (state, offsets) {
+      state.charmOffsets = offsets.charmOffsets
+      state.emptyOffsets = offsets.emptyOffsets
+    },
     
     SET_ACTIVE (state, a) {
       state.active = a
     },
-    */
+    
     EDIT_CHARM (state, data) {
       let charm = state.charms[data.offset]
       charm[data.key] = data.value
@@ -55,39 +58,44 @@ export default new Vuex.Store({
     
     // accepts an array of offsets or a single offset
     DELETE_CHARMS (state, off) {
-      if (Array.isArray(off))
-        for (let i = 0; i < off.length; i++) {
-          state.charms[off[i]] = null
-          
-        }
-      else state.charms[off] = null
+      if (!Array.isArray(off)) off = [off]      
+      for (let i = 0; i < off.length; i++) {
+        state.charms[off[i]] = null
+        removeFrom(state.charmOffsets[state.active], off[i])
+        addTo(state.emptyOffsets[state.active], off[i])
+      }
     },
     
-    ADD_CHARM (state, data) {
-      state.charms[data.offset] = data.charm
-      /*
-      state.charmOffsets[state.active].splice(
-        state.charmOffsets[state.active].length,
-        0, data.offset
-      )
-      */
+    // accepts an array of {offset, charm} objects or a single one
+    ADD_CHARMS (state, data) {
+      if (!Array.isArray(data)) data = [data]
+      for (let i = 0; i < data.length; i++) {
+        state.charms[data[i].offset] = data[i].charm
+        addTo(state.charmOffsets[state.active], data[i].offset)
+        removeFrom(state.emptyOffsets[state.active], data[i].offset)
+      }
     },
     
     SAVE_CHARMS (state) {
       saveCharms(state.file, state.charms)
+    },
+    
+    // used in sorting
+    UPDATE_CHARMOFFSETS (state, charmOffsets) {
+      state.charmOffsets[state.active] = charmOffsets
     }
   },
   actions: {
     
     init ({ commit, state }, data) {
       commit('LOAD_CHARMS', data.charms)
-      //commit('LOAD_OFFSETS', data.offsets)
-      //commit('SET_ACTIVE', data.active)
+      commit('LOAD_OFFSETS', data.offsets)
+      commit('SET_ACTIVE', data.active)
     },
     
-    loadFile ({ commit, state }, file) {
+    loadFile ({ commit, state }, data) {
     setTimeout(() => {
-        commit('LOAD_FILE', file)
+        commit('LOAD_FILE', data)
       }, 0)
     },
     
@@ -108,7 +116,7 @@ export default new Vuex.Store({
     add ({commit, state}, data) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          commit('ADD_CHARM', data)
+          commit('ADD_CHARMS', data)
           resolve()
         }, 0)
       })
@@ -116,6 +124,12 @@ export default new Vuex.Store({
     
     save ({ commit, state }, data) {
       commit('SAVE_CHARMS')
-    }
+    },
+    
+    setActive ({ commit, state }, data) {
+    setTimeout(() => {
+        commit('SET_ACTIVE', data)
+      }, 0)
+    },
   }
 })

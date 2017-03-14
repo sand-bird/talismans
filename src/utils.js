@@ -114,22 +114,22 @@ export const loadSaves = (file) => {
        we use readUInt8, which reads 1 byte  */
     if (checkSave(file, i)) {
       let nameOffset = getOffset(file, i, NAME_OFFSET)
-      saves[i] = file.toString('utf8', nameOffset, nameOffset + 32).replace(/\0/g, '')
-    }
+      saves[i] = file.toString('utf8', nameOffset, nameOffset + 32)
+                     .replace(/\0/g, '') // chrome now displays null
+    }                                    // characters as ugly boxes
     else saves[i] = null
   }
   return saves
 }
 
-/* takes a save slot id and returns a charmOffsets array (for
-   displaying charms in a sortable way & further decoupling
-   App.vue from the data) and an emptyOffsets array (for adding 
-   new charms). 
-   
-   currently executed each time the user changes the active
-   save slot and returns only that save's offsets. will probably 
-   change it to run once on init and store all offsets for all 
-   saves in one 2d array (speed at the cost of memory)  */
+/* takes a save slot id and returns arrays of charmOffsets 
+   (for displaying charms in a sortable way) and emptyOffsets 
+   (for adding new charms). 
+
+   these are contained in OBJECTS with keys 0, 1, 2 corresponding 
+   to save slot ids where those offsets can be found. they can't 
+   be arrays because of spooky vue action when watched arrays are 
+   updated/accessed by index.  */
 export const loadOffsets = (file) => {
   
   let emptyOffsets = {}
@@ -182,13 +182,13 @@ export const loadCharms = (file) => {
         let charm = {}
         
         if (DEBUG) {
-          charm.data = Buffer.alloc(36)
-          file.copy(charm.data, 0, offset)
+          charm.data = getRawCharm(file, offset)
         }
         
         /* properties from file */
         
-        charm.offset = offset
+        // unnecessary and would complicate import/export
+        // charm.offset = offset
         charm.rarity = file.readUInt8(offset + RARITY_OFFSET)
         charm.slots = file.readUInt8(offset + SLOTS_OFFSET)
         charm.type = file.readUInt16LE(offset + TYPE_OFFSET)
@@ -234,7 +234,7 @@ export const loadCharms = (file) => {
   return charms
 }
 
-
+/* writes the contents of the charms object into the given file */
 export const saveCharms = (file, charms) => {
   let offsets = Object.keys(charms)
   for (let i = 0; i < offsets.length; i++) {
@@ -259,6 +259,98 @@ export const saveCharms = (file, charms) => {
   }
 }
 
+export const sortFunction = (charms, sortKey, sortOrder) => {
+  let sortFn = () => { return 1 }
+  
+  if (sortKey == 'skill1' || sortKey == 'skill2') {
+    let index = parseInt(sortKey.slice(-1)) - 1
+    
+    sortFn = (a, b) => {
+
+      return compareCharms (charms[a], charms[b],
+         ['skills', index], 
+         ['skillValues', index], 
+         ['skills', 1 - index], 
+         ['skillValues', 1 - index]
+       ) * sortOrder
+       
+      /*                       
+      if (charmA.skills[index] > 
+          charmB.skills[index])
+        return 1 * this.sortOrder
+      
+      else if (charmA.skills[index] < 
+               charmB.skills[index])
+        return -1 * this.sortOrder
+      
+      else {
+        if (charmA.skillValues[index] > 
+            charmB.skillValues[index])
+          return 1 * this.sortOrder
+      
+        else if (charmA.skillValues[index] < 
+                 charmB.skillValues[index])
+          return -1 * this.sortOrder
+      
+        else {
+          if (charmA.skills[1 - index] > 
+              charmB.skills[1 - index]) 
+            return 1 * this.sortOrder
+      
+          else if (charmA.skills[1 - index] > 
+                   charmB.skills[1 - index])
+            return -1 * this.sortOrder
+      
+          else {
+            if (charmA.skillValues[1 - index] < 
+                charmB.skillValues[1 - index])
+              return 1 * this.sortOrder
+      
+            else if (charmA.skillValues[1 - index] > 
+                     charmB.skillValues[1 - index]) 
+              return -1 * this.sortOrder
+            
+            else return 0
+          }
+        }
+      }
+      */
+    }
+    
+  }
+  
+  else {
+    sortFn = (a, b) => {
+      a = charms[a][sortKey]
+      b = charms[b][sortKey]
+      return (a == b ? 0 : a > b ? 1 : -1) * this.sortOrder
+    }
+  }
+}
+
+/* */
+export const compareCharms = (charmA, charmB, ...keys) => {
+  if (keys.length) {
+    var valueA, valueB
+    if (Array.isArray(keys[0])) {
+      let key = keys[0][0]
+      let index = keys[0][1]
+      valueA = charmA[key][index]
+      valueB = charmB[key][index]
+    }
+    else {
+      let key = keys[0]
+      valueA = charmA[key]
+      valueB = charmB[key]
+    }
+    return (valueA < valueB ? 1 : valueA > valueB ? -1 : 
+            compareCharms(charmA, charmB, ...keys.slice(1)))
+  }
+  else return 0
+}
+
+/* used for debugging - fetches the charm's data in buffer 
+   format and returns it as a prettified string  */
 export const getRawCharm = (file, offset) => {
   let buf = Buffer.alloc(36)
   file.copy(buf, 0, offset)
