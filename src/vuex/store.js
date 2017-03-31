@@ -67,12 +67,12 @@ export default new Vuex.Store({
     },
     
     // accepts an array of {offset, charm} objects or a single one
-    ADD_CHARMS (state, data) {
-      if (!Array.isArray(data)) data = [data]
-      for (let i = 0; i < data.length; i++) {
-        state.charms[data[i].offset] = data[i].charm
-        addTo(state.charmOffsets[state.active], data[i].offset)
-        removeFrom(state.emptyOffsets[state.active], data[i].offset)
+    ADD_CHARMS (state, charms) {
+      if (!Array.isArray(charms)) charms = [charms]
+      for (let i = 0; i < charms.length; i++) {
+        let offset = state.emptyOffsets[state.active].pop()
+        state.charms[offset] = charms[i]
+        addTo(state.charmOffsets[state.active], offset)
       }
     },
     
@@ -114,12 +114,17 @@ export default new Vuex.Store({
     // needs to be synchronous because the render
     // relies on the add to be finished
     add ({commit, state}, data) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
+    //  return new Promise((resolve, reject) => {
+    //    setTimeout(() => {
           commit('ADD_CHARMS', data)
-          resolve()
-        }, 0)
-      })
+    //      resolve()
+    //    }, 0)
+    //  })
+    },
+    
+    replace ({commit, state}, ...data) {
+      commit('DELETE_CHARMS', data[0])
+      commit('ADD_CHARMS', data[1])
     },
     
     save ({ commit, state }, data) {

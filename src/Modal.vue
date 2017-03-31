@@ -81,13 +81,28 @@ export default {
   overflow-y: auto;
 }
 
-.modal-body *:first-child:not(div):not(input) {
+.modal-body div > *:first-child:not(input) {
   padding-top: 0;
   margin-top: 0.5em;
 }
 
+/*
+.modal-body div > *:last-child:not(input) {
+  padding-bottom: 0;
+  margin-bottom: 0.5em;
+}
+*/
+
 .modal-default-button {
   float: right;
+}
+
+.settings .modal-container {
+  width: 420px;
+}
+
+.settings .modal-body {
+  overflow-y: hidden;
 }
 
 .about .modal-container {

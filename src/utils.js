@@ -1,5 +1,5 @@
 // shows raw data for each charm if true
-export const DEBUG = true
+export const DEBUG = false
 
 /* -----------------------------------------------
                     O F F S E T S                
@@ -157,8 +157,8 @@ export const loadOffsets = (file) => {
         emptyOffsForSlot.push(offset)
       }
     }
-    emptyOffsets[slot] = emptyOffsForSlot
-    charmOffsets[slot] = charmOffsForSlot    
+    emptyOffsets[slot] = emptyOffsForSlot.reverse()
+    charmOffsets[slot] = charmOffsForSlot
   }
   
   return { emptyOffsets: emptyOffsets, charmOffsets: charmOffsets }
