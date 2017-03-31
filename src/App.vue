@@ -1,5 +1,62 @@
 <template>
   <div id="app">
+  
+    <modal v-if="showModal == 'settings'" class="settings modal" v-on:close="closeModal">
+      <h3 slot="header">Settings</h3>
+      <div slot="body">
+        <div class="options-item"
+             @mouseover="setDesc('skillSort')" @mouseout="setDesc(null)">
+          <div class="skill-sort label">Skill Sort:</div>
+        
+          <ul class="skill-sort options">
+            <li v-for="option, index in ['ID#', 'A-Z']">
+              <span @click="changeSetting('skillSort', index)" 
+                    :class="['button', {active: skillSort == index}]">
+              {{ option }}
+              </span>
+            </li>
+          </ul>         
+        </div>
+        
+        <div class="options-item" 
+             @mouseover="setDesc('decoWarn')" @mouseout="setDesc(null)">
+          <div class="deco-warn label">Decoration Warning:</div>       
+          <ul class="deco-warn options">
+            <li v-for="option, index in ['On', 'Off']">
+              <span @click="changeSetting('decoWarn', 1-index)"
+                    :class="['button', {active: decoWarn == 1-index}]">
+                {{ option }}
+              </span>
+            </li>
+          </ul>
+          
+        </div>
+        
+        <div class="options-item" 
+             @mouseover="setDesc('decoDelete')" @mouseout="setDesc(null)">
+          <div class="deco-delete label">Decoration Deletion:</div>          
+          <ul class="deco-delete options">
+            <li v-for="option, index in ['Auto', 'Manual']">
+              <span @click="changeSetting('decoDelete', 1-index)"
+                    :class="['button', {active: decoDelete == 1-index}]">
+                {{ option }}
+              </span>
+            </li>
+          </ul>       
+        </div>
+        
+        <transition name="settings-transition">
+          <p class="options-description" 
+             v-if="settingDescription"
+             v-html="settingDescription"  
+          />
+        </transition>
+        
+      </div>
+      <div slot="footer">
+        <button class="button" @click="closeModal">OK</button>
+      </div>
+    </modal>
     
     <modal v-if="showModal == 'contact'" class="contact modal" v-on:close="closeModal">
       <h3 slot="header">Contact</h3>
@@ -29,7 +86,7 @@
           <li>Copy talismans – select a talisman with the paperclip icon, then click “Add Talisman” to make a copy</li>
         </ul>
         </p>
-        <p>Please <a @click="contactModal">contact me</a> if you find any issues, and enjoy!</p>
+        <p>Please <a @click="modal('contact')">contact me</a> if you find any issues, and enjoy!</p>
       </div>
       <div slot="footer">
         <button class="button" @click="closeModal">OK</button>
@@ -74,9 +131,9 @@
         <p>That's the legality checking at work. Different rarities of talisman have different skills (and different levels of those skills) available – for example, a lot of skills, like Critical Up, Evade Distance, and Handicraft, can only be found on talismans that come from a Timeworn Charm (Queen, King, and Dragon rarites). So, if you have a Queen Talisman with Handicraft and you change its rarity to Pawn, the Handicraft skill will be reset to something else.</p>
         <p>Skill compatibility information used in <b>☆'s MHGen Talisman Editor</b> was collected from <a href="https://docs.google.com/spreadsheets/d/1N7lqzdSzNl1o_W8JiYyQz_cXDXJEE_Ur4myI4Uf0F7E/">this spreadsheet</a>. You can view the actual datafile used in the app <a href="https://github.com/sand-bird/talismans/blob/master/src/skills.json">here</a>.</p>
         <h4>You should add {feature}!</h4>
-        <p>Sure! <a @click="contactModal">Drop me a line.</a></p>
+        <p>Sure! <a @click="modal('contact')">Drop me a line.</a></p>
         <h4>I think I found a bug.</h4>
-        <p>Oops, sorry about that! Please <a @click="contactModal">contact me</a> – I'll do my best to fix it right away.</p>
+        <p>Oops, sorry about that! Please <a @click="modal('contact')">contact me</a> – I'll do my best to fix it right away.</p>
       </div>
       <div slot="footer">
         <button class="button" @click="closeModal">OK</button>
@@ -92,29 +149,23 @@
       </div>
     </modal>
     
-    <modal v-if="showModal == 'import'" class="import modal" :class="importModal" @close="closeModal">    
+    <modal v-if="showModal == 'import'" class="import modal" @close="closeModal">    
       <h3 slot="header">Import Talismans</h3>
       <div slot="body">
-        <div v-if="!importModal" class="import-text">
-          Upload a file to import, or paste text here.
+        <div class="import-description">
+          Choose a file to import, or paste text below.
         </div>
-        <div class="" v-if="importModal == 'file'" >
-          <input type="file" class="upload" v-on:change='checkImportFile' />
+        <div class="import-file" >
+          <input type="file" class="import-upload upload" v-on:change='checkImportFile' />
         </div>
         <transition name="textbox-transition">
-          <textarea class="textbox" v-if="importText" v-model="importText" />
+          <textarea class="import-textbox" v-model="importText" />
         </transition>
       </div>
       <div slot="footer">
-        <div v-if="!importModal">
-        <button class="button" @click="importModal = 'file'">File</button>
-        <button class="button" @click="importModal = 'paste'">Paste</button>
-        </div>
-        <div v-if="importModal">
-        <button class="button" @click="importCharms">Insert</button>
-        <button class="button" @click="closeModal">Overwrite</button>
+        <button class="button" @click="importCharms(false)">Insert</button>
+        <button class="button" @click="importCharms(true)">Overwrite</button>
         <button class="button" @click="closeModal">Cancel</button> 
-        </div>
       </div>
     </modal>
     
@@ -130,7 +181,7 @@
       <transition name="download-transition">
         <div class="dl-transition-holder" v-if="renderFinished">
           <div class="download button" v-on:click="download">Save Changes</div>
-          <div class="help button">?</div>
+          <a class="settings button" @click="modal('settings')"></a>
         </div>
       </transition>
     </div>
@@ -160,11 +211,11 @@
       </ul>
       
       
-      <div class="button" @click="clearCharms" v-show="charms">Clear Talismans</div>
-      <div class="button" @click="showModal = 'import'" v-show="file">Import</div>
-      <div class="button" @click="exportCharms" v-show="file && charms">Export</div>
+      <div class="button" @click="clearCharms()" v-show="charms">Clear Talismans</div>
+      <div class="button" @click="showModal = 'import'" v-show="file">Import Talismans</div>
+      <div class="button" @click="exportCharms" v-show="file && charms">Export Talismans</div>
       <!-- <div class="button" v-on:click='test' v-show="charms">Test</div> -->
-      <div class="button" @click="toggleSkillSort" v-show="charms">Skill Sort: <b class="sort-id">{{ skillSort }}</b></div>
+      <!-- <div class="button" @click="toggleSkillSort" v-show="charms">Skill Sort: <b class="sort-id">{{ skillSort }}</b></div> -->
       
       
       
@@ -215,6 +266,12 @@ import charm from './Charm.vue'
 import modal from './Modal.vue'
 import fileSaver from 'file-saver'
 
+const settingDescriptions = {
+  "skillSort": "<b>Skill Sort:</b> Determines the order skills are listed in the dropdown menu, and the order talismans are listed when sorted by skills.",
+  "decoWarn": "<b>Decoration Warning:</b> Whether to display a warning message when deleting talismans with decorations.",
+  "decoDelete": "<b>Decoration Deletion:</b> Whether to automatically delete talismans with decorations when clearing or overwriting talismans."
+}
+
 export default {
   name: 'app',
   data () {
@@ -230,9 +287,7 @@ export default {
       // when the charms are done rendering we animate
       // the header (otherwise it's choppy)
       renderFinished: false,
-      
-      importModal: null,
-      
+    
       /* saved offsets */
  
       // offset of charm in "clipboard"
@@ -252,11 +307,16 @@ export default {
       //allCharmOffsets: {},
       //allEmptyOffsets: {},
       //active: null,
-      importText: {"offset":2106707,"rarity":7,"slots":3,"type":327,"skills":[36,21],"skillValues":[4,-8],"decorations":[1693,0,0],"filledSlots":3,"minRarity":1},
+      importText: null,
       
       /* display strings */
       
-      skillSort: "ID#",
+      skillSort: 0,
+      decoWarn: 1,
+      decoDelete: 0,
+      settingDescription: null,
+      settingTimeout: null,
+      
       saves: [],
       columns: [
         { name: 'Rarity', id: 'rarity' },
@@ -393,9 +453,21 @@ export default {
       }
     },
     
-    toggleSkillSort () {
-      if (this.skillSort == "ID#") this.skillSort = "A-Z"
-      else this.skillSort = "ID#"
+    changeSetting (setting, value) {
+      this[setting] = value
+      this.setDesc(setting)
+    },
+    
+    setDesc(setting) {
+      if (settingDescriptions[setting]) {
+        this.settingDescription = settingDescriptions[setting]
+        clearTimeout(this.settingTimeout)
+      }
+      else { 
+        this.settingTimeout = setTimeout(() => {
+          this.settingDescription = null 
+        }, 500)
+      }
     },
     
     download () {
@@ -403,7 +475,6 @@ export default {
       var binaryData = []
       binaryData.push(this.$store.state.file)
       fileSaver.saveAs(new Blob(binaryData, {type: "application/octet-stream"}), 'system', false)
-      
     },
     
     exportCharms () {
@@ -440,7 +511,7 @@ export default {
     */
     tryRemoveCharm (offset) {
       if (this.$store.state.charms[offset].filledSlots) {
-        this.showModal = 'delete'
+        this.modal('delete')
         this.charmToRemove = offset
       }
       else this.removeCharm(offset)
@@ -449,8 +520,7 @@ export default {
     removeCharm (offset) {
       console.log("removed " + offset)
       this.$store.dispatch('remove', offset)
-      this.charmToRemove = null
-      this.showModal = null
+      this.closeModal()
     },
     
     setActiveCharm (offset) {
@@ -462,11 +532,9 @@ export default {
     // in the equipment box, then in slots created by deleting
     // charms as a last resort
     newCharm () {
-      let newOffset = this.emptyOffsets.pop()
       let newCharm = {}
       let sourceCharm = this.$store.state.charms[this.activeCharm] || null
-      if (this.activeCharm && sourceCharm) newCharm = { 
-        offset: newOffset,
+      if (this.activeCharm && sourceCharm) newCharm = {
         rarity: sourceCharm.rarity,
         slots: sourceCharm.slots,
         type: sourceCharm.type,
@@ -479,18 +547,6 @@ export default {
       }
       else newCharm = {
         offset: newOffset,
-        rarity: 2,
-        slots: 3,
-        type: 327,
-        skills: [36, 18],
-        skillValues: [5, 10],
-        decorations: [0, 0, 0],
-        minRarity: 1,
-        filledSlots: 0
-      }
-      /*
-      else newCharm = {
-        offset: newOffset,
         rarity: 7,
         slots: 3,
         type: 327,
@@ -500,47 +556,51 @@ export default {
         minRarity: 1,
         filledSlots: 0
       }
-      */
-      this.$store.dispatch('add', {offset: newOffset, charm: newCharm})
+      this.$store.dispatch('add', newCharm)
     },
     
     checkImportFile (event) {
-
-      console.log("import file")
-      this.loading = true
-      
       let file = event.target.files[0]
 
       let reader = new FileReader()
       
       reader.onload = function (e) {
-        let file = JSON.parse(e.target.result)        
+        this.importText = e.target.result
         console.log(file)
-      }
+      }.bind(this)
       
       reader.readAsText(file)
     },
     
-    importCharms () {
-      this.closeModal()
+    importCharms (overwrite) {
+      if (overwrite) this.clearCharms().then((res) =>
+        this.$store.dispatch('add', JSON.parse(this.importText))
+        this.closeModal()
+      )
     },
     
+    // all: when set, clearCharms does not track charms with
+    // decorations, and deletes indiscriminately instead
     clearCharms () {
-      let offsetsToRemove = []
-      let filledCharmOffsets = []
-      this.charmOffsets.forEach((offset) => {
-        if (this.$store.state.charms[offset].filledSlots)
-          filledCharmOffsets.push(offset)
-        else
-          offsetsToRemove.push(offset)
+      return new Promise((resolve, reject) => {
+        let offsetsToRemove = []
+        let filledCharmOffsets = []
+        this.charmOffsets.forEach((offset) => {
+          if (this.$store.state.charms[offset].filledSlots && this.decoDelete)
+            filledCharmOffsets.push(offset)
+          else
+            offsetsToRemove.push(offset)
+        })
+        
+        if (offsetsToRemove.length)
+          this.$store.dispatch('remove', offsetsToRemove)
+          resolve()
+        else if (filledCharmOffsets.length) {
+          this.modal('delete')
+          this.charmToRemove = filledCharmOffsets
+          console.log(this.charmToRemove)
+        }
       })
-      if (offsetsToRemove.length)
-        this.$store.dispatch('remove', offsetsToRemove)
-      else if (filledCharmOffsets.length) {
-        this.showModal = 'delete'
-        this.charmToRemove = filledCharmOffsets
-        console.log(this.charmToRemove)
-      }
     },
     
     sortCharms (sortKey) {
@@ -597,13 +657,13 @@ export default {
     closeModal () {
       this.showModal = null
       this.charmToRemove = null
-      this.importModal = null
+      this.importText = null
     },
     
-    contactModal () {
+    modal (modal) {
       this.closeModal()
       this.$nextTick(() => {
-        this.showModal = 'contact'
+        this.showModal = modal
       })
     }
   }
@@ -624,17 +684,19 @@ export default {
   font-family: 'icons';
 }
 
-.icon-ok-circled2:before { content: '\e800'; } /* '' */
-.icon-ok-circled:before { content: '\e801'; } /* '' */
-.icon-doc:before { content: '\e802'; } /* '' */
-.icon-doc-inv:before { content: '\e803'; } /* '' */
-.icon-attach:before { content: '\e804'; } /* '' */
-.icon-clipboard:before { content: '\e805'; } /* '' */
-.icon-attach-1:before { content: '\e806'; } /* '' */
-.icon-download:before { content: '\f02e'; } /* '' */
-.icon-docs:before { content: '\f0c5'; } /* '' */
-.icon-circle-empty:before { content: '\f10c'; } /* '' */
-.icon-dot-circled:before { content: '\f192'; } /* '' */
+
+.icon-ok-circled2:before { content: '\e800'; }
+.icon-ok-circled:before { content: '\e801'; }
+.icon-circle-empty:before { content: '\f10c'; }
+.icon-dot-circled:before { content: '\f192'; }
+
+.icon-cancel:before { content: '\e802'; }
+.icon-cog:before { content: '\e803'; }
+.icon-cog-1:before { content: '\e804'; }
+.icon-wrench:before { content: '\e805'; }
+.icon-attach-1:before { content: '\e806'; }
+.icon-download:before { content: '\f02e'; }
+
 
 html {
   -webkit-box-sizing: border-box;
@@ -795,24 +857,115 @@ h1, h2 {
   transition: all 0.25s;
 }
 
-.button.help {
-  padding: 10px;
+.settings:after {
+  content: '\e803 \e804 \e805';
+  content: '\e805';
+  font-family: 'icons';
+  font-size: 18px;
+}
+
+.settings.button {
+  padding: 10px 0;
+  width: 34px;
+  text-align: center;
   line-height: 20px;
   height: 42px;
   position: absolute;
   right: 0;
   bottom: 20px;
+ 
   background-color: #fefefe;
-  color: #999; /* 17a563; */
+  color: #999;
+  /*17a563; */
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
   transition: all 0.25s;
+  
 }
 
-.button.help:hover {
+.settings.button:hover {
   background-color: #fefefe;
   color: #666; 
 }
 
+
+.options-item {
+  width: 100%;
+  font-size: 0;
+  margin: 15px 0;
+  overflow: hidden;
+}
+
+.modal .options-item .label {
+  font-size: 1rem;
+  display: inline-block;
+  float: left;
+  margin-top: 0;
+  line-height: 38px;
+}
+
+.options-item .description {
+  display: none;
+}
+
+.options {
+  display: inline-block;
+  font-size: 0;
+  float: right;
+}
+
+.modal .options li {
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  display: inline-block;
+  text-align: center;
+/*  min-width: 70px; */
+}
+
+.options span {
+  display: inline-block;
+  margin: 0;
+  padding: 8px 16px;
+}
+
+.options li:first-child {
+  text-align: right;
+}
+.options li:last-child {
+  text-align: left;
+}
+
+.options li:first-child span {
+  border-radius: 20px 0 0 20px;
+}
+
+.options li:last-child span {
+  border-radius: 0 20px 20px 0;
+}
+
+.options input {
+  display: none;
+}
+
+.options-description {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 0.5em !important;
+  margin: 25px 0 5px 0 !important;
+  height: 4.9em;
+}
+
+.settings-transition-enter, .settings-transition-leave-to {
+  height: 1px;
+  margin: 0 !important;
+  padding: 0 0.5em !important;
+  opacity: 0;
+}
+
+.settings-transition-enter-active, .settings-transition-leave-active {
+  transition: all 0.4s ease-in-out;
+  transition-delay: 0s;
+}
 
 .button b.sort-id {
   width: 2em;
@@ -888,13 +1041,28 @@ a:hover {
   line-height: 21px;
 }
 
-.textbox {
+.import-file {
+  padding: 12px 20px;
+  width: 100%;
+  border: 1px solid #eee;
+  display: inline-block;
+  margin: 1em auto;
+  border-radius: 10px;
+}
+
+.import-upload {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.import-textbox {
   width: 100%;
   height: 30vh;
   border: 0;
   box-shadow: 0 0 5px #ccc;
   transition: height 0.5s ease;
-  margin: 1px 0;
+  margin: 0;
 }
 
 .textbox-transition-enter {

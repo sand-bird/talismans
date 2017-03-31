@@ -72,7 +72,7 @@
 import { getAvailableSkills, getSkillLevels, 
          getSkillName, getRarityName,
          getMaxSlots, DEBUG } from './utils'
-         
+
 /* ---------------------------------------------------------------
         C H A R M   P R O P E R T Y   D E P E N D E N C I E S
    ---------------------------------------------------------------   
@@ -478,7 +478,6 @@ html, * {
 }
 
 .active-charm-button:before {
-  content: '\e804 \e805 \e806 \f0c5';
   content: '\e806';
   font-family: 'icons';
 }
