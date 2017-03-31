@@ -196,6 +196,7 @@
       
     </div>
     
+<<<<<<< HEAD
     
     
     <transition name="app-transition" v-on:after-enter="setRenderFinished">
@@ -217,8 +218,26 @@
       <!-- <div class="button" v-on:click='test' v-show="charms">Test</div> -->
       <!-- <div class="button" @click="toggleSkillSort" v-show="charms">Skill Sort: <b class="sort-id">{{ skillSort }}</b></div> -->
       
+=======
+    <ul id="files" v-show="file">
+      <li v-for="(name, index) in names" v-on:click="setActive(index)"
+          :class="[{ active: active == index}, 
+                   { disabled : !name }]"
+      >
+        <span>File {{ index + 1 }}:</span>
+        <h3 :class="'name'">{{ name || "(none)" }}</h3>
+      </li>
+    </ul>
+    
+    <div class="button" v-on:click='clearCharms' v-show="file && charms">Clear Talismans</div>
+    <div class="button disabled" v-on:click='' v-show="file && charms">Export Talismans</div>
+    <div class="button disabled" v-on:click='' v-show="file">Import Talismans</div>
+    
+    <ul id="charms" v-show="file">
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
       
       
+<<<<<<< HEAD
       
       <ul id="charms">
         
@@ -255,6 +274,25 @@
         <li><a @click="showModal = 'contact'">Contact</a></li>
       </ul>
       <div class="copy">© 2017 <a href="http://github.com/sand-bird">sand bird</a></div>
+=======
+      <div v-for="offset in charmOffsets" :class="{'active-charm': (activeCharm && activeCharm == offset)}">
+      <charm 
+             :charm="charms[offset]" 
+             :offset="offset"
+             :availableSkillsList="availableSkills" 
+             v-on:remove="removeCharm"
+             v-on:active="setActiveCharm"
+      />
+      </div>
+    
+      <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
+        <span class="add">➕</span> Add Talisman
+      </li>
+    </ul>
+    
+    <div id="footer">
+      © 2017 <a href="http://github.com/sand-bird">sand bird</a>
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
     </div>
   </div>
 </template>
@@ -294,9 +332,21 @@ export default {
       activeCharm: null,
       // used by the delete warning modal
       charmToRemove: null,
+<<<<<<< HEAD
       
       /* sorting state info */
  
+=======
+      title: '☆\'s MHGen Talisman Editor',
+      file: null,
+      names: [],
+      active: null,
+      charms: {},
+      activeCharm: null,
+      charmOffsets: [],
+      emptyOffsets: [],
+      lastSortKey: null,
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
       sortOrder: 1,
       // if same as next sortKey, flip sort order
       lastSortKey: null,
@@ -528,10 +578,16 @@ export default {
       else this.activeCharm = offset
     },
     
+    setActiveCharm (offset) {
+      if (this.activeCharm && this.activeCharm == offset) this.activeCharm = null
+      else this.activeCharm = offset
+    },
+    
     // new charms will be placed at the last available place
     // in the equipment box, then in slots created by deleting
     // charms as a last resort
     newCharm () {
+<<<<<<< HEAD
       let newCharm = {}
       let sourceCharm = this.$store.state.charms[this.activeCharm] || null
       if (this.activeCharm && sourceCharm) newCharm = {
@@ -544,6 +600,19 @@ export default {
         decorations: [0, 0, 0],
         minRarity: 1,
         filledSlots: 0
+=======
+      let newOffset = this.emptyOffsets.shift()
+      let newCharm = {}
+      if (this.activeCharm && this.charms[this.activeCharm]) newCharm = { 
+        offset: newOffset,
+        rarity: this.charms[this.activeCharm].rarity,
+        slots: this.charms[this.activeCharm].slots,
+        type: this.charms[this.activeCharm].type,
+        // why does js default to passing arrays by reference this is dumb
+        skills: this.charms[this.activeCharm].skills.slice(),
+        skillvalues: this.charms[this.activeCharm].skillvalues.slice(),
+        decorations: [0, 0, 0]
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
       }
       else newCharm = {
         offset: newOffset,
@@ -551,12 +620,20 @@ export default {
         slots: 3,
         type: 327,
         skills: [36, 18],
+<<<<<<< HEAD
         skillValues: [5, 10],
         decorations: [0, 0, 0],
         minRarity: 1,
         filledSlots: 0
       }
       this.$store.dispatch('add', newCharm)
+=======
+        skillvalues: [5, 10],
+        decorations: [0, 0, 0]
+      }
+      this.charms[newOffset] = newCharm
+      this.charmOffsets.push(newOffset)
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
     },
     
     checkImportFile (event) {
@@ -582,6 +659,7 @@ export default {
     // all: when set, clearCharms does not track charms with
     // decorations, and deletes indiscriminately instead
     clearCharms () {
+<<<<<<< HEAD
       return new Promise((resolve, reject) => {
         let offsetsToRemove = []
         let filledCharmOffsets = []
@@ -599,6 +677,16 @@ export default {
           this.modal('delete')
           this.charmToRemove = filledCharmOffsets
           console.log(this.charmToRemove)
+=======
+      let filledCharmOffsets = []
+      this.charmOffsets.forEach((offset) => {
+        if (offset && this.charms[offset].filledSlots) {
+          filledCharmOffsets.push(offset)
+        }
+        else {
+          this.charms[offset] = null
+          this.emptyOffsets.push(offset)
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
         }
       })
     },
@@ -1171,6 +1259,7 @@ a:hover {
 
 #footer {
   position: relative;
+<<<<<<< HEAD
   margin: 0 auto;
 }
 
@@ -1193,6 +1282,9 @@ a:hover {
 
 .menu a {
   cursor: pointer;
+=======
+  margin: 100px auto 40px;
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
 }
 
 .loaded .copy {

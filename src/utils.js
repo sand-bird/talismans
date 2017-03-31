@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 // shows raw data for each charm if true
 export const DEBUG = false
+=======
+export const DEBUG = false
+
+const FIRST_CHAR_SLOT_USED = 0x04
+const CHAR_SLOT_USED_SIZE = 1
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
 
 /* -----------------------------------------------
                     O F F S E T S                
@@ -229,6 +236,19 @@ export const loadCharms = (file) => {
         charms[offset] = null
       }
       
+<<<<<<< HEAD
+=======
+      if (DEBUG) {
+        charm.data = Buffer.alloc(36)
+        data.copy(charm.data, 0, offset)
+      }
+      
+      charms[offset] = charm
+    }
+    else if (equipType == 0) {
+      // found empty space - save offset so we can add charms
+      charms[offset] = null
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
     }
   }
   return charms
