@@ -573,10 +573,10 @@ export default {
     },
     
     importCharms (overwrite) {
-      if (overwrite) this.clearCharms().then((res) =>
+      if (overwrite) this.clearCharms().then((res) => {
         this.$store.dispatch('add', JSON.parse(this.importText))
         this.closeModal()
-      )
+      })
     },
     
     // all: when set, clearCharms does not track charms with
@@ -592,9 +592,10 @@ export default {
             offsetsToRemove.push(offset)
         })
         
-        if (offsetsToRemove.length)
+        if (offsetsToRemove.length) {
           this.$store.dispatch('remove', offsetsToRemove)
           resolve()
+        }
         else if (filledCharmOffsets.length) {
           this.modal('delete')
           this.charmToRemove = filledCharmOffsets
