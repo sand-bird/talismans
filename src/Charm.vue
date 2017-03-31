@@ -5,10 +5,17 @@
   
   <div class="charm">
     <div class="rarity styled-select">
+<<<<<<< HEAD
       <select v-model="rarity"
               @change="blur">
         <option v-for="rarity in 7" v-if="rarity >= minRarity" :value="rarity">
           {{ rarityName(rarity) }}
+=======
+      <select v-model="charm.rarity"
+              v-on:change="blur($event); validateCharm()">
+        <option v-for="rarity in 7" v-if="rarity >= charm.minRarity" :value="rarities[rarity-1].value">
+          {{ rarities[rarity-1].text }}
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
         </option>
       </select>
     </div>
@@ -25,33 +32,60 @@
     </div>
     
     <div class="skill1">
+<<<<<<< HEAD
       <select v-model="skills[0]" @change="blur">
         <option v-for="skillId in availableSkills[0]" :value="skillId">
+=======
+      <select v-model="charm.skills[0]"
+              v-on:change="blur($event); handleSkillChange(0)">
+        <option v-for="skillId in charm.availableSkills[0]" 
+                v-if="skillId != charm.skills[1]"
+                :value="skillId">
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
           {{ skillName(skillId) }}
         </option>
       </select>
     </div>
     
     <div class="skill1value">
+<<<<<<< HEAD
       <select v-model="skillValues[0]" @change="blur" @blur="blur">
         <option v-for="value in skillLevels[0]" :value="value">
+=======
+      <select v-model="charm.skillvalues[0]" @change="blur">
+        <option v-for="value in charm.skillLevels[0]" :value="value">
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
           {{ value }}
         </option>
       </select>
     </div>
     
     <div class="skill2">
+<<<<<<< HEAD
       <select v-model="skills[1]" @change="blur">
         <option v-for="skillId in availableSkills[1]" :value="skillId">
+=======
+      <select v-model="charm.skills[1]"
+              v-on:change="blur($event); handleSkillChange(1)">
+        <option v-for="skillId in charm.availableSkills[1]" 
+                v-if="skillId != charm.skills[0]"
+                :value="skillId">
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
           {{ skillName(skillId) }}
         </option>
       </select>
     </div>
     
     <div class="skill2value">
+<<<<<<< HEAD
       <select v-model="skillValues[1]" @change="blur"
               v-show="skillValues[1]">
         <option v-for="value in skillLevels[1]" :value="value">
+=======
+      <select v-model="charm.skillvalues[1]"
+              v-show="charm.skillvalues[1]" v-on:change="blur($event); validateSkillTwo()">
+        <option v-for="value in charm.skillLevels[1]" :value="value">
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
           {{ value }}
         </option>
       </select>
@@ -59,16 +93,23 @@
     
   </div>
   
+<<<<<<< HEAD
   <a class="active-charm-button" v-on:click="setActive"></a>
   <div v-if="debugOn" style="overflow: hidden">
     <pre style="float:left">{{ offset }}<br>{{ origOffset != offset ? origOffset : null }}</pre>
     <pre style="float:right">{{ data }}</pre>
   </div>
+=======
+  <a class="active-charm-button" v-on:click="setActive">᳃</a>
+  
+  <div v-if="debug">{{ offset }}<br>{{ charm.data || "new charm" }}</div>
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
 </li> 
 </transition>
 </template>
 
 <script>
+<<<<<<< HEAD
 import { getAvailableSkills, getSkillLevels, 
          getSkillName, getRarityName,
          getMaxSlots, DEBUG } from './utils'
@@ -91,13 +132,52 @@ import { getAvailableSkills, getSkillLevels,
                                  ^                      |
                                  '----------------------'
 */
+=======
+import skills from 'json-loader!./skills.json'
+import decorations from 'json-loader!./decorations.json'
+import { DEBUG } from './utils'
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
 
 export default {
   name: 'charm',
   props: [ 'offset' ],
   data () {
+<<<<<<< HEAD
     return { debugOn: DEBUG, origOffset: this.offset }
   },
+=======
+    return { 
+      rarities: [
+        { text: "Pawn Talisman", value: 1 },
+        { text: "Bishop Talisman", value: 2 },
+        { text: "Knight Talisman", value: 3 },
+        { text: "Rook Talisman", value: 4 },
+        { text: "Queen Talisman", value: 5 },
+        { text: "King Talisman", value: 6 },
+        { text: "Dragon Talisman", value: 7 }
+      ],
+      types: {
+        "325": { name: "mystery", slots: 1 },
+        "326": { name: "shining", slots: 2 },
+        "327": { name: "timeworn", slots: 3 }
+      },
+      debug: DEBUG
+    }
+  },
+  
+  created () {
+    this.getFilledSlots()
+    this.getMinRarity()
+    this.getAvailableSkills()
+    this.getSkillLevels()
+  },
+  
+  updated () {
+  
+    console.log("updated charm " + this.offset)
+  },
+  
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
   computed: {
 
     /* mutable properties fetched from state */
@@ -172,7 +252,6 @@ export default {
       this.debug("[computed] canIncreaseSlots")
       return (this.slots < this.maxSlots)
     },
-    
     canDecreaseSlots () {
       this.debug("[computed] canDecreaseSlots")
       return (this.slots > this.filledSlots)
@@ -256,6 +335,7 @@ export default {
         if (this.skillValues[slot] < minLevel)
           this.skillValues[slot] = minLevel
           
+<<<<<<< HEAD
         // if skillvalue is already valid, do nothing
         // (make changeable with a setting? probably people 
         // would like to have skillValues auto max out)  
@@ -264,9 +344,37 @@ export default {
         
         // otherwise, just force skillValue to maximum
         else this.skillValues[slot] = maxLevel
+=======
+          for (let slot = 0; slot < 2; slot++) {
+            if (this.charm.availableSkills[slot].indexOf(this.charm.skills[slot]) == -1) {
+              
+              console.log("current skill not found! setting new skill...")
+              
+              this.charm.skills[slot] = this.charm.availableSkills[slot][0]
+              this.handleSkillChange(slot)
+              
+              console.log(this.charm.skills)
+              console.log(this.charm.skillvalues)
+            }
+          }
+        }
+      }
+      
+      /* SLOTS -------
+         validates the number of slots in the charm
+         based on max available for the selected charm type */
+         
+      console.log("validating slots for charm " + this.offset)
+      
+      let maxSlots = this.types[this.charm.type.toString()].slots
+      // TODO: equipped decoration testing goes here
+      if (this.charm.slots > maxSlots) {
+        this.charm.slots = maxSlots
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
       }
     },
     
+<<<<<<< HEAD
     maxSlots (val) {
       this.debug("[watch] maxSlots: " + val)
       if (this.slots > val) this.slots = val
@@ -302,6 +410,85 @@ export default {
     rarityName (rarityId) {
       //this.debug("[methods] rarityName: " + rarityId)
       return getRarityName(rarityId)
+=======
+    validateSkillTwo () {
+      if (this.charm.skillvalues[1] == 0) {
+        this.charm.skills[1] = 0
+      }
+    },
+    
+    doGetSkillLevels (slot) {
+      let levels = []
+      let source = this.types[this.charm.type.toString()].name
+      
+      /* just in case someone screwed up
+         maybe not the best place for this? but it gets run
+         before anything else that relies on charm.skills[i]
+         so if we fix it here it SHOULD be fine */
+      if (isNaN(this.charm.skills[slot])) {
+        this.charm.skills[slot] = 0
+      }
+      if (this.charm.skills[slot]) {
+        let currSkill = this.charm.skills[slot]
+        let boundSource = skills[currSkill][source]
+        if (boundSource) {
+          let boundSlot = boundSource[slot]
+          if (boundSlot) {
+            for (let i = boundSlot[1]; i >= boundSlot[0]; i--) {
+              levels.push(i)
+            }
+          }
+        }
+        return levels
+      }
+      else return [0]
+    },
+    
+    handleSkillChange (slot) {
+      console.log("skill " + (slot+1) + " changed for charm " + this.offset + ", validating skill values")
+      
+      this.charm.skillLevels[slot] = this.doGetSkillLevels(slot)
+      
+      console.log(this.charm.skillLevels[slot])
+      
+      /* if-else chain to decide what to do with the skillvalue
+         when the skill is changed. since we are now forcing it
+         to the max available level by default, a couple of these
+         cases are obsolete, but i'll leave them in just in ~case~  */
+      
+      // because we want to show the largest numbers on top in the 
+      // select dropdown, the skillLevels array goes from max to min
+      let minLevel = this.charm.skillLevels[slot].slice(-1)[0]
+      let maxLevel = this.charm.skillLevels[slot][0]
+      
+      // force skillvalue to 0 when skill goes to 0 
+      if (this.charm.skills[slot] == 0) {
+        console.log("found 0 skill in slot " + slot + " of charm " + this.offset)
+        this.charm.skillvalues[slot] = 0
+      }
+      // for negative skillvalues in excess of new skillLevels,
+      // force skillvalue to minLevel
+      // (should only happen in 2nd slot)
+      else if (this.charm.skillvalues[slot] < minLevel) {
+        this.charm.skillvalues[slot] = minLevel
+      }
+      // when current skillvalue exceeds skillLevels for newSkill,
+      // force skillvalue to maxLevel
+      else if (this.charm.skillvalues[slot] > maxLevel) {
+        this.charm.skillvalues[slot] = maxLevel
+      }
+      // when allocating a new skill,
+      // force skillvalue to maxLevel
+      // (because of the if-else chain we already know that
+      // the skill for this slot is nonzero)
+      // (should also only happen in 2nd slot)
+      else if (this.charm.skillvalues[slot] == 0) {
+        console.log("new skill, forcing to max")
+        this.charm.skillvalues[slot] = maxLevel
+      }
+      // force skillvalue to maxLevel by default
+      else this.charm.skillvalues[slot] = maxLevel
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
     },
     
     removeCharm (event) {
@@ -377,7 +564,6 @@ html, * {
 
 .charm div, .charms-header div {
   display: inline-block;
-  padding: 1px;
   float: left;
   height: 50px;
   line-height: 50px;
@@ -462,14 +648,14 @@ html, * {
   position: absolute;
   left: -30px;
   font-size: 24px;
-  height:50px;
   line-height: 50px;
-  top: 6px;
+  top: 2px;
   cursor: pointer;
 }
 
 .active-charm-button {
   position: absolute;
+<<<<<<< HEAD
   right: -24px;
   font-size: 20px;
   line-height: 50px;
@@ -480,6 +666,13 @@ html, * {
 .active-charm-button:before {
   content: '\e806';
   font-family: 'icons';
+=======
+  right: -25px;
+  font-size: 24px;
+  line-height: 50px;
+  top: 2px;
+  cursor: pointer;
+>>>>>>> 2c5fc82a52cf5431c60e24fd2960cd80caf370a8
 }
 
 .rarity {
