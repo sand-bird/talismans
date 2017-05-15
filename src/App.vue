@@ -672,13 +672,6 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: 'icons';
-  src: url('dist/icons.ttf?67942823') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 .font-test:before {
   content: '\e800 \e801 \e802 \e803 \e804 \e805 \e806 \f02e \f0c5 \f10c \f192';
   display: none;
