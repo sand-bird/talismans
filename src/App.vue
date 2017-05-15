@@ -676,7 +676,7 @@ export default {
 <style>
 @font-face {
   font-family: 'icons';
-  src: url('/dist/icons.ttf?67942823') format('truetype');
+  src: url('icons.ttf?67942823') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
