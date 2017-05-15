@@ -123,13 +123,15 @@
         <h4>Why does this exist?</h4>
         <p>Because talismans in Monster Hunter Generations are randomly generated out of <i>millions</i> of possibilities, the chance of getting a desired or even a useful talisman is extremely low, even after hours of tedious farming.</p>
         <p>I and many others believe that even though Monster Hunter was designed to be this way, in practice, this situation goes against the <i>spirit</i> of the game. Any player who wants high-quality talismans, whether for speedrunning or just to expand their options for viable fashion sets, must either be very lucky or spend potentially hundreds of hours mining rocks in a game that is supposed to be about killing dragons.</p>
-        <p>This tool exists to solve that dilemma, letting you spend your time in Monster Hunter actually hunting monsters. (Also, it looks pretty good on a portfolio.)</p>
+        <p>This tool exists to solve that dilemma, letting you spend your time in Monster Hunter actually hunting monsters.</p>
         <h4>Will people who play with me know that I hacked?</h4>
         <p>Nope – it's impossible to know for sure, since anything you can make with this tool, you also could have gotten by being <i>really, really</i> lucky.</p>
         <p>Of course, people might always choose to believe that someone is a hacker anyway, depending on just how “lucky” they are.</p>
         <h4>Why do my skills keep changing?</h4>
         <p>That's the legality checking at work. Different rarities of talisman have different skills (and different levels of those skills) available – for example, a lot of skills, like Critical Up, Evade Distance, and Handicraft, can only be found on talismans that come from a Timeworn Charm (Queen, King, and Dragon rarites). So, if you have a Queen Talisman with Handicraft and you change its rarity to Pawn, the Handicraft skill will be reset to something else.</p>
         <p>Skill compatibility information used in <b>☆'s MHGen Talisman Editor</b> was collected from <a href="https://docs.google.com/spreadsheets/d/1N7lqzdSzNl1o_W8JiYyQz_cXDXJEE_Ur4myI4Uf0F7E/">this spreadsheet</a>. You can view the actual datafile used in the app <a href="https://github.com/sand-bird/talismans/blob/master/src/skills.json">here</a>.</p>
+        <h4>Why don't my decorations get copied when I copy a charm?</h4>
+        <p></p>
         <h4>You should add {feature}!</h4>
         <p>Sure! <a @click="modal('contact')">Drop me a line.</a></p>
         <h4>I think I found a bug.</h4>
@@ -674,7 +676,7 @@ export default {
 <style>
 @font-face {
   font-family: 'icons';
-  src: url('icons.ttf?67942823') format('truetype');
+  src: url('/dist/icons.ttf?67942823') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

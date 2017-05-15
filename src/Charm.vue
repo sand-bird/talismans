@@ -73,25 +73,6 @@ import { getAvailableSkills, getSkillLevels,
          getSkillName, getRarityName,
          getMaxSlots, DEBUG } from './utils'
 
-/* ---------------------------------------------------------------
-        C H A R M   P R O P E R T Y   D E P E N D E N C I E S
-   ---------------------------------------------------------------   
- 
-  filledSlots ----------------------------------> canDecreaseSlots 
-                                             |
-                                .--> slots --+      
-  rarity        .--> maxSlots --|            |
-    |           |               '---------------> canIncreaseSlots
-    |           |
-    '--> type --+----------------------.                       
-                |                      |
-                '--> availableSkills   +--> skillLevels
-                         |             |       |
-  minRarity              '--> skills --'       '--> skillValues
-                                 ^                      |
-                                 '----------------------'
-*/
-
 export default {
   name: 'charm',
   props: [ 'offset' ],
@@ -102,33 +83,38 @@ export default {
 
     /* mutable properties fetched from state */
     
+    // integer from 0 (pawn) to 6 (dragon)
     rarity: {
       get () { 
-        this.debug("[computed] rarity: get"); 
+        this.debug("[computed] rarity: get")
         return this.get("rarity") 
       },
       set (val) { 
-        this.debug("[computed] rarity: set"); 
+        this.debug("[computed] rarity: set")
         this.set("rarity", val) 
       }
     },
+    // integer representing the type of charm 
+    // corresponding to the talisman's rarity:
+    // mystery (325), shining (326), or timeworn (327)
     type: {
       get () { 
-        this.debug("[computed] type: get"); 
+        this.debug("[computed] type: get")
         return this.get("type") 
       },
       set (val) { 
-        this.debug("[computed] type: set"); 
+        this.debug("[computed] type: set")
         this.set("type", val) 
       }
     },
+    // integer from 0 to 3, just a counter
     slots: {
       get () { 
-        this.debug("[computed] slots: get"); 
+        this.debug("[computed] slots: get")
         return this.get("slots") 
       },
       set (val) { 
-        this.debug("[computed] slots: set"); 
+        this.debug("[computed] slots: set")
         this.set("slots", val) 
       }
     },
@@ -136,30 +122,29 @@ export default {
     
     /* immutable properties fetched from state */
     
-    // skill arrays won't accept computed setters, must be watched
+    // skill arrays won't accept computed setters; must be watched.
+    // each is an array of length 2, containing integers, whose indices 
+    // correspond respectively to the two skill slots in a charm.
     skills () {
-      this.debug("[computed] skills"); 
+      this.debug("[computed] skills") 
       return this.get("skills") 
     },
     skillValues () { 
-      this.debug("[computed] skillValues"); 
+      this.debug("[computed] skillValues") 
       return this.get("skillValues") 
     },
     
-    // restrictions based on decorations attached to the charm
+    // restrictions based on decorations attached to the charm.
+    // set in utils when data is read (or in App when charm is created)
     minRarity () { 
-      this.debug("[computed] minRarity"); 
+      this.debug("[computed] minRarity") 
       return this.get("minRarity") 
     },
     filledSlots () { 
-      this.debug("[computed] filledSlots"); 
+      this.debug("[computed] filledSlots") 
       return this.get("filledSlots") 
     },
     
-    // for debugging
-    data () {
-      if (DEBUG) return this.get("data")
-    },
     
     /* computed properties relying on functions stored in utils.js */
     
@@ -186,6 +171,12 @@ export default {
     skillLevels () {
       this.debug("[computed] skillLevels")
       return getSkillLevels(this.type, this.skills)
+    },
+    
+    
+    // for debugging
+    data () {
+      if (DEBUG) return this.get("data")
     }
     
   },
@@ -223,10 +214,9 @@ export default {
       if (type != this.type) this.type = type
     },
   
-    /* when the available skills change, checks if our current
-       skill is valid and chooses a default one if not.
-       also updates the skillValue in that case 
-       (though i think this is redundant)  */
+    /* when the available skills change, checks if our current skill 
+       is valid and chooses a default one if not. also updates the 
+       skillValue in that case (though i think this is redundant)  */
     availableSkills (val) {
       this.debug("[watch] availableSkills: " + val)
       for (let slot = 0; slot < 2; slot++) {

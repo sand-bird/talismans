@@ -1,21 +1,46 @@
-check charms:
+-----------------------------------------------------------------------
+         C H A R M   P R O P E R T Y   D E P E N D E N C I E S        
+-----------------------------------------------------------------------
+ 
+TRICKLE ORDER:
 
-rarity -> type -> maxSlots -> slots
+ 
+ rarity -> type -> maxSlots -> slots
             |
-            ----> availableSkills -> skills -> skillLevels -> skillValues
-            
-            
+            '-> availableSkills -> skills -> skillLevels -> skillValues
+    
 
-  filledSlots ---------------------------------> canIncreaseSlots 
-                                             |
-                                ,--> slots --+       
-  rarity        ,--> maxSlots --|            |
-    |           |               '---------------> canIncreaseSlots
-    |           |
-    '--> type --+----------------------,                        
-                |                      |
-                '--> availableSkills   |--> skillLevels
-                         |             |       |
-  minRarity              '--> skills --'       '--> skillValues
-                                 ^                      |
-                                 '----------------------'
+    
+
+FULL DEPENDENCY CHART:
+    
+
+ filledSlots** -----------------------------------> canDecreaseSlots
+                                               |
+                                .--> slots* ---+       
+ rarity*        .--> maxSlots --|              |
+   |            |               '-----------------> canIncreaseSlots
+   |            |
+   '--> type* --+------------------------.                        
+                |                        |
+                '--> availableSkills     |--> skillLevels
+ minRarity**             |               |       |
+                         '--> skills* ---'       '--> skillValues*
+                                 ^                       |
+ decorations*                    '-----------------------'
+
+
+
+LEGEND:
+
+ Many properties are watched; all are computed.
+ Computed properties update automatically whenever
+ a variable used in the property function changes.
+
+ parentProperty --> compute function depends on parentProperty
+     |
+     '--> updated manually inside a watcher for parentProperty
+ 
+  * properties corresponding to game data (all are integers)
+ ** properties derived from game data but not mutated or saved
+    (currently, both are derived from the decorations property)
