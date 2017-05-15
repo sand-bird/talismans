@@ -4,11 +4,11 @@
     <modal v-if="showModal == 'settings'" class="settings modal" v-on:close="closeModal">
       <h3 slot="header">Settings</h3>
       <div slot="body">
-        <div class="options-item"
-             @mouseover="setDesc('skillSort')" @mouseout="setDesc(null)">
+        <div class="options-item">
           <div class="skill-sort label">Skill Sort:</div>
         
-          <ul class="skill-sort options">
+          <ul class="skill-sort options"
+             @mouseover="setDesc('skillSort')" @mouseout="setDesc(null)">
             <li v-for="option, index in ['ID#', 'A-Z']">
               <span @click="changeSetting('skillSort', index)" 
                     :class="['button', {active: skillSort == index}]">
@@ -18,10 +18,10 @@
           </ul>         
         </div>
         
-        <div class="options-item" 
-             @mouseover="setDesc('decoWarn')" @mouseout="setDesc(null)">
+        <div class="options-item">
           <div class="deco-warn label">Decoration Warning:</div>       
-          <ul class="deco-warn options">
+          <ul class="deco-warn options"
+             @mouseover="setDesc('decoWarn')" @mouseout="setDesc(null)">
             <li v-for="option, index in ['On', 'Off']">
               <span @click="changeSetting('decoWarn', 1-index)"
                     :class="['button', {active: decoWarn == 1-index}]">
@@ -32,10 +32,10 @@
           
         </div>
         
-        <div class="options-item" 
-             @mouseover="setDesc('decoDelete')" @mouseout="setDesc(null)">
+        <div class="options-item">
           <div class="deco-delete label">Decoration Deletion:</div>          
-          <ul class="deco-delete options">
+          <ul class="deco-delete options" 
+             @mouseover="setDesc('decoDelete')" @mouseout="setDesc(null)">
             <li v-for="option, index in ['Auto', 'Manual']">
               <span @click="changeSetting('decoDelete', 1-index)"
                     :class="['button', {active: decoDelete == 1-index}]">
@@ -548,7 +548,6 @@ export default {
         filledSlots: 0
       }
       else newCharm = {
-        offset: newOffset,
         rarity: 7,
         slots: 3,
         type: 327,
@@ -626,8 +625,8 @@ export default {
       let sortFn = () => { return 1 }
   
       if (sortKey == 'skill1' || sortKey == 'skill2') {
+        // grab index off the '1' or '2' in the sortKey
         let index = parseInt(sortKey.slice(-1)) - 1
-        
         sortKeys = [
           ['skills', index], 
           ['skillValues', index], 
@@ -652,8 +651,7 @@ export default {
         
         ) * this.sortOrder
       }
-      
-      console.log(sortKeys)
+
       this.charmOffsets = this.charmOffsets.sort(sortFn)
     },
     
@@ -676,7 +674,7 @@ export default {
 <style>
 @font-face {
   font-family: 'icons';
-  src: url('icons.ttf?67942823') format('truetype');
+  src: url('dist/icons.ttf?67942823') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
