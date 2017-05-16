@@ -19,13 +19,14 @@
             @click="slots-=1">➖</a> 
         <span v-for="slot in slots" 
               class="slot" :class="{ filled: filledSlots >= slot }" />
-      <a class="plus-slots" 
+      <a class="plus-slots"
             v-if="canIncreaseSlots"
             @click="slots+=1">➕</a>
     </div>
     
     <div class="skill1">
-      <select v-model="skills[0]" @change="blur">
+      <select v-model="skills[0]" @change="blur" 
+              @focus="track(0)">
         <option v-for="skillId in availableSkills[0]" :value="skillId">
           {{ skillName(skillId) }}
         </option>
@@ -33,7 +34,7 @@
     </div>
     
     <div class="skill1value">
-      <select v-model="skillValues[0]" @change="blur" @blur="blur">
+      <select v-model="skillValues[0]" @change="blur">
         <option v-for="value in skillLevels[0]" :value="value">
           {{ value }}
         </option>
@@ -41,7 +42,8 @@
     </div>
     
     <div class="skill2">
-      <select v-model="skills[1]" @change="blur">
+      <select v-model="skills[1]" @change="blur" 
+              @focus="track(1)">
         <option v-for="skillId in availableSkills[1]" :value="skillId">
           {{ skillName(skillId) }}
         </option>
@@ -75,9 +77,15 @@ import { getAvailableSkills, getSkillLevels,
 
 export default {
   name: 'charm',
-  props: [ 'offset' ],
+  props: [ 'offset', 'skillSort', 'skillMax' ],
   data () {
-    return { debugOn: DEBUG, origOffset: this.offset }
+    return { 
+      debugOn: DEBUG, 
+      origOffset: this.offset,
+      currentSkillSlot: null,
+      currentSkill: null,
+      currentSkillValue: null
+    }
   },
   computed: {
 
@@ -126,7 +134,7 @@ export default {
     // each is an array of length 2, containing integers, whose indices 
     // correspond respectively to the two skill slots in a charm.
     skills () {
-      this.debug("[computed] skills") 
+      this.debug("[computed] skills")
       return this.get("skills") 
     },
     skillValues () { 
@@ -165,7 +173,7 @@ export default {
     
     availableSkills () {
       this.debug("[computed] availableSkills")
-      return getAvailableSkills(this.type)
+      return getAvailableSkills(this.type, this.skillSort)
     },
     
     skillLevels () {
@@ -187,6 +195,25 @@ export default {
     skills (val) {
       this.debug("[watch] skills: " + val)
       this.set("skills", val)
+      // settings skills[1] to something nonzero should also 
+      // set the skillValue to nonzero. this goes here instead 
+      // of the skillLevels watcher for consistency with the
+      // skillValues watcher below, and for edge cases where 
+      // someone loads a save with already-illegal data.
+      if (val[1] && !this.skillValues[1]) {
+        this.debug("[watch] skills: setting skillValue")
+        if (this.skillMax)
+          this.skillValues[1] = this.max(this.skillLevels[1])
+        else
+          this.skillValues[1] = 1
+      }
+      
+      if (this.skillMax) {
+        let slot = this.currentSkillSlot
+        console.log("current slot: " + slot)
+        if (val[slot] > this.currentSkillValue)
+          this.skillValues[slot] = this.max(this.skillLevels[slot])
+      }
     },
     skillValues (val) { 
       this.debug("[watch] skillValues: " + val)
@@ -222,7 +249,7 @@ export default {
       for (let slot = 0; slot < 2; slot++) {
         // if the available skills for the slot no longer contain
         // the current skill selected for that slot:
-        if (val[slot].indexOf(this.skills[slot] == -1)) {
+        if (val[slot].indexOf(this.skills[slot]) == -1) {
           // set the skill to the first available skill
           // (should be 0 (no skill) if this is slot 2)
           this.skills[slot] = val[slot][0]
@@ -237,8 +264,10 @@ export default {
     skillLevels (val) {
       this.debug("[watch] skillLevels: " + val)
       for (let slot = 0; slot < 2; slot++) {
-        let minLevel = val[slot].slice(-1)[0]
-        let maxLevel = val[slot][0]
+        // i really wanted to use Math.min(...arr), but i 
+        // figured there'd be too much of a performance hit :(
+        let minLevel = this.min(val[slot])
+        let maxLevel = this.max(val[slot])
         
         // force skillvalue to minimum for negative 
         // skillValues in excess of new skillLevels
@@ -246,11 +275,9 @@ export default {
         if (this.skillValues[slot] < minLevel)
           this.skillValues[slot] = minLevel
           
-        // if skillvalue is already valid, do nothing
-        // (make changeable with a setting? probably people 
-        // would like to have skillValues auto max out)  
-        else if (this.skillValues <= maxLevel)
-          return
+        // if skillvalue is already valid, do nothing 
+        else if (this.skillValues[slot] <= maxLevel)
+          continue
         
         // otherwise, just force skillValue to maximum
         else this.skillValues[slot] = maxLevel
@@ -302,9 +329,17 @@ export default {
       this.$emit('active', this.offset)
     },
     
-    blur (e) {
-      e.target.blur()
-    }
+    track (i) { 
+      this.currentSkillSlot = i 
+      this.currentSkill = this.skills[i]
+      this.currentSkillValue = this.skillValues[i]
+    },
+    
+    min (arr) { return arr.slice(-1)[0] },
+    
+    max (arr) { return arr[0] },
+    
+    blur (e) { e.target.blur() }
     
   } 
 }

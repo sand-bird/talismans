@@ -13,6 +13,7 @@ const USED_SLOTS_SIZE = 1
 
 // contains a pointer to the beginning 
 // of the data block for that save slot
+// (see getOffset for how this is used)
 const SLOT_POINTER_OFFSET = 0x10
 const SLOT_POINTER_OFFSET_SIZE = 4
 
@@ -25,7 +26,7 @@ const NAME_OFFSET = 0x00
 const NAME_SIZE = 32  
 
 const EQUIPMENT_BOX_OFFSET = 0x4667
-// dunno what the extra 15 bytes is for
+// dunno what the extra 15 bytes are for
 const EQUIPMENT_BOX_SIZE = 50415
 const EQUIPMENT_BOX_SLOTS = 1400 
 const EQUIPMENT_BOX_SLOT_SIZE = 36
@@ -57,11 +58,14 @@ const DECORATION3_OFFSET = 10
    ----------------------------------------------- */
 
 import DECORATIONS from 'json-loader!./decorations.json'
+
 import SKILLS from 'json-loader!./skills.json'
+
 // avail. skills are stored in a 2d array. for 2nd slot skills, 
 // we start with id 0 available, as that represents no skill. 
 // the 1st slot must have a skill, so id 0 is NOT an option.
 import AVAILABLE_SKILLS from 'json-loader!./avail_skills.json'
+
 // technically, a "talisman" is the equippable item and a "charm" 
 // is the source of the talisman. but i like to use "charm" 
 // everywhere since it's shorter, so we call these "types" instead.
@@ -79,7 +83,11 @@ const RARITIES = {
   "6": "King Talisman",
   "7": "Dragon Talisman"
 }
+/*
+import { EventEmitter } from 'events'
 
+class Modal extends EventEmitter
+*/
 /* -----------------------------------------------
                F I L E   M E T H O D S               
    ----------------------------------------------- */
@@ -164,8 +172,8 @@ export const loadOffsets = (file) => {
   return { emptyOffsets: emptyOffsets, charmOffsets: charmOffsets }
 }
 
-/* gathers every charm on every save and returns 
-   one big object. vuex handles the rest  */
+/* gathers every charm on every save and returns one big object. 
+   vuex handles the rest  */
 export const loadCharms = (file) => {
   let charms = {}
   for (let slot = 0; slot < 3; slot++) {
@@ -187,8 +195,6 @@ export const loadCharms = (file) => {
         
         /* properties from file */
         
-        // unnecessary and would complicate import/export
-        // charm.offset = offset
         charm.rarity = file.readUInt8(offset + RARITY_OFFSET)
         charm.slots = file.readUInt8(offset + SLOTS_OFFSET)
         charm.type = file.readUInt16LE(offset + TYPE_OFFSET)
@@ -208,7 +214,6 @@ export const loadCharms = (file) => {
         
         /* calculated properties (not saved but still important) */
         
-        // 
         let filled = 0
         for (let i = 0; i < 3; i++) {
           let decoration = charm.decorations[i]
@@ -224,7 +229,8 @@ export const loadCharms = (file) => {
         
         charms[offset] = charm
       }
-      /// ??????????
+      // store.charms should have every offset, even empty ones,
+      // because of vue/vuex watched property magic
       else if (equipType == 0) {
         charms[offset] = null
       }
@@ -259,96 +265,6 @@ export const saveCharms = (file, charms) => {
   }
 }
 
-export const sortFunction = (charms, sortKey, sortOrder) => {
-  let sortFn = () => { return 1 }
-  
-  if (sortKey == 'skill1' || sortKey == 'skill2') {
-    let index = parseInt(sortKey.slice(-1)) - 1
-    
-    sortFn = (a, b) => {
-
-      return compareCharms (charms[a], charms[b],
-         ['skills', index], 
-         ['skillValues', index], 
-         ['skills', 1 - index], 
-         ['skillValues', 1 - index]
-       ) * sortOrder
-       
-      /*                       
-      if (charmA.skills[index] > 
-          charmB.skills[index])
-        return 1 * this.sortOrder
-      
-      else if (charmA.skills[index] < 
-               charmB.skills[index])
-        return -1 * this.sortOrder
-      
-      else {
-        if (charmA.skillValues[index] > 
-            charmB.skillValues[index])
-          return 1 * this.sortOrder
-      
-        else if (charmA.skillValues[index] < 
-                 charmB.skillValues[index])
-          return -1 * this.sortOrder
-      
-        else {
-          if (charmA.skills[1 - index] > 
-              charmB.skills[1 - index]) 
-            return 1 * this.sortOrder
-      
-          else if (charmA.skills[1 - index] > 
-                   charmB.skills[1 - index])
-            return -1 * this.sortOrder
-      
-          else {
-            if (charmA.skillValues[1 - index] < 
-                charmB.skillValues[1 - index])
-              return 1 * this.sortOrder
-      
-            else if (charmA.skillValues[1 - index] > 
-                     charmB.skillValues[1 - index]) 
-              return -1 * this.sortOrder
-            
-            else return 0
-          }
-        }
-      }
-      */
-    }
-    
-  }
-  
-  else {
-    sortFn = (a, b) => {
-      a = charms[a][sortKey]
-      b = charms[b][sortKey]
-      return (a == b ? 0 : a > b ? 1 : -1) * this.sortOrder
-    }
-  }
-}
-
-/* */
-export const compareCharms = (charmA, charmB, ...keys) => {
-  if (keys.length) {
-    var valueA, valueB
-    if (Array.isArray(keys[0])) {
-      let key = keys[0][0]
-      let index = keys[0][1]
-      valueA = charmA[key][index]
-      valueB = charmB[key][index]
-    }
-    else {
-      let key = keys[0]
-      valueA = charmA[key]
-      valueB = charmB[key]
-    }
-    return (valueA < valueB ? 1 : valueA > valueB ? -1 : 
-            compareCharms(charmA, charmB, ...keys.slice(1)))
-  }
-  else return 0
-}
-
 /* used for debugging - fetches the charm's data in buffer 
    format and returns it as a prettified string  */
 export const getRawCharm = (file, offset) => {
@@ -360,6 +276,70 @@ export const getRawCharm = (file, offset) => {
     .match(/.{1,2}/g).join(" ")
     // trim and newline
     .match(/.{1,54}/g).map(s => s.trim()).join("\n")
+}
+
+/* -----------------------------------------------
+                A P P   M E T H O D S             
+   ----------------------------------------------- */
+
+/* used in the sort function for comparing charms in App.vue. 
+
+   charmA, charmB: charms to sort; objects, not offsets, 
+                   since we don't have access to the store 
+                   here in utils.js
+   
+             alph: 1 or 0; tells us when to sort skills 
+                   by name instead of by id
+         
+            order: 1 or -1; flips the return value to
+                   sort in reverse
+         
+         notfirst: not passed; starts null and is set true
+                   when compareCharms recurses
+   
+   if both charms have the same value for key[0], the 
+   next key is used, and so on recursively until the 
+   keys array is empty.  */
+export const compareCharms = (charmA, charmB, keys, alph, order, notfirst) => {
+  
+  // when sortOrder is -1, unflips every key but the first one
+  if (notfirst) order = 1
+  
+  if (keys.length) {
+    var valueA, valueB, key
+    if (Array.isArray(keys[0])) {
+      key = keys[0][0]
+      let index = keys[0][1]
+      valueA = charmA[key][index]
+      valueB = charmB[key][index]
+    }
+    else {
+      key = keys[0]
+      valueA = charmA[key]
+      valueB = charmB[key]
+    }
+
+    if (key == 'skills') {
+      // we swap the names of a and b because when sorting skills 
+      // we want the default order to be [ascending, descending], 
+      // while the default for the others is [descending, ascending]
+      [valueA, valueB] = [valueB, valueA]
+      if (alph) {
+        valueA = getSortName(valueA, order)
+        valueB = getSortName(valueB, order)
+      }
+    }
+    
+    return (valueA < valueB ? order : valueA > valueB ? (order * -1) :
+            compareCharms(charmA, charmB, keys.slice(1), alph, order, true))
+  }
+  else return 0
+}
+
+/* we pass order here so that we can make blank slot2 skills stay 
+   at the bottom no matter which sortOrder we are using.  */
+const getSortName = (skill, order) => {
+  return (SKILLS[skill].name || (order == 1 ? '\uffff' : ''))
 }
 
 /* -----------------------------------------------
@@ -406,14 +386,22 @@ const getSkillLevelsForSlot = (type, skill, slot) => {
   else return [0]
 }
 
-export const getAvailableSkills = (type) => {
+export const getAvailableSkills = (type, alph) => {
   let availSkills = []
   for (let slot = 0; slot < 2; slot++) {
-    availSkills[slot] = getAvailableSkillsForSlot(type, slot)
+    availSkills[slot] = getAvailableSkillsForSlot(type, slot, alph)
   }
   return availSkills
 }
 
-const getAvailableSkillsForSlot = (type, slot) => {
-  return AVAILABLE_SKILLS[TYPES[type].name][slot]
+const getAvailableSkillsForSlot = (type, slot, alph) => {
+  let skills = AVAILABLE_SKILLS[TYPES[type].name][slot]
+  if (alph == 1) return skills.sort((a, b) => {
+    let na = SKILLS[a].name
+    let nb = SKILLS[b].name
+    return (na > nb ? 1 : na < nb ? -1 : 0)
+  })
+  else return skills.sort((a, b) => {
+    return (a > b ? 1 : a < b ? -1 : 0)
+  })
 }

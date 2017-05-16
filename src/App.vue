@@ -4,27 +4,39 @@
     <modal v-if="showModal == 'settings'" class="settings modal" v-on:close="closeModal">
       <h3 slot="header">Settings</h3>
       <div slot="body">
-        <div class="options-item">
-          <div class="skill-sort label">Skill Sort:</div>
-        
-          <ul class="skill-sort options"
+        <div class="options-item"
              @mouseover="setDesc('skillSort')" @mouseout="setDesc(null)">
-            <li v-for="option, index in ['ID#', 'A-Z']">
-              <span @click="changeSetting('skillSort', index)" 
-                    :class="['button', {active: skillSort == index}]">
+          <div class="skill-sort label">Skill Sort:</div>
+          <ul class="skill-sort options">
+            <li v-for="option, index in ['A-Z', 'ID#']">
+              <span @click="changeSetting('skillSort', 1-index)" 
+                    :class="['button', {active: settings.skillSort == 1-index}]">
               {{ option }}
               </span>
             </li>
           </ul>         
         </div>
         
-        <div class="options-item">
-          <div class="deco-warn label">Decoration Warning:</div>       
-          <ul class="deco-warn options"
+        <div class="options-item"
+             @mouseover="setDesc('skillMax')" @mouseout="setDesc(null)">
+          <div class="skill-max label">Auto-Max Skills:</div>
+          <ul class="skill-sort options">
+            <li v-for="option, index in ['On', 'Off']">
+              <span @click="changeSetting('skillMax', 1-index)" 
+                    :class="['button', {active: settings.skillMax == 1-index}]">
+              {{ option }}
+              </span>
+            </li>
+          </ul>         
+        </div>
+        
+        <div class="options-item"
              @mouseover="setDesc('decoWarn')" @mouseout="setDesc(null)">
+          <div class="deco-warn label">Decoration Warning:</div>       
+          <ul class="deco-warn options">
             <li v-for="option, index in ['On', 'Off']">
               <span @click="changeSetting('decoWarn', 1-index)"
-                    :class="['button', {active: decoWarn == 1-index}]">
+                    :class="['button', {active: settings.decoWarn == 1-index}]">
                 {{ option }}
               </span>
             </li>
@@ -32,13 +44,13 @@
           
         </div>
         
-        <div class="options-item">
-          <div class="deco-delete label">Decoration Deletion:</div>          
-          <ul class="deco-delete options" 
+        <div class="options-item" 
              @mouseover="setDesc('decoDelete')" @mouseout="setDesc(null)">
-            <li v-for="option, index in ['Auto', 'Manual']">
-              <span @click="changeSetting('decoDelete', 1-index)"
-                    :class="['button', {active: decoDelete == 1-index}]">
+          <div class="deco-delete label">Decoration Deletion:</div>          
+          <ul class="deco-delete options">
+            <li v-for="option, index in ['Manual', 'Auto']">
+              <span @click="changeSetting('decoDelete', index)"
+                    :class="['button', {active: settings.decoDelete == index}]">
                 {{ option }}
               </span>
             </li>
@@ -49,12 +61,14 @@
           <p class="options-description" 
              v-if="settingDescription"
              v-html="settingDescription"  
+             @mouseover="setDesc('last')" @mouseout="setDesc(null)"
           />
         </transition>
         
       </div>
       <div slot="footer">
-        <button class="button" @click="closeModal">OK</button>
+        <button class="button" @click="closeModal"
+          @mouseover="setDesc('last')" @mouseout="setDesc(null)">OK</button>
       </div>
     </modal>
     
@@ -113,7 +127,7 @@
         <p>An extdata file is a save file from the 3DS's SD card (as opposed to the game cartridge), decrypted by a 3DS homebrew save editor such as <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>.</p> 
         <p>For more information on how to generate an extdata file, the <a href="https://smealum.github.io/3ds/" >official homebrew channel site</a> and the communities on <a href="https://www.reddit.com/r/3dshacks/wiki/index" >reddit</a> and <a href="https://gbatemp.net/forums/3ds-homebrew-development-and-emulators.275/">gbatemp</a> are good places to start learning about 3DS homebrew.</p>
         <h4>Does this overwrite my save?</h4>
-        <p>No. Clicking "Save Changes" will download a fresh copy of your save file with the changes you have made. You will need to manually overwrite your original save in order to load the modified data into Monster Hunter Generations.</p>
+        <p>No. Clicking "Save Changes" will download a fresh copy of your save file with the changes you have made. You will need to manually place this downloaded save file in the correct place on your SD card in order to load the modified data into Monster Hunter Generations.</p>
         <h4>Which games does this support?</h4>
         <p>Only <b>Monster Hunter Generations</b> (the NA / EU release of Monster Hunter X). I don't plan to add support for MHX or the older games, but I do plan to support the English version of Monster Hunter XX when it eventually comes out.</p>
         <h4>What's wrong with <a href="https://gbatemp.net/threads/release-mh-talisman-editor-for-mhx-mhgen-mh4g-mh4u.411182/">jc28735250's talisman editor</a>?</h4>
@@ -131,7 +145,8 @@
         <p>That's the legality checking at work. Different rarities of talisman have different skills (and different levels of those skills) available – for example, a lot of skills, like Critical Up, Evade Distance, and Handicraft, can only be found on talismans that come from a Timeworn Charm (Queen, King, and Dragon rarites). So, if you have a Queen Talisman with Handicraft and you change its rarity to Pawn, the Handicraft skill will be reset to something else.</p>
         <p>Skill compatibility information used in <b>☆'s MHGen Talisman Editor</b> was collected from <a href="https://docs.google.com/spreadsheets/d/1N7lqzdSzNl1o_W8JiYyQz_cXDXJEE_Ur4myI4Uf0F7E/">this spreadsheet</a>. You can view the actual datafile used in the app <a href="https://github.com/sand-bird/talismans/blob/master/src/skills.json">here</a>.</p>
         <h4>Why don't my decorations get copied when I copy a charm?</h4>
-        <p></p>
+        <p>Now that would be going a little too far, wouldn't it?</p>
+        <p>(Actually, there <i>is</i> a sneaky way to create decorations using this editor, though you'll need to know the ID of the decoration you want. That's all I can say – the rest is up to you to figure out!)</p>
         <h4>You should add {feature}!</h4>
         <p>Sure! <a @click="modal('contact')">Drop me a line.</a></p>
         <h4>I think I found a bug.</h4>
@@ -201,7 +216,7 @@
     
     
     <transition name="app-transition" v-on:after-enter="setRenderFinished">
-    <div v-if="!renderDelay">
+    <div v-if="!renderDelay" class="app-body">
       <ul id="files">
         <li v-for="(save, index) in saves" v-on:click="setActive(index)"
             :class="[{ active: $store.state.active == index}, 
@@ -216,10 +231,6 @@
       <div class="button" @click="clearCharms()" v-show="charms">Clear Talismans</div>
       <div class="button" @click="showModal = 'import'" v-show="file">Import Talismans</div>
       <div class="button" @click="exportCharms" v-show="file && charms">Export Talismans</div>
-      <!-- <div class="button" v-on:click='test' v-show="charms">Test</div> -->
-      <!-- <div class="button" @click="toggleSkillSort" v-show="charms">Skill Sort: <b class="sort-id">{{ skillSort }}</b></div> -->
-      
-      
       
       
       <ul id="charms">
@@ -234,7 +245,8 @@
           </div>
         </li>
         
-        <charm v-for="offset in charmOffsets" :offset="offset" :key="offset"
+        <charm v-for="offset in charmOffsets" :offset="offset" :key="offset" 
+               :skillSort="settings.skillSort" :skillMax="settings.skillMax"
                :class="{'active-charm': (activeCharm && activeCharm == offset)}"
                v-if="offset"
                v-on:remove="tryRemoveCharm"
@@ -244,7 +256,9 @@
         <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
           <span class="add">➕</span> Add Talisman
         </li>
+        
       </ul>
+      
     </div>
     </transition>
     
@@ -267,9 +281,11 @@ import { loadSaves, loadOffsets, loadCharms,
 import charm from './Charm.vue'
 import modal from './Modal.vue'
 import fileSaver from 'file-saver'
+import { EventEmitter } from 'events'
 
 const settingDescriptions = {
   "skillSort": "<b>Skill Sort:</b> Determines the order skills are listed in the dropdown menu, and the order talismans are listed when sorted by skills.",
+  "skillMax": "<b>Auto-Max Skills:</b> When selecting a new skill, whether to automatically set the skill's level to the highest possible amount.",
   "decoWarn": "<b>Decoration Warning:</b> Whether to display a warning message when deleting talismans with decorations.",
   "decoDelete": "<b>Decoration Deletion:</b> Whether to automatically delete talismans with decorations when clearing or overwriting talismans."
 }
@@ -278,9 +294,12 @@ export default {
   name: 'app',
   data () {
     return {
+      // holds string specifying which modal to show
+      showModal: null,
+      testModal: new EventEmitter(),
+      
       /* render control flags */
       
-      showModal: null,
       // controls display of "loading..." animation
       loading: false,
       // ensures nothing is rendered until charms 
@@ -298,26 +317,25 @@ export default {
       charmToRemove: null,
       
       /* sorting state info */
- 
+
       sortOrder: 1,
       // if same as next sortKey, flip sort order
       lastSortKey: null,
+      
+      /* settings */
 
-      /* offset info (todo: move back into state??) */
-      
-      
-      //allCharmOffsets: {},
-      //allEmptyOffsets: {},
-      //active: null,
-      importText: null,
-      
-      /* display strings */
-      
-      skillSort: 0,
-      decoWarn: 1,
-      decoDelete: 0,
+      settings: {
+        skillSort: 1,
+        skillMax: 1,
+        decoWarn: 1,
+        decoDelete: 0
+      },
       settingDescription: null,
       settingTimeout: null,
+      
+      // textbox in import charms dialog 
+      // (converted to json on submit) 
+      importText: null,
       
       saves: [],
       columns: [
@@ -348,7 +366,6 @@ export default {
     charmOffsets: {
       get () { 
         console.log("(computed) charmOffsets")
-        // return this.allCharmOffsets[this.active]
         return this.$store.getters.charmOffsets
       },
       set (val) {
@@ -383,6 +400,7 @@ export default {
     },
   
     init (event) {
+      console.log(localStorage)
     
       if (event.target.files[0].size != 4000815) {
         alert("Error: wrong file size!")
@@ -390,20 +408,13 @@ export default {
         return
       }
 
-      console.log("loading: true")
       this.loading = true
-      
       let file = event.target.files[0]
-
       let reader = new FileReader()
-      
+
       reader.onload = function (e) {
-        let file = Buffer.from(e.target.result)
-        
-        console.log("file: true")
+        let file = Buffer.from(e.target.result)        
         this.file = true
-        
-        console.log(this)
         
         this.saves = loadSaves(file)
         // finds first occupied file and inits it to active
@@ -416,7 +427,7 @@ export default {
           this.loading = false
           return
         }
-      
+
         this.$store.dispatch('init', {
           charms: loadCharms(file),
           offsets: loadOffsets(file),
@@ -441,6 +452,11 @@ export default {
         */
         
         this.$store.dispatch('loadFile', file)
+        
+        Object.keys(this.settings).forEach( key => {
+          if (localStorage.hasOwnProperty(key))
+            this.settings[key] = parseInt(localStorage.getItem(key))
+        })
 
       }.bind(this)
       
@@ -456,7 +472,9 @@ export default {
     },
     
     changeSetting (setting, value) {
-      this[setting] = value
+      this.settings[setting] = value
+      localStorage.setItem(setting, value)
+      console.log(localStorage)
       this.setDesc(setting)
     },
     
@@ -465,6 +483,8 @@ export default {
         this.settingDescription = settingDescriptions[setting]
         clearTimeout(this.settingTimeout)
       }
+      else if (setting == 'last') 
+        clearTimeout(this.settingTimeout)
       else { 
         this.settingTimeout = setTimeout(() => {
           this.settingDescription = null 
@@ -509,10 +529,11 @@ export default {
     
     /* pops up the decoration warning modal if the charm to be
        removed has decorations equipped, then stores the offset
-       so the modal button can access it. clunky, but works
-    */
+       so the modal button can access it. clunky, but works  */
     tryRemoveCharm (offset) {
-      if (this.$store.state.charms[offset].filledSlots) {
+      console.log("tryRemoveCharm: " + offset)
+      console.log(this.$store.state.charms[offset].filledSlots)
+      if (this.settings.decoWarn && this.$store.state.charms[offset].filledSlots) {
         this.modal('delete')
         this.charmToRemove = offset
       }
@@ -578,6 +599,10 @@ export default {
         this.$store.dispatch('add', JSON.parse(this.importText))
         this.closeModal()
       })
+      else {
+        this.$store.dispatch('add', JSON.parse(this.importText))
+        this.closeModal()
+      }
     },
     
     // all: when set, clearCharms does not track charms with
@@ -587,7 +612,8 @@ export default {
         let offsetsToRemove = []
         let filledCharmOffsets = []
         this.charmOffsets.forEach((offset) => {
-          if (this.$store.state.charms[offset].filledSlots && this.decoDelete)
+          if (this.$store.state.charms[offset].filledSlots 
+              && !this.settings.decoDelete)
             filledCharmOffsets.push(offset)
           else
             offsetsToRemove.push(offset)
@@ -598,15 +624,18 @@ export default {
           resolve()
         }
         else if (filledCharmOffsets.length) {
-          this.modal('delete')
+          let modal = this.modal('delete')
           this.charmToRemove = filledCharmOffsets
           console.log(this.charmToRemove)
+          
+          modal.on('close', () => { 
+            console.log("close event detected")
+          })
         }
       })
     },
     
-    sortCharms (sortKey) {
-    
+    sortCharms (sortKey) {    
       let sortKeys = [
         'rarity',
         'slots',
@@ -616,7 +645,9 @@ export default {
         ['skills', 1],
         ['skillValues', 1]
       ]
-    
+      
+      // flips sortOrder if sorting again on the same key;
+      // on a new key, sortOrder should always be 1
       if (this.lastSortKey == sortKey) this.sortOrder *= -1
       else this.sortOrder = 1
       
@@ -643,13 +674,12 @@ export default {
       }
       
       sortFn = (a, b) => {
-        return compareCharms (
+        return compareCharms ( 
           this.$store.state.charms[a],
           this.$store.state.charms[b],
-          
-          ...sortKeys
-        
-        ) * this.sortOrder
+          sortKeys, 
+          this.settings.skillSort, this.sortOrder
+        )
       }
 
       this.charmOffsets = this.charmOffsets.sort(sortFn)
@@ -659,10 +689,18 @@ export default {
       this.showModal = null
       this.charmToRemove = null
       this.importText = null
+      this.testModal.emit('close')
     },
     
     modal (modal) {
-      this.closeModal()
+      console.log("this.modal: " + modal)
+      this.testModal.on('close', () => {
+        console.log('test close')
+      })
+      
+      //this.testModal.emit('close')
+      //closeModal()
+      
       this.$nextTick(() => {
         this.showModal = modal
       })
@@ -851,7 +889,7 @@ h1, h2 {
   transition: all 0.25s;
 }
 
-.settings:after {
+.settings.button:after {
   content: '\e803 \e804 \e805';
   content: '\e805';
   font-family: 'icons';
@@ -879,6 +917,12 @@ h1, h2 {
 .settings.button:hover {
   background-color: #fefefe;
   color: #666; 
+}
+
+.app-body .button {
+  width: 200px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 
@@ -919,7 +963,10 @@ h1, h2 {
 .options span {
   display: inline-block;
   margin: 0;
-  padding: 8px 16px;
+  padding: 8px 10px;
+  border-radius: 0;
+  min-width: 60px;
+  text-align: center !important;
 }
 
 .options li:first-child {
@@ -930,11 +977,13 @@ h1, h2 {
 }
 
 .options li:first-child span {
-  border-radius: 20px 0 0 20px;
+  border-radius: 10px 0 0 10px;
+  padding-left: 16px;
 }
 
 .options li:last-child span {
-  border-radius: 0 20px 20px 0;
+  border-radius: 0 10px 10px 0;
+  padding-right: 16px;
 }
 
 .options input {
@@ -1198,31 +1247,27 @@ a:hover {
   margin-right: 15px;
 }
 
+body::-webkit-scrollbar-track {
+	border-radius: 0px;
+	background-color: transparent;
+}
+
 body::-webkit-scrollbar {
   border-radius: 10px;
-}
-
-body::-webkit-scrollbar-track
-{
-	border-radius: 0px;
+	width: 16px;
 	background-color: #fff;
 }
 
-body::-webkit-scrollbar
-{
-	width: 12px;
-	background-color: #fff;
-}
-
-body::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
+body::-webkit-scrollbar-thumb {
+	border-radius: 6px;
+	width: 10px;
+	background-clip: padding-box;
+	border: 2px solid transparent;
 	background-color: #ccc;
 }
 
-body::-webkit-scrollbar-button
-{
-  height: 5px;
+body::-webkit-scrollbar-button {
+  height: 0px;
   background-color: #fff;
 }
 

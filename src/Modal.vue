@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     close () {
-      console.log("close modal")
       this.$emit('close')
     }
   }
