@@ -82,6 +82,9 @@ export default {
     return { 
       debugOn: DEBUG, 
       origOffset: this.offset,
+      
+      /* skill tracking values -- for knowing 
+         which skill slot we've just modified */
       currentSkillSlot: null,
       currentSkill: null,
       currentSkillValue: null
@@ -103,8 +106,8 @@ export default {
       }
     },
     // integer representing the type of charm 
-    // corresponding to the talisman's rarity:
-    // mystery (325), shining (326), or timeworn (327)
+    // corresponding to the talisman's rarity.
+    // mystery: 325, shining: 326, timeworn: 327
     type: {
       get () { 
         this.debug("[computed] type: get")
@@ -126,7 +129,6 @@ export default {
         this.set("slots", val) 
       }
     },
-    
     
     /* immutable properties fetched from state */
     
@@ -152,7 +154,6 @@ export default {
       this.debug("[computed] filledSlots") 
       return this.get("filledSlots") 
     },
-    
     
     /* computed properties relying on functions stored in utils.js */
     
@@ -180,7 +181,6 @@ export default {
       this.debug("[computed] skillLevels")
       return getSkillLevels(this.type, this.skills)
     },
-    
     
     // for debugging
     data () {
@@ -312,12 +312,10 @@ export default {
     },
   
     skillName (skillId) {
-      //this.debug("[methods] skillName: " + skillId)
       return getSkillName(skillId)
     },
     
     rarityName (rarityId) {
-      //this.debug("[methods] rarityName: " + rarityId)
       return getRarityName(rarityId)
     },
     
@@ -330,6 +328,7 @@ export default {
     },
     
     track (i) { 
+      this.debug("[methods] track: " + i)
       this.currentSkillSlot = i 
       this.currentSkill = this.skills[i]
       this.currentSkillValue = this.skillValues[i]

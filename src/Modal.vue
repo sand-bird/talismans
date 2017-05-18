@@ -96,36 +96,6 @@ export default {
   float: right;
 }
 
-.settings .modal-container {
-  width: 420px;
-}
-
-.settings .modal-body {
-  overflow-y: hidden;
-}
-
-.about .modal-container {
-  width: 540px;
-}
-
-.faq .modal-container {
-  width: 680px;
-}
-
-.contact .modal-container {
-  width: 480px;
-}
-
-.import .modal-container {
-  width: 560px;
-}
-
-.import .upload, .import-text {
-  margin-top: 1px;
-  margin-bottom: 1px;
-  height: 21px;
-}
-
 .modal a:hover {
   cursor: pointer;
 }
@@ -151,10 +121,6 @@ export default {
   text-align: left;
   padding-left: 0.25em;
   margin: 0.25em 10px;
-}
-
-.about.modal li {
-  margin: 0.1em 10px;
 }
 
 .modal p, .modal li {
@@ -194,15 +160,6 @@ export default {
   font-size:1.1em;
   padding:0 0.2em;
 }
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;

@@ -21,7 +21,6 @@ export default new Vuex.Store({
     active: null,
     loaded: false
   },
-  
   getters: {
     charmOffsets: (state) => {
       return state.charmOffsets[state.active]
@@ -30,7 +29,6 @@ export default new Vuex.Store({
       return state.emptyOffsets[state.active]
     }
   },
-  
   mutations: {
     LOAD_FILE (state, file) {
       state.file = file
@@ -86,7 +84,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    
     init ({ commit, state }, data) {
       commit('LOAD_CHARMS', data.charms)
       commit('LOAD_OFFSETS', data.offsets)
@@ -111,20 +108,10 @@ export default new Vuex.Store({
       }, 0)
     },
     
-    // needs to be synchronous because the render
-    // relies on the add to be finished
+    // needs to be synchronous because the 
+    // render relies on the add to be finished
     add ({commit, state}, data) {
-    //  return new Promise((resolve, reject) => {
-    //    setTimeout(() => {
-          commit('ADD_CHARMS', data)
-    //      resolve()
-    //    }, 0)
-    //  })
-    },
-    
-    replace ({commit, state}, ...data) {
-      commit('DELETE_CHARMS', data[0])
-      commit('ADD_CHARMS', data[1])
+      commit('ADD_CHARMS', data)
     },
     
     save ({ commit, state }, data) {
@@ -132,9 +119,9 @@ export default new Vuex.Store({
     },
     
     setActive ({ commit, state }, data) {
-    setTimeout(() => {
+      setTimeout(() => {
         commit('SET_ACTIVE', data)
       }, 0)
-    },
+    }
   }
 })

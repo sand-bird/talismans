@@ -1,224 +1,33 @@
 <template>
   <div id="app">
-  
-    <modal v-if="showModal == 'settings'" class="settings modal" v-on:close="closeModal">
-      <h3 slot="header">Settings</h3>
-      <div slot="body">
-        <div class="options-item"
-             @mouseover="setDesc('skillSort')" @mouseout="setDesc(null)">
-          <div class="skill-sort label">Skill Sort:</div>
-          <ul class="skill-sort options">
-            <li v-for="option, index in ['A-Z', 'ID#']">
-              <span @click="changeSetting('skillSort', 1-index)" 
-                    :class="['button', {active: settings.skillSort == 1-index}]">
-              {{ option }}
-              </span>
-            </li>
-          </ul>         
-        </div>
-        
-        <div class="options-item"
-             @mouseover="setDesc('skillMax')" @mouseout="setDesc(null)">
-          <div class="skill-max label">Auto-Max Skills:</div>
-          <ul class="skill-sort options">
-            <li v-for="option, index in ['On', 'Off']">
-              <span @click="changeSetting('skillMax', 1-index)" 
-                    :class="['button', {active: settings.skillMax == 1-index}]">
-              {{ option }}
-              </span>
-            </li>
-          </ul>         
-        </div>
-        
-        <div class="options-item"
-             @mouseover="setDesc('decoWarn')" @mouseout="setDesc(null)">
-          <div class="deco-warn label">Decoration Warning:</div>       
-          <ul class="deco-warn options">
-            <li v-for="option, index in ['On', 'Off']">
-              <span @click="changeSetting('decoWarn', 1-index)"
-                    :class="['button', {active: settings.decoWarn == 1-index}]">
-                {{ option }}
-              </span>
-            </li>
-          </ul>
-          
-        </div>
-        
-        <div class="options-item" 
-             @mouseover="setDesc('decoDelete')" @mouseout="setDesc(null)">
-          <div class="deco-delete label">Decoration Deletion:</div>          
-          <ul class="deco-delete options">
-            <li v-for="option, index in ['Manual', 'Auto']">
-              <span @click="changeSetting('decoDelete', index)"
-                    :class="['button', {active: settings.decoDelete == index}]">
-                {{ option }}
-              </span>
-            </li>
-          </ul>       
-        </div>
-        
-        <transition name="settings-transition">
-          <p class="options-description" 
-             v-if="settingDescription"
-             v-html="settingDescription"  
-             @mouseover="setDesc('last')" @mouseout="setDesc(null)"
-          />
-        </transition>
-        
-      </div>
-      <div slot="footer">
-        <button class="button" @click="closeModal"
-          @mouseover="setDesc('last')" @mouseout="setDesc(null)">OK</button>
-      </div>
-    </modal>
-    
-    <modal v-if="showModal == 'contact'" class="contact modal" v-on:close="closeModal">
-      <h3 slot="header">Contact</h3>
-      <div slot="body">
-        <p>Please free to <a href="mailto:sandbird@tuta.io">email me</a> about requests, issues, questions, comments, job offers, or anything else at all.</p>
-        <p>You can also post in the <a href="https://gbatemp.net/threads/release-online-mhgen-talisman-editor.457791/">gbatemp thread</a> if you prefer, or for feature requests and bug reports, raise an issue on the <a href="https://github.com/sand-bird/talismans/issues">github repository</a>.</p> 
-        <p>Thanks for taking the time to contact me! I really appreciate your feedback, and I'll do my best to respond quickly.</p>
-      </div>
-      <div slot="footer">
-        <button class="button" @click="closeModal">OK</button>
-      </div>
-    </modal>
-    
-    <modal v-if="showModal == 'about'" class="about modal" @close="closeModal">    
-      <h3 slot="header">About</h3>
-      <div slot="body">
-        <p><b>☆'s MHGen Talisman Editor</b> is a talisman editor for Monster Hunter Generations.</p>
-        <p>Features:
-        <ul>
-          <li>Comprehensive legality checking</li>
-          <li>Save slot selection</li>
-          <li>Decoration handling</li>
-          <li>Sort talismans by rarity, slots, or skills</li>
-          <li>List skills alphabetically or by <span style="font-size:0.9em;">ID</span></li>
-          <li>Import and export talismans</li>  
-          <li>Add, delete, and clear talismans</li>      
-          <li>Copy talismans – select a talisman with the paperclip icon, then click “Add Talisman” to make a copy</li>
-        </ul>
-        </p>
-        <p>Please <a @click="modal('contact')">contact me</a> if you find any issues, and enjoy!</p>
-      </div>
-      <div slot="footer">
-        <button class="button" @click="closeModal">OK</button>
-      </div>
-    </modal>
-    
-    <modal v-if="showModal == 'faq'" class="faq modal" @close="closeModal">    
-      <h3 slot="header">FAQ</h3>
-      <div slot="body">    
-        <h4>How do I use this?</h4>
-        <ol>
-          <li>Using a homebrew save editor like <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>, dump your Monster Hunter Generations <b>extdata</b> to your 3DS's SD card.</li>
-          <li>Power off your 3DS, remove the SD card, and connect it to your computer.</li>
-          <li>Click <b>Choose File</b>, and locate your extdata file. Usually this is called <span class="inline-mono">system</span> with no extension.</li>
-          <li>Edit your talismans and click <b>Save Changes</b> to download a new <span class="inline-mono">system</span> file.</li>
-          <li><b>Move or rename the original extdata file on your SD card.</b> Take good care of it! As long as you have this backup, you can always restore your save if something goes wrong. <i>I am not liable if you forget to back up your save.</i></li>
-          <li>Copy or move the downloaded <span class="inline-mono">system</span> file into the <b>extdata</b> location on the SD card, and make sure it has the correct filename.</li>
-          <li>Unmount the SD card from your computer and insert it back into your 3DS.</li>
-          <li>Use your homebrew save editor to import the edited <b>extdata</b> file to Monster Hunter Generations.</li>
-        </ol>
-        <h4>Can I use it offline?</h4>
-        <p>Yes! Instructions for downloading and running the app locally are available on the <a href="http://github.com/sand-bird/talismans">github page</a>. You will need to have <a href="https://nodejs.org/en/">node.js</a> and <a href="http://blog.npmjs.org/post/85484771375/how-to-install-npm">npm</a> installed first.</p>
-        <h4>What's an extdata file?</h4>
-        <p>An extdata file is a save file from the 3DS's SD card (as opposed to the game cartridge), decrypted by a 3DS homebrew save editor such as <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>.</p> 
-        <p>For more information on how to generate an extdata file, the <a href="https://smealum.github.io/3ds/" >official homebrew channel site</a> and the communities on <a href="https://www.reddit.com/r/3dshacks/wiki/index" >reddit</a> and <a href="https://gbatemp.net/forums/3ds-homebrew-development-and-emulators.275/">gbatemp</a> are good places to start learning about 3DS homebrew.</p>
-        <h4>Does this overwrite my save?</h4>
-        <p>No. Clicking "Save Changes" will download a fresh copy of your save file with the changes you have made. You will need to manually place this downloaded save file in the correct place on your SD card in order to load the modified data into Monster Hunter Generations.</p>
-        <h4>Which games does this support?</h4>
-        <p>Only <b>Monster Hunter Generations</b> (the NA / EU release of Monster Hunter X). I don't plan to add support for MHX or the older games, but I do plan to support the English version of Monster Hunter XX when it eventually comes out.</p>
-        <h4>What's wrong with <a href="https://gbatemp.net/threads/release-mh-talisman-editor-for-mhx-mhgen-mh4g-mh4u.411182/">jc28735250's talisman editor</a>?</h4>
-        <p>Nothing – in fact, since it supports MHX and MH4U, it's actually a lot better than mine. However, it's currently Windows-only, and tends to crash under Wine, so I decided to write a cross-platform editor.</p>
-        <h4>Isn't this cheating?</h4>
-        <p>Well, yes, in that it allows you to modify your save file in ways that the game's developers did not intend. However, this tool very limited – <b>it only generates <i>legal</i> talismans</b>, meaning they are always possible (however unlikely) to obtain in-game without editing. Even the best talismans in the game will not turn a bad hunter into a good one.</p>
-        <h4>Why does this exist?</h4>
-        <p>Because talismans in Monster Hunter Generations are randomly generated out of <i>millions</i> of possibilities, the chance of getting a desired or even a useful talisman is extremely low, even after hours of tedious farming.</p>
-        <p>I and many others believe that even though Monster Hunter was designed to be this way, in practice, this situation goes against the <i>spirit</i> of the game. Any player who wants high-quality talismans, whether for speedrunning or just to expand their options for viable fashion sets, must either be very lucky or spend potentially hundreds of hours mining rocks in a game that is supposed to be about killing dragons.</p>
-        <p>This tool exists to solve that dilemma, letting you spend your time in Monster Hunter actually hunting monsters.</p>
-        <h4>Will people who play with me know that I hacked?</h4>
-        <p>Nope – it's impossible to know for sure, since anything you can make with this tool, you also could have gotten by being <i>really, really</i> lucky.</p>
-        <p>Of course, people might always choose to believe that someone is a hacker anyway, depending on just how “lucky” they are.</p>
-        <h4>Why do my skills keep changing?</h4>
-        <p>That's the legality checking at work. Different rarities of talisman have different skills (and different levels of those skills) available – for example, a lot of skills, like Critical Up, Evade Distance, and Handicraft, can only be found on talismans that come from a Timeworn Charm (Queen, King, and Dragon rarites). So, if you have a Queen Talisman with Handicraft and you change its rarity to Pawn, the Handicraft skill will be reset to something else.</p>
-        <p>Skill compatibility information used in <b>☆'s MHGen Talisman Editor</b> was collected from <a href="https://docs.google.com/spreadsheets/d/1N7lqzdSzNl1o_W8JiYyQz_cXDXJEE_Ur4myI4Uf0F7E/">this spreadsheet</a>. You can view the actual datafile used in the app <a href="https://github.com/sand-bird/talismans/blob/master/src/skills.json">here</a>.</p>
-        <h4>Why don't my decorations get copied when I copy a charm?</h4>
-        <p>Now that would be going a little too far, wouldn't it?</p>
-        <p>(Actually, there <i>is</i> a sneaky way to create decorations using this editor, though you'll need to know the ID of the decoration you want. That's all I can say – the rest is up to you to figure out!)</p>
-        <h4>You should add {feature}!</h4>
-        <p>Sure! <a @click="modal('contact')">Drop me a line.</a></p>
-        <h4>I think I found a bug.</h4>
-        <p>Oops, sorry about that! Please <a @click="modal('contact')">contact me</a> – I'll do my best to fix it right away.</p>
-      </div>
-      <div slot="footer">
-        <button class="button" @click="closeModal">OK</button>
-      </div>
-    </modal>
-    
-    <modal v-if="showModal == 'delete'" @close="closeModal">
-      <h3 slot="header">Decoration Warning</h3>
-      <div slot="body">This action will delete one or more talismans with decorations. Decorations will be lost.</div>
-      <div slot="footer">
-        <button class="button" @click="removeCharm(charmToRemove)">OK</button>
-        <button class="button" @click="closeModal">Cancel</button> 
-      </div>
-    </modal>
-    
-    <modal v-if="showModal == 'import'" class="import modal" @close="closeModal">    
-      <h3 slot="header">Import Talismans</h3>
-      <div slot="body">
-        <div class="import-description">
-          Choose a file to import, or paste text below.
-        </div>
-        <div class="import-file" >
-          <input type="file" class="import-upload upload" v-on:change='checkImportFile' />
-        </div>
-        <transition name="textbox-transition">
-          <textarea class="import-textbox" v-model="importText" />
-        </transition>
-      </div>
-      <div slot="footer">
-        <button class="button" @click="importCharms(false)">Insert</button>
-        <button class="button" @click="importCharms(true)">Overwrite</button>
-        <button class="button" @click="closeModal">Cancel</button> 
-      </div>
-    </modal>
-    
-    <!----------------
-       END OF MODALS 
-     ----------------->
-    
+
+    <component :is="modal.current" :settings="settings" 
+      @close="closeModal" @update="update" @open="openModal" />
+   
     <div class="header" :class="{ loaded: renderFinished }"
-         v-on:scroll="alert('abcd')" >
+         @scroll="alert('abcd')" >
       <div class="outer">
         <h1>☆'s MHGen Talisman Editor</h1>
       </div>
       <transition name="download-transition">
         <div class="dl-transition-holder" v-if="renderFinished">
-          <div class="download button" v-on:click="download">Save Changes</div>
-          <a class="settings button" @click="modal('settings')"></a>
+          <div class="download button" @click="download">Save Changes</div>
+          <a class="settings button" @click="openModal('settings')"></a>
         </div>
       </transition>
     </div>
     
-    
-    
     <div id="upload-holder" v-show="renderDelay">
       <div class="font-test"></div>
       Please select your extdata file: 
-      <input class="upload" type="file" v-on:change='init' v-show="!loading" />
+      <input class="upload" type="file" @change='init' v-show="!loading" />
       <div id="loading" v-show="loading">Loading...</div>
-      
     </div>
     
-    
-    
-    <transition name="app-transition" v-on:after-enter="setRenderFinished">
+    <transition name="app-transition" @after-enter="setRenderFinished">
     <div v-if="!renderDelay" class="app-body">
       <ul id="files">
-        <li v-for="(save, index) in saves" v-on:click="setActive(index)"
+        <li v-for="(save, index) in saves" @click="setActive(index)"
             :class="[{ active: $store.state.active == index}, 
                      { disabled : !save }]"
         >
@@ -227,11 +36,9 @@
         </li>
       </ul>
       
-      
-      <div class="button" @click="clearCharms()" v-show="charms">Clear Talismans</div>
-      <div class="button" @click="showModal = 'import'" v-show="file">Import Talismans</div>
+      <div class="button" @click="clearCharms" v-show="charms">Clear Talismans</div>
+      <div class="button" @click="importCharms" v-show="file">Import Talismans</div>
       <div class="button" @click="exportCharms" v-show="file && charms">Export Talismans</div>
-      
       
       <ul id="charms">
         
@@ -240,7 +47,7 @@
                :class="[column.id, 
                    {'sort-down': column.id == lastSortKey && sortOrder == -1 },
                    {'sort-up': column.id == lastSortKey && sortOrder == 1 }]" 
-               v-on:click="sortCharms(column.id)">
+               @click="sortCharms(column.id)">
             {{ column.name }}
           </div>
         </li>
@@ -249,11 +56,11 @@
                :skillSort="settings.skillSort" :skillMax="settings.skillMax"
                :class="{'active-charm': (activeCharm && activeCharm == offset)}"
                v-if="offset"
-               v-on:remove="tryRemoveCharm"
-               v-on:active="setActiveCharm"
+               @remove="removeCharm"
+               @active="setActiveCharm"
         />
       
-        <li class="add-charm" v-on:click='newCharm' v-show="file && emptyOffsets.length">
+        <li class="add-charm" @click='newCharm' v-show="file && emptyOffsets.length">
           <span class="add">➕</span> Add Talisman
         </li>
         
@@ -262,41 +69,58 @@
     </div>
     </transition>
     
-    
     <div id="footer" :class="{loaded: renderFinished}">
       <ul class="menu">
-        <li><a @click="showModal = 'about'">About</a></li>·
-        <li><a @click="showModal = 'faq'">FAQ</a></li>·
+        <li><a @click="openModal('about')">About</a></li>·
+        <li><a @click="openModal('faq')">FAQ</a></li>·
         <li><a href="http://github.com/sand-bird/talismans">Source</a></li>·
-        <li><a @click="showModal = 'contact'">Contact</a></li>
+        <li><a @click="openModal('contact')">Contact</a></li>
       </ul>
       <div class="copy">© 2017 <a href="http://github.com/sand-bird">sand bird</a></div>
     </div>
+    
   </div>
 </template>
 
 <script>
-import { loadSaves, loadOffsets, loadCharms, 
-         saveCharms, getRawCharm, compareCharms } from './utils'
-import charm from './Charm.vue'
-import modal from './Modal.vue'
 import fileSaver from 'file-saver'
 import { EventEmitter } from 'events'
 
-const settingDescriptions = {
-  "skillSort": "<b>Skill Sort:</b> Determines the order skills are listed in the dropdown menu, and the order talismans are listed when sorted by skills.",
-  "skillMax": "<b>Auto-Max Skills:</b> When selecting a new skill, whether to automatically set the skill's level to the highest possible amount.",
-  "decoWarn": "<b>Decoration Warning:</b> Whether to display a warning message when deleting talismans with decorations.",
-  "decoDelete": "<b>Decoration Deletion:</b> Whether to automatically delete talismans with decorations when clearing or overwriting talismans."
+import { loadSaves, loadOffsets, loadCharms, DEBUG,
+         saveCharms, getRawCharm, compareCharms } from './utils'
+import charm from './Charm.vue'
+import * as modals from './modals'
+
+class Modal extends EventEmitter {
+  constructor() {
+    super()
+    this.current = ''
+    this.on('open', function(modal) {
+      debug('[modal] open: ' + modal)
+      this.current = modal
+    })
+    this.on('close', function() {
+      debug('[modal] close: ' + this.current)
+      this.current = ''
+    })
+    this.on('confirm', function(...args) {
+      debug (
+        '[modal] confirm: ' + this.current + (args.length ? ' ' + args : '')
+      )
+    })
+  }
+}
+var modal = new Modal()
+
+const debug = (msg) => {
+  if (DEBUG) console.log("App " + msg)
 }
 
 export default {
   name: 'app',
   data () {
     return {
-      // holds string specifying which modal to show
-      showModal: null,
-      testModal: new EventEmitter(),
+      modal: modal,
       
       /* render control flags */
       
@@ -328,14 +152,10 @@ export default {
         skillSort: 1,
         skillMax: 1,
         decoWarn: 1,
-        decoDelete: 0
+        decoClear: 1
       },
       settingDescription: null,
       settingTimeout: null,
-      
-      // textbox in import charms dialog 
-      // (converted to json on submit) 
-      importText: null,
       
       saves: [],
       columns: [
@@ -347,7 +167,13 @@ export default {
     }
   },
   components: {
-    charm, modal
+    charm, 
+    'about': modals.about, 
+    'settings': modals.settings, 
+    'faq': modals.faq, 
+    'contact': modals.contact, 
+    'delete': modals.deleteModal, 
+    'import': modals.importModal
   },
   mounted () {
     document.addEventListener("keydown", (e) => {
@@ -365,22 +191,24 @@ export default {
     
     charmOffsets: {
       get () { 
-        console.log("(computed) charmOffsets")
+        debug("[computed] charmOffsets: get")
         return this.$store.getters.charmOffsets
       },
       set (val) {
+        debug("[computed] charmOffsets: set")
         this.$store.commit('UPDATE_CHARMOFFSETS', val)
       }
     },
     
     emptyOffsets () {
-      console.log("(computed) emptyOffsets")
+      debug("[computed] emptyOffsets: get")
       return this.$store.getters.emptyOffsets
     }
   },
   
   watch: {
     loaded (val) {
+      debug("[watch] loaded: " + val)
       if (val && this.renderDelay) {
         setTimeout(() => {
           this.renderDelay = false
@@ -393,15 +221,15 @@ export default {
   methods: {
   
     setRenderFinished () {
+      debug("[methods] setRenderFinished")
       setTimeout(() => {
         console.log("render finished")
         this.renderFinished = true
       }, 0)
     },
-  
-    init (event) {
-      console.log(localStorage)
     
+    init (event) {
+      debug("[methods] init")
       if (event.target.files[0].size != 4000815) {
         alert("Error: wrong file size!")
         event.target.value = null
@@ -431,123 +259,104 @@ export default {
         this.$store.dispatch('init', {
           charms: loadCharms(file),
           offsets: loadOffsets(file),
-          active: a
+          active: a,
+          file: file
         })
         
-        // unfinished code to generate a demo state
-        // (let's use our own offsets: 1001, 1002, ... 2001, 2002, etc)
-        // (use import charms to match the ones in system(6) to custom offs)
-        /*
-        let demo = {}
-        demo.charms = this.$store.state.charms,
-        demo.charmOffsets = {}
-        demo.charmOffsets[0] = this.$store.state.charmOffsets[1].slice(0,10)
-        demo.charmOffsets[1] = []
-        demo.emptyOffsets = {}
-        demo.emptyOffsets[0] = this.$store.state.emptyOffsets[1].slice(0,10)
-        demo.emptyOffsets[1] = this.$store.state.emptyOffsets[0].slice(0,10)
-        demo.active = 0,
-        
-        fileSaver.saveAs(new Blob([JSON.stringify(demo, null, '  ')], {type: "text/json"}), 'state.json', false)
-        */
-        
-        this.$store.dispatch('loadFile', file)
-        
+        // initialize settings to user's localStorage
         Object.keys(this.settings).forEach( key => {
           if (localStorage.hasOwnProperty(key))
             this.settings[key] = parseInt(localStorage.getItem(key))
         })
-
       }.bind(this)
-      
       reader.readAsArrayBuffer(file)
     },
     
     setActive (index) {
+      debug("[methods] setActive: " + index)
       if (this.saves[index] && this.active != index) {
-        //this.active = index
         this.$store.dispatch('setActive', index)
         this.activeCharm = null
       }
     },
     
-    changeSetting (setting, value) {
-      this.settings[setting] = value
-      localStorage.setItem(setting, value)
-      console.log(localStorage)
-      this.setDesc(setting)
-    },
-    
-    setDesc(setting) {
-      if (settingDescriptions[setting]) {
-        this.settingDescription = settingDescriptions[setting]
-        clearTimeout(this.settingTimeout)
-      }
-      else if (setting == 'last') 
-        clearTimeout(this.settingTimeout)
-      else { 
-        this.settingTimeout = setTimeout(() => {
-          this.settingDescription = null 
-        }, 500)
-      }
-    },
-    
     download () {
+      debug("[methods] download")
       this.$store.commit('SAVE_CHARMS')
       var binaryData = []
       binaryData.push(this.$store.state.file)
-      fileSaver.saveAs(new Blob(binaryData, {type: "application/octet-stream"}), 'system', false)
+      fileSaver.saveAs (
+        new Blob(binaryData, {type: "application/octet-stream"}), 
+        'system', false
+      )
     },
     
     exportCharms () {
+      debug("[methods] exportCharms")
       let charms = []
       for (let i = 0; i < this.charmOffsets.length; i++)
         charms.push(this.$store.state.charms[this.charmOffsets[i]])
-      fileSaver.saveAs(new Blob([JSON.stringify(charms, null, '  ')], {type: "text/json"}), 'charm.txt', false)
+      fileSaver.saveAs (
+        new Blob([JSON.stringify(charms, null, '  ')], {type: "text/json"}),
+       'talismans_' + this.saves[this.$store.state.active] + '.txt', false
+      )
     },
     
-    test () {
-      let deletedCharms = []
-      for (let i = 0; i < 5; i++) {
-        let index = Math.floor(Math.random() * (this.charmOffsets.length))
-        let charm = this.charmOffsets[index]
-        deletedCharms.push(charm)
-        this.removeCharm(charm)
-      }
-      console.log(deletedCharms)
-      
-      for (let i = 0; i < 5; i++) {
-        console.log(getRawCharm(this.$store.state.file, deletedCharms[i]))
-      }
-      
-      this.$store.commit('SAVE_CHARMS')
-      
-      for (let i = 0; i < 5; i++) {
-        console.log(getRawCharm(this.$store.state.file, deletedCharms[i]))
-      }
+    openModal (modal) {
+      debug("[methods] openModal: " + modal)
+      this.modal.emit('open', modal)
     },
     
-    /* pops up the decoration warning modal if the charm to be
-       removed has decorations equipped, then stores the offset
-       so the modal button can access it. clunky, but works  */
-    tryRemoveCharm (offset) {
-      console.log("tryRemoveCharm: " + offset)
-      console.log(this.$store.state.charms[offset].filledSlots)
-      if (this.settings.decoWarn && this.$store.state.charms[offset].filledSlots) {
-        this.modal('delete')
-        this.charmToRemove = offset
+    closeModal (...args) {
+      debug("[methods] closeModal: " + args)
+      this.modal.emit('close')
+      if (args.length && typeof args[0] === 'string') 
+        this.modal.emit(...args)
+    },
+    
+    update (...args) {
+      debug("[methods] update: " + args)
+      if (args.length < 2) {
+        console.log("[App.update] Error: Not enough arguments!")
+        return
       }
-      else this.removeCharm(offset)
+      let val = args[args.length - 1]
+      let key = args[args.length - 2]
+      let obj = this
+
+      if (args.length > 2) {
+        for (let i = 0; i < args.length - 2; i++) {
+          if (args[i] in obj) obj = obj[args[i]]
+          else {
+            console.log("[App.update] Error: Key " + args[i] + " not found!")
+            return
+          }
+        }
+      }
+      if (key in obj) obj[key] = val
+      else {
+        console.log("[App.update] Error: Key " + args[i] + " not found!")
+      }
     },
     
     removeCharm (offset) {
-      console.log("removed " + offset)
-      this.$store.dispatch('remove', offset)
-      this.closeModal()
+      debug("[methods] removeCharm: " + offset)
+      // if we need a decoration warning, open the modal
+      // and only delete if the modal emits a 'confirm' event
+      if (this.settings.decoWarn &&
+          this.$store.state.charms[offset].filledSlots) {
+        this.openModal('delete')
+        this.modal.once('confirm', () => {
+          this.$store.dispatch('remove', offset)
+        })
+      }
+      else this.$store.dispatch('remove', offset)
     },
     
     setActiveCharm (offset) {
-      if (this.activeCharm && this.activeCharm == offset) this.activeCharm = null
+      debug("[methods] setActiveCharm: " + offset)
+      if (this.activeCharm && this.activeCharm == offset) 
+        this.activeCharm = null
       else this.activeCharm = offset
     },
     
@@ -555,6 +364,7 @@ export default {
     // in the equipment box, then in slots created by deleting
     // charms as a last resort
     newCharm () {
+      debug("[methods] newCharm: " + this.activeCharm)
       let newCharm = {}
       let sourceCharm = this.$store.state.charms[this.activeCharm] || null
       if (this.activeCharm && sourceCharm) newCharm = {
@@ -581,61 +391,72 @@ export default {
       this.$store.dispatch('add', newCharm)
     },
     
-    checkImportFile (event) {
-      let file = event.target.files[0]
-
-      let reader = new FileReader()
+    importCharms () {
+      debug("[methods] importCharms")
+      this.openModal('import')
       
-      reader.onload = function (e) {
-        this.importText = e.target.result
-        console.log(file)
-      }.bind(this)
-      
-      reader.readAsText(file)
-    },
-    
-    importCharms (overwrite) {
-      if (overwrite) this.clearCharms().then((res) => {
-        this.$store.dispatch('add', JSON.parse(this.importText))
-        this.closeModal()
+      this.modal.once('confirm', (ow, text) => {
+        if (ow) {
+          this.clearCharms().then((res) => {
+            this.$store.dispatch('add', JSON.parse(text))
+          })
+        }
+        else {
+          this.$store.dispatch('add', JSON.parse(text))
+        }
       })
-      else {
-        this.$store.dispatch('add', JSON.parse(this.importText))
-        this.closeModal()
-      }
     },
     
     // all: when set, clearCharms does not track charms with
     // decorations, and deletes indiscriminately instead
     clearCharms () {
+      debug("[methods] clearCharms: " + this.settings.decoClear)
       return new Promise((resolve, reject) => {
-        let offsetsToRemove = []
+        let emptyCharmOffsets = []
         let filledCharmOffsets = []
+        
         this.charmOffsets.forEach((offset) => {
-          if (this.$store.state.charms[offset].filledSlots 
-              && !this.settings.decoDelete)
+          if (this.settings.decoClear < 2 &&
+              this.$store.state.charms[offset].filledSlots)
             filledCharmOffsets.push(offset)
           else
-            offsetsToRemove.push(offset)
+            // even if decoClear is Always, we still want to push 
+            // each charm offset to a new array before clearing --
+            // store freaks out and doesn't delete right otherwise
+            emptyCharmOffsets.push(offset)
         })
-        
-        if (offsetsToRemove.length) {
-          this.$store.dispatch('remove', offsetsToRemove)
+        // if we have empty charms, our work is done
+        if (emptyCharmOffsets.length) {
+          this.$store.dispatch('remove', emptyCharmOffsets)
           resolve()
         }
+        // if we are here, it means there are no empty charms
         else if (filledCharmOffsets.length) {
-          let modal = this.modal('delete')
-          this.charmToRemove = filledCharmOffsets
-          console.log(this.charmToRemove)
-          
-          modal.on('close', () => { 
-            console.log("close event detected")
-          })
+          // decoClear is Smart: clear filled charms
+          if (this.settings.decoClear) {
+            // decoWarn is On: we need a modal
+            if (this.settings.decoWarn) {
+              this.openModal('delete')
+              
+              this.modal.once('confirm', () => {
+                this.$store.dispatch('remove', filledCharmOffsets)
+                resolve()
+              })
+            }
+            // decoWarn is Off: just clear it
+            else {
+              this.$store.dispatch('remove', filledCharmOffsets)
+              resolve()
+            }
+          }
+          // decoClear is Never: do nothing
+          else resolve()
         }
       })
     },
     
-    sortCharms (sortKey) {    
+    sortCharms (sortKey) {   
+      debug("[methods] sortCharms: " + sortKey)
       let sortKeys = [
         'rarity',
         'slots',
@@ -645,16 +466,12 @@ export default {
         ['skills', 1],
         ['skillValues', 1]
       ]
-      
       // flips sortOrder if sorting again on the same key;
       // on a new key, sortOrder should always be 1
       if (this.lastSortKey == sortKey) this.sortOrder *= -1
       else this.sortOrder = 1
-      
       this.lastSortKey = sortKey
       
-      let sortFn = () => { return 1 }
-  
       if (sortKey == 'skill1' || sortKey == 'skill2') {
         // grab index off the '1' or '2' in the sortKey
         let index = parseInt(sortKey.slice(-1)) - 1
@@ -673,7 +490,7 @@ export default {
         sortKeys.unshift(sortKey)
       }
       
-      sortFn = (a, b) => {
+      let sortFn = (a, b) => {
         return compareCharms ( 
           this.$store.state.charms[a],
           this.$store.state.charms[b],
@@ -681,29 +498,7 @@ export default {
           this.settings.skillSort, this.sortOrder
         )
       }
-
       this.charmOffsets = this.charmOffsets.sort(sortFn)
-    },
-    
-    closeModal () {
-      this.showModal = null
-      this.charmToRemove = null
-      this.importText = null
-      this.testModal.emit('close')
-    },
-    
-    modal (modal) {
-      console.log("this.modal: " + modal)
-      this.testModal.on('close', () => {
-        console.log('test close')
-      })
-      
-      //this.testModal.emit('close')
-      //closeModal()
-      
-      this.$nextTick(() => {
-        this.showModal = modal
-      })
     }
   }
 }
@@ -925,91 +720,6 @@ h1, h2 {
   padding-right: 0;
 }
 
-
-.options-item {
-  width: 100%;
-  font-size: 0;
-  margin: 15px 0;
-  overflow: hidden;
-}
-
-.modal .options-item .label {
-  font-size: 1rem;
-  display: inline-block;
-  float: left;
-  margin-top: 0;
-  line-height: 38px;
-}
-
-.options-item .description {
-  display: none;
-}
-
-.options {
-  display: inline-block;
-  font-size: 0;
-  float: right;
-}
-
-.modal .options li {
-  padding: 0;
-  margin: 0;
-  font-size: 1rem;
-  display: inline-block;
-  text-align: center;
-/*  min-width: 70px; */
-}
-
-.options span {
-  display: inline-block;
-  margin: 0;
-  padding: 8px 10px;
-  border-radius: 0;
-  min-width: 60px;
-  text-align: center !important;
-}
-
-.options li:first-child {
-  text-align: right;
-}
-.options li:last-child {
-  text-align: left;
-}
-
-.options li:first-child span {
-  border-radius: 10px 0 0 10px;
-  padding-left: 16px;
-}
-
-.options li:last-child span {
-  border-radius: 0 10px 10px 0;
-  padding-right: 16px;
-}
-
-.options input {
-  display: none;
-}
-
-.options-description {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 0.5em !important;
-  margin: 25px 0 5px 0 !important;
-  height: 4.9em;
-}
-
-.settings-transition-enter, .settings-transition-leave-to {
-  height: 1px;
-  margin: 0 !important;
-  padding: 0 0.5em !important;
-  opacity: 0;
-}
-
-.settings-transition-enter-active, .settings-transition-leave-active {
-  transition: all 0.4s ease-in-out;
-  transition-delay: 0s;
-}
-
 .button b.sort-id {
   width: 2em;
   display: inline-block;
@@ -1082,34 +792,6 @@ a:hover {
   margin-bottom: 10px;
   height: 21px;
   line-height: 21px;
-}
-
-.import-file {
-  padding: 12px 20px;
-  width: 100%;
-  border: 1px solid #eee;
-  display: inline-block;
-  margin: 1em auto;
-  border-radius: 10px;
-}
-
-.import-upload {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.import-textbox {
-  width: 100%;
-  height: 30vh;
-  border: 0;
-  box-shadow: 0 0 5px #ccc;
-  transition: height 0.5s ease;
-  margin: 0;
-}
-
-.textbox-transition-enter {
-  height: 21px;
 }
 
 #loading {
@@ -1270,6 +952,5 @@ body::-webkit-scrollbar-button {
   height: 0px;
   background-color: #fff;
 }
-
 
 </style>
