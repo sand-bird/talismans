@@ -1,0 +1,6 @@
+export {default as about} from './about.vue'
+export {default as settings} from './settings.vue'
+export {default as contact} from './contact.vue'
+export {default as faq} from './faq.vue'
+export {default as deleteModal} from './delete.vue'
+export {default as importModal} from './import.vue'
