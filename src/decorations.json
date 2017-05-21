@@ -1,1315 +1,1315 @@
 {
   "1664": {
     "name": "﻿Antidote Jwl",
-    "skill": "",
+    "skill": "Poison",
     "slots": 1
   },
 
   "1665": {
     "name": "Antidote Jwl",
-    "skill": "",
+    "skill": "Poison",
     "slots": 2
   },
 
   "1666": {
     "name": "Paralysis Jwl",
-    "skill": "",
+    "skill": "Paralysis",
     "slots": 1
   },
 
   "1667": {
     "name": "Paralysis Jwl",
-    "skill": "",
+    "skill": "Paralysis",
     "slots": 2
   },
 
   "1668": {
     "name": "Pep Jwl",
-    "skill": "",
+    "skill": "Sleep",
     "slots": 1
   },
 
   "1669": {
     "name": "Pep Jwl",
-    "skill": "",
+    "skill": "Sleep",
     "slots": 2
   },
 
   "1670": {
     "name": "Steadfast Jwl",
-    "skill": "",
+    "skill": "Stun",
     "slots": 1
   },
 
   "1671": {
     "name": "Standfast Jwl",
-    "skill": "",
+    "skill": "Stun",
     "slots": 1
   },
 
   "1672": {
     "name": "Earplug Jwl",
-    "skill": "",
+    "skill": "Hearing",
     "slots": 1
   },
 
   "1673": {
     "name": "Earplug Jwl",
-    "skill": "",
+    "skill": "Hearing",
     "slots": 3
   },
 
   "1674": {
     "name": "Wind Res Jwl",
-    "skill": "",
+    "skill": "Wind Res",
     "slots": 1
   },
 
   "1675": {
     "name": "Wind Res Jwl",
-    "skill": "",
+    "skill": "Wind Res",
     "slots": 2
   },
 
   "1676": {
     "name": "Footing Jwl",
-    "skill": "",
+    "skill": "Tremor Res",
     "slots": 1
   },
 
   "1677": {
     "name": "Tectonic Jwl",
-    "skill": "",
+    "skill": "Tremor Res",
     "slots": 1
   },
 
   "1678": {
     "name": "Bind Jwl",
-    "skill": "",
+    "skill": "Bind Res",
     "slots": 1
   },
 
   "1679": {
     "name": "Shackle Jwl",
-    "skill": "",
+    "skill": "Bind Res",
     "slots": 1
   },
 
   "1680": {
     "name": "Heat Res Jwl",
-    "skill": "",
+    "skill": "Heat Res",
     "slots": 1
   },
 
   "1681": {
     "name": "Cold Res Jwl",
-    "skill": "",
+    "skill": "Cold Res",
     "slots": 1
   },
 
   "1682": {
     "name": "Polar Jwl",
-    "skill": "",
+    "skill": "ColdBlooded",
     "slots": 1
   },
 
   "1683": {
     "name": "Solar Jwl",
-    "skill": "",
+    "skill": "HotBlooded",
     "slots": 1
   },
 
   "1684": {
     "name": "Safe Jwl",
-    "skill": "",
+    "skill": "Anti-Theft",
     "slots": 1
   },
 
   "1685": {
     "name": "Def Lock Jwl",
-    "skill": "",
+    "skill": "Def Lock",
     "slots": 1
   },
 
   "1686": {
     "name": "Sane Jwl",
-    "skill": "",
+    "skill": "Frenzy Res",
     "slots": 1
   },
 
   "1687": {
     "name": "Sane Jwl",
-    "skill": "",
+    "skill": "Frenzy Res",
     "slots": 3
   },
 
   "1688": {
     "name": "Biology Jwl",
-    "skill": "",
+    "skill": "Biology",
     "slots": 1
   },
 
   "1689": {
     "name": "Microbio Jwl",
-    "skill": "",
+    "skill": "Biology",
     "slots": 1
   },
 
   "1690": {
     "name": "Staunch Jwl",
-    "skill": "",
+    "skill": "Bleeding",
     "slots": 1
   },
 
   "1691": {
     "name": "Attack Jwl",
-    "skill": "",
+    "skill": "Attack",
     "slots": 1
   },
 
   "1692": {
     "name": "Attack Jwl",
-    "skill": "",
+    "skill": "Attack",
     "slots": 2
   },
 
   "1693": {
     "name": "Attack Jwl",
-    "skill": "",
+    "skill": "Attack",
     "slots": 3
   },
 
   "1694": {
     "name": "Defense Jwl",
-    "skill": "",
+    "skill": "Defense",
     "slots": 1
   },
 
   "1695": {
     "name": "Defense Jwl",
-    "skill": "",
+    "skill": "Defense",
     "slots": 2
   },
 
   "1696": {
     "name": "Vitality Jwl",
-    "skill": "",
+    "skill": "Health",
     "slots": 1
   },
 
   "1697": {
     "name": "Fire Res Jwl",
-    "skill": "",
+    "skill": "Fire Res",
     "slots": 1
   },
 
   "1698": {
     "name": "Nul-Fire Jwl",
-    "skill": "",
+    "skill": "Fire Res",
     "slots": 1
   },
 
   "1699": {
     "name": "Water Res Jwl",
-    "skill": "",
+    "skill": "Water Res",
     "slots": 1
   },
 
   "1700": {
     "name": "Nul-Water Jwl",
-    "skill": "",
+    "skill": "Water Res",
     "slots": 1
   },
 
   "1701": {
     "name": "ThunderRes Jwl",
-    "skill": "",
+    "skill": "Thunder Res",
     "slots": 1
   },
 
   "1702": {
     "name": "Nul-Thundr Jwl",
-    "skill": "",
+    "skill": "Thunder Res",
     "slots": 1
   },
 
   "1703": {
     "name": "Ice Res Jwl",
-    "skill": "",
+    "skill": "Ice Res",
     "slots": 1
   },
 
   "1704": {
     "name": "Nul-Ice Jwl",
-    "skill": "",
+    "skill": "Ice Res",
     "slots": 1
   },
 
   "1705": {
     "name": "Dragon Res Jwl",
-    "skill": "",
+    "skill": "Dragon Res",
     "slots": 1
   },
 
   "1706": {
     "name": "Nul-Dragon Jwl",
-    "skill": "",
+    "skill": "Dragon Res",
     "slots": 1
   },
 
   "1707": {
     "name": "Resistor Jwl",
-    "skill": "",
+    "skill": "Blight Res",
     "slots": 1
   },
 
   "1708": {
     "name": "Resistor Jwl",
-    "skill": "",
+    "skill": "Blight Res",
     "slots": 3
   },
 
   "1709": {
     "name": "Blaze Jwl",
-    "skill": "",
+    "skill": "Fire Atk",
     "slots": 1
   },
 
   "1710": {
     "name": "Blaze Jwl",
-    "skill": "",
+    "skill": "Fire Atk",
     "slots": 2
   },
 
   "1711": {
     "name": "Stream Jwl",
-    "skill": "",
+    "skill": "Water Atk",
     "slots": 1
   },
 
   "1712": {
     "name": "Stream Jwl",
-    "skill": "",
+    "skill": "Water Atk",
     "slots": 2
   },
 
   "1713": {
     "name": "Bolt Jwl",
-    "skill": "",
+    "skill": "Thunder Atk",
     "slots": 1
   },
 
   "1714": {
     "name": "Bolt Jwl",
-    "skill": "",
+    "skill": "Thunder Atk",
     "slots": 2
   },
 
   "1715": {
     "name": "Frost Jwl",
-    "skill": "",
+    "skill": "Ice Atk",
     "slots": 1
   },
 
   "1716": {
     "name": "Frost Jwl",
-    "skill": "",
+    "skill": "Ice Atk",
     "slots": 2
   },
 
   "1717": {
     "name": "Dragon Jwl",
-    "skill": "",
+    "skill": "Dragon Atk",
     "slots": 1
   },
 
   "1718": {
     "name": "Dragon Jwl",
-    "skill": "",
+    "skill": "Dragon Atk",
     "slots": 2
   },
 
   "1719": {
     "name": "Element Jwl",
-    "skill": "",
+    "skill": "Elemental",
     "slots": 1
   },
 
   "1720": {
     "name": "Element Jwl",
-    "skill": "",
+    "skill": "Elemental",
     "slots": 3
   },
 
   "1721": {
     "name": "Disabler Jwl",
-    "skill": "",
+    "skill": "Status",
     "slots": 1
   },
 
   "1722": {
     "name": "Disabler Jwl",
-    "skill": "",
+    "skill": "Status",
     "slots": 2
   },
 
   "1723": {
     "name": "Grinder Jwl",
-    "skill": "",
+    "skill": "Sharpener",
     "slots": 1
   },
 
   "1724": {
     "name": "Handicraft Jwl",
-    "skill": "",
+    "skill": "Handicraft",
     "slots": 2
   },
 
   "1725": {
     "name": "Handicraft Jwl",
-    "skill": "",
+    "skill": "Handicraft",
     "slots": 3
   },
 
   "1726": {
     "name": "Razor Jwl",
-    "skill": "",
+    "skill": "Sharpness",
     "slots": 1
   },
 
   "1727": {
     "name": "Razor Jwl",
-    "skill": "",
+    "skill": "Sharpness",
     "slots": 3
   },
 
   "1728": {
     "name": "Fencer Jwl",
-    "skill": "",
+    "skill": "Fencing",
     "slots": 1
   },
 
   "1729": {
     "name": "Fencer Jwl",
-    "skill": "",
+    "skill": "Fencing",
     "slots": 3
   },
 
   "1730": {
     "name": "Sharp Jwl",
-    "skill": "",
+    "skill": "Grinder",
     "slots": 1
   },
 
   "1731": {
     "name": "Sharp Jwl",
-    "skill": "",
+    "skill": "Grinder",
     "slots": 3
   },
 
   "1732": {
     "name": "Blunt Jwl",
-    "skill": "",
+    "skill": "Blunt",
     "slots": 1
   },
 
   "1733": {
     "name": "Blunt Jwl",
-    "skill": "",
+    "skill": "Blunt",
     "slots": 2
   },
 
   "1734": {
     "name": "Draw Jwl",
-    "skill": "",
+    "skill": "Crit Draw",
     "slots": 1
   },
 
   "1735": {
     "name": "Draw Jwl",
-    "skill": "",
+    "skill": "Crit Draw",
     "slots": 2
   },
 
   "1736": {
     "name": "Gambit Jwl",
-    "skill": "",
+    "skill": "Punish Draw",
     "slots": 1
   },
 
   "1737": {
     "name": "Gambit Jwl",
-    "skill": "",
+    "skill": "Punish Draw",
     "slots": 3
   },
 
   "1738": {
     "name": "Sheath Jwl",
-    "skill": "",
+    "skill": "Sheathing",
     "slots": 1
   },
 
   "1739": {
     "name": "Sheath Jwl",
-    "skill": "",
+    "skill": "Sheathing",
     "slots": 2
   },
 
   "1740": {
     "name": "Quickload Jwl",
-    "skill": "",
+    "skill": "Reload Spd",
     "slots": 1
   },
 
   "1741": {
     "name": "Quickload Jwl",
-    "skill": "",
+    "skill": "Reload Spd",
     "slots": 2
   },
 
   "1742": {
     "name": "Absorber Jwl",
-    "skill": "",
+    "skill": "Recoil",
     "slots": 1
   },
 
   "1743": {
     "name": "Absorber Jwl",
-    "skill": "",
+    "skill": "Recoil",
     "slots": 3
   },
 
   "1744": {
     "name": "Sniper Jwl",
-    "skill": "",
+    "skill": "Precision",
     "slots": 1
   },
 
   "1745": {
     "name": "Forceshot Jwl",
-    "skill": "",
+    "skill": "Normal Up",
     "slots": 1
   },
 
   "1746": {
     "name": "Forceshot Jwl",
-    "skill": "",
+    "skill": "Normal Up",
     "slots": 3
   },
 
   "1747": {
     "name": "Pierce Jwl",
-    "skill": "",
+    "skill": "Pierce Up",
     "slots": 1
   },
 
   "1748": {
     "name": "Pierce Jwl",
-    "skill": "",
+    "skill": "Pierce Up",
     "slots": 3
   },
 
   "1749": {
     "name": "Pellet Jwl",
-    "skill": "",
+    "skill": "Pellet Up",
     "slots": 1
   },
 
   "1750": {
     "name": "Pellet Jwl",
-    "skill": "",
+    "skill": "Pellet Up",
     "slots": 3
   },
 
   "1751": {
     "name": "Heavyshot Jwl",
-    "skill": "",
+    "skill": "Heavy Up",
     "slots": 1
   },
 
   "1752": {
     "name": "Heavyshot Jwl",
-    "skill": "",
+    "skill": "Heavy Up",
     "slots": 3
   },
 
   "1753": {
     "name": "ShotPlus Jwl",
-    "skill": "",
+    "skill": "Normal S+",
     "slots": 1
   },
 
   "1754": {
     "name": "ShotPlus Jwl",
-    "skill": "",
+    "skill": "Normal S+",
     "slots": 2
   },
 
   "1755": {
     "name": "PiercePlus Jwl",
-    "skill": "",
+    "skill": "Pierce S+",
     "slots": 1
   },
 
   "1756": {
     "name": "PelletPlus Jwl",
-    "skill": "",
+    "skill": "Pelle S+",
     "slots": 1
   },
 
   "1757": {
     "name": "CragPlus Jwl",
-    "skill": "",
+    "skill": "Crag S+",
     "slots": 1
   },
 
   "1758": {
     "name": "ClustPlus Jwl",
-    "skill": "",
+    "skill": "Clust S+",
     "slots": 1
   },
 
   "1759": {
     "name": "Poisoncoat Jwl",
-    "skill": "",
+    "skill": "Poison C+",
     "slots": 1
   },
 
   "1760": {
     "name": "Paracoat Jwl",
-    "skill": "",
+    "skill": "Para C+",
     "slots": 1
   },
 
   "1761": {
     "name": "Paracoat Jwl",
-    "skill": "",
+    "skill": "Para C+",
     "slots": 2
   },
 
   "1762": {
     "name": "Sleep Jwl",
-    "skill": "",
+    "skill": "Sleep C+",
     "slots": 1
   },
 
   "1763": {
     "name": "Powercoat Jwl",
-    "skill": "",
+    "skill": "Power C+",
     "slots": 1
   },
 
   "1764": {
     "name": "Powercoat Jwl",
-    "skill": "",
+    "skill": "Power C+",
     "slots": 2
   },
 
   "1765": {
     "name": "Elemcoat Jwl",
-    "skill": "",
+    "skill": "Elem C+",
     "slots": 1
   },
 
   "1766": {
     "name": "Elemcoat Jwl",
-    "skill": "",
+    "skill": "Elem C+",
     "slots": 2
   },
 
   "1767": {
     "name": "Rangecoat Jwl",
-    "skill": "",
+    "skill": "C.Range C+",
     "slots": 1
   },
 
   "1768": {
     "name": "Draincoat Jwl",
-    "skill": "",
+    "skill": "Exhaust C+",
     "slots": 1
   },
 
   "1769": {
     "name": "Blastcoat Jwl",
-    "skill": "",
+    "skill": "Blast C+",
     "slots": 1
   },
 
   "1770": {
     "name": "Salvo Jwl",
-    "skill": "",
+    "skill": "Rapid Fire",
     "slots": 1
   },
 
   "1771": {
     "name": "Salvo Jwl",
-    "skill": "",
+    "skill": "Rapid Fire",
     "slots": 3
   },
 
   "1772": {
     "name": "Precise Jwl",
-    "skill": "",
+    "skill": "Dead Eye",
     "slots": 1
   },
 
   "1773": {
     "name": "Precise Jwl",
-    "skill": "",
+    "skill": "Dead Eye",
     "slots": 2
   },
 
   "1774": {
     "name": "Capacity Jwl",
-    "skill": "",
+    "skill": "Loading",
     "slots": 2
   },
 
   "1775": {
     "name": "Capacity Jwl",
-    "skill": "",
+    "skill": "Loading",
     "slots": 3
   },
 
   "1776": {
     "name": "Irregular Jwl",
-    "skill": "",
+    "skill": "Haphazard",
     "slots": 1
   },
 
   "1777": {
     "name": "Thrift Jwl",
-    "skill": "",
+    "skill": "Ammo Saver",
     "slots": 1
   },
 
   "1778": {
     "name": "Thrift Jwl",
-    "skill": "",
+    "skill": "Ammo Saver",
     "slots": 2
   },
 
   "1779": {
     "name": "Expert Jwl",
-    "skill": "",
+    "skill": "Expert",
     "slots": 1
   },
 
   "1780": {
     "name": "Expert Jwl",
-    "skill": "",
+    "skill": "Expert",
     "slots": 2
   },
 
   "1781": {
     "name": "Expert Jwl",
-    "skill": "",
+    "skill": "Expert",
     "slots": 3
   },
 
   "1782": {
     "name": "Tenderizer Jwl",
-    "skill": "",
+    "skill": "Tenderizer",
     "slots": 1
   },
 
   "1783": {
     "name": "Tenderizer Jwl",
-    "skill": "",
+    "skill": "Tenderizer",
     "slots": 3
   },
 
   "1784": {
     "name": "Chain Jwl",
-    "skill": "",
+    "skill": "Chain Crit",
     "slots": 1
   },
 
   "1785": {
     "name": "Chain Jwl",
-    "skill": "",
+    "skill": "Chain Crit",
     "slots": 3
   },
 
   "1786": {
     "name": "Crit Status Jwl",
-    "skill": "",
+    "skill": "Crit Status",
     "slots": 1
   },
 
   "1787": {
     "name": "Crit Status Jwl",
-    "skill": "",
+    "skill": "Crit Status",
     "slots": 2
   },
 
   "1788": {
     "name": "CritElementJwl",
-    "skill": "",
+    "skill": "Crit Element",
     "slots": 1
   },
 
   "1789": {
     "name": "CritElementJwl",
-    "skill": "",
+    "skill": "Crit Element",
     "slots": 2
   },
 
   "1790": {
     "name": "Critical Jwl",
-    "skill": "",
+    "skill": "Critical Up",
     "slots": 1
   },
 
   "1791": {
     "name": "Charger Jwl",
-    "skill": "",
+    "skill": "FastCharge",
     "slots": 1
   },
 
   "1792": {
     "name": "Charger Jwl",
-    "skill": "",
+    "skill": "FastCharge",
     "slots": 3
   },
 
   "1793": {
     "name": "Sprinter Jwl",
-    "skill": "",
+    "skill": "Stamina",
     "slots": 1
   },
 
   "1794": {
     "name": "Sprinter Jwl",
-    "skill": "",
+    "skill": "Stamina",
     "slots": 3
   },
 
   "1795": {
     "name": "Physique Jwl",
-    "skill": "",
+    "skill": "Constitution",
     "slots": 1
   },
 
   "1796": {
     "name": "Physique Jwl",
-    "skill": "",
+    "skill": "Constitution",
     "slots": 2
   },
 
   "1797": {
     "name": "Refresh Jwl",
-    "skill": "",
+    "skill": "Stam Recov",
     "slots": 1
   },
 
   "1798": {
     "name": "Refresh Jwl",
-    "skill": "",
+    "skill": "Stam Recov",
     "slots": 2
   },
 
   "1799": {
     "name": "Evasion Jwl",
-    "skill": "",
+    "skill": "Evasion",
     "slots": 1
   },
 
   "1800": {
     "name": "Evasion Jwl",
-    "skill": "",
+    "skill": "Evasion",
     "slots": 2
   },
 
   "1801": {
     "name": "Jumping Jwl",
-    "skill": "",
+    "skill": "Evade Dist",
     "slots": 1
   },
 
   "1802": {
     "name": "Bubble Jwl",
-    "skill": "",
+    "skill": "Bubble",
     "slots": 1
   },
 
   "1803": {
     "name": "Ironwall Jwl",
-    "skill": "",
+    "skill": "Guard",
     "slots": 1
   },
 
   "1804": {
     "name": "Ironwall Jwl",
-    "skill": "",
+    "skill": "Guard",
     "slots": 2
   },
 
   "1805": {
     "name": "Shield Jwl",
-    "skill": "",
+    "skill": "Guard Up",
     "slots": 1
   },
 
   "1806": {
     "name": "Shield Jwl",
-    "skill": "",
+    "skill": "Guard Up",
     "slots": 2
   },
 
   "1807": {
     "name": "KO Jwl",
-    "skill": "",
+    "skill": "KO",
     "slots": 1
   },
 
   "1808": {
     "name": "KO Jwl",
-    "skill": "",
+    "skill": "KO",
     "slots": 2
   },
 
   "1809": {
     "name": "Drain Jwl",
-    "skill": "",
+    "skill": "Stam Drain",
     "slots": 1
   },
 
   "1810": {
     "name": "Drain Jwl",
-    "skill": "",
+    "skill": "Stam Drain",
     "slots": 2
   },
 
   "1811": {
     "name": "Sonorous Jwl",
-    "skill": "",
+    "skill": "Maestro",
     "slots": 1
   },
 
   "1812": {
     "name": "Artillery Jwl",
-    "skill": "",
+    "skill": "Artillery",
     "slots": 1
   },
 
   "1813": {
     "name": "Destroyer Jwl",
-    "skill": "",
+    "skill": "Destroyer",
     "slots": 1
   },
 
   "1814": {
     "name": "Destroyer Jwl",
-    "skill": "",
+    "skill": "Destroyer",
     "slots": 3
   },
 
   "1815": {
     "name": "Bombardier Jwl",
-    "skill": "",
+    "skill": "Bomb Boost",
     "slots": 1
   },
 
   "1816": {
     "name": "Throttle Jwl",
-    "skill": "",
+    "skill": "Gloves Off",
     "slots": 1
   },
 
   "1817": {
     "name": "Throttle Jwl",
-    "skill": "",
+    "skill": "Gloves Off",
     "slots": 2
   },
 
   "1818": {
     "name": "Spirit Jwl",
-    "skill": "",
+    "skill": "Spirit",
     "slots": 1
   },
 
   "1819": {
     "name": "Spirit Jwl",
-    "skill": "",
+    "skill": "Spirit",
     "slots": 2
   },
 
   "1820": {
     "name": "Flawless Jwl",
-    "skill": "",
+    "skill": "Unscathed",
     "slots": 1
   },
 
   "1821": {
     "name": "Flawless Jwl",
-    "skill": "",
+    "skill": "Unscathed",
     "slots": 2
   },
 
   "1822": {
     "name": "Favor Jwl",
-    "skill": "",
+    "skill": "Chance",
     "slots": 1
   },
 
   "1823": {
     "name": "Potential Jwl",
-    "skill": "",
+    "skill": "Potential",
     "slots": 1
   },
 
   "1824": {
     "name": "Potential Jwl",
-    "skill": "",
+    "skill": "Potential",
     "slots": 2
   },
 
   "1825": {
     "name": "Fortitude Jwl",
-    "skill": "",
+    "skill": "Survivor",
     "slots": 1
   },
 
   "1826": {
     "name": "Fortitude Jwl",
-    "skill": "",
+    "skill": "Survivor",
     "slots": 2
   },
 
   "1827": {
     "name": "Furor Jwl",
-    "skill": "",
+    "skill": "Furor",
     "slots": 1
   },
 
   "1828": {
     "name": "Furor Jwl",
-    "skill": "",
+    "skill": "Furor",
     "slots": 2
   },
 
   "1829": {
     "name": "Crisis Jwl",
-    "skill": "",
+    "skill": "Crisis",
     "slots": 1
   },
 
   "1830": {
     "name": "Crisis Jwl",
-    "skill": "",
+    "skill": "Crisis",
     "slots": 2
   },
 
   "1831": {
     "name": "Guts Jwl",
-    "skill": "",
+    "skill": "Guts",
     "slots": 1
   },
 
   "1832": {
     "name": "Guts Jwl",
-    "skill": "",
+    "skill": "Guts",
     "slots": 2
   },
 
   "1833": {
     "name": "Ninja Jwl",
-    "skill": "",
+    "skill": "Sense",
     "slots": 1
   },
 
   "1834": {
     "name": "Player Jwl",
-    "skill": "",
+    "skill": "Team Player",
     "slots": 1
   },
 
   "1835": {
     "name": "Morale Jwl",
-    "skill": "",
+    "skill": "Team Player",
     "slots": 1
   },
 
   "1836": {
     "name": "Leader Jwl",
-    "skill": "",
+    "skill": "TeamLeader",
     "slots": 1
   },
 
   "1837": {
     "name": "Leader Jwl",
-    "skill": "",
+    "skill": "TeamLeader",
     "slots": 2
   },
 
   "1838": {
     "name": "Rodeo Jwl",
-    "skill": "",
+    "skill": "Mounting",
     "slots": 1
   },
 
   "1839": {
     "name": "Flight Jwl",
-    "skill": "",
+    "skill": "Vault",
     "slots": 1
   },
 
   "1840": {
     "name": "Insight Jwl",
-    "skill": "",
+    "skill": "Insight",
     "slots": 1
   },
 
   "1841": {
     "name": "Psychic Jwl",
-    "skill": "",
+    "skill": "Psychic",
     "slots": 1
   },
 
   "1842": {
     "name": "Perception Jwl",
-    "skill": "",
+    "skill": "Perception",
     "slots": 1
   },
 
   "1843": {
     "name": "Ranger Jwl",
-    "skill": "",
+    "skill": "Ranger",
     "slots": 1
   },
 
   "1844": {
     "name": "Transportr Jwl",
-    "skill": "",
+    "skill": "Transporter",
     "slots": 1
   },
 
   "1845": {
     "name": "Protection Jwl",
-    "skill": "",
+    "skill": "Protection",
     "slots": 1
   },
 
   "1846": {
     "name": "Asylum Jwl",
-    "skill": "",
+    "skill": "Protection",
     "slots": 1
   },
 
   "1847": {
     "name": "Hero Jwl",
-    "skill": "",
+    "skill": "Hero Shield",
     "slots": 1
   },
 
   "1848": {
     "name": "Hero Jwl",
-    "skill": "",
+    "skill": "Hero Shield",
     "slots": 3
   },
 
   "1849": {
     "name": "Medicine Jwl",
-    "skill": "",
+    "skill": "Rec Level",
     "slots": 1
   },
 
   "1850": {
     "name": "Medicine Jwl",
-    "skill": "",
+    "skill": "Rec Level",
     "slots": 2
   },
 
   "1851": {
     "name": "Recovery Jwl",
-    "skill": "",
+    "skill": "Rec Speed",
     "slots": 1
   },
 
   "1852": {
     "name": "Recovery Jwl",
-    "skill": "",
+    "skill": "Rec Speed",
     "slots": 2
   },
 
   "1853": {
     "name": "Enduring Jwl",
-    "skill": "",
+    "skill": "Lasting Pwr",
     "slots": 1
   },
 
   "1854": {
     "name": "Friendship Jwl",
-    "skill": "",
+    "skill": "Wide-Range",
     "slots": 1
   },
 
   "1855": {
     "name": "Friendship Jwl",
-    "skill": "",
+    "skill": "Wide-Range",
     "slots": 2
   },
 
   "1856": {
     "name": "Hungerless Jwl",
-    "skill": "",
+    "skill": "Hunger",
     "slots": 1
   },
 
   "1857": {
     "name": "Metabolism Jwl",
-    "skill": "",
+    "skill": "Gluttony",
     "slots": 1
   },
 
   "1858": {
     "name": "Gobbler Jwl",
-    "skill": "",
+    "skill": "Eating",
     "slots": 1
   },
 
   "1859": {
     "name": "Gobbler Jwl",
-    "skill": "",
+    "skill": "Eating",
     "slots": 3
   },
 
   "1860": {
     "name": "Satiated Jwl",
-    "skill": "",
+    "skill": "Light Eater",
     "slots": 1
   },
 
   "1861": {
     "name": "Meateater Jwl",
-    "skill": "",
+    "skill": "Carnivore",
     "slots": 1
   },
 
   "1862": {
     "name": "Meatlover Jwl",
-    "skill": "",
+    "skill": "Carnivore",
     "slots": 1
   },
 
   "1863": {
     "name": "Fungiform Jwl",
-    "skill": "",
+    "skill": "Mycology",
     "slots": 1
   },
 
   "1864": {
     "name": "Grass Jwl",
-    "skill": "",
+    "skill": "Botany",
     "slots": 1
   },
 
   "1865": {
     "name": "Professor Jwl",
-    "skill": "",
+    "skill": "Combo Rate",
     "slots": 1
   },
 
   "1866": {
     "name": "Factory Jwl",
-    "skill": "",
+    "skill": "Combo Plus",
     "slots": 1
   },
 
   "1867": {
     "name": "Trapmaster Jwl",
-    "skill": "",
+    "skill": "Speed Setup",
     "slots": 1
   },
 
   "1868": {
     "name": "Gathering Jwl",
-    "skill": "",
+    "skill": "Gathering",
     "slots": 1
   },
 
   "1869": {
     "name": "Honeybee Jwl",
-    "skill": "",
+    "skill": "Honey",
     "slots": 1
   },
 
   "1870": {
     "name": "Queenbee Jwl",
-    "skill": "",
+    "skill": "Honey",
     "slots": 1
   },
 
   "1871": {
     "name": "Charmer Jwl",
-    "skill": "",
+    "skill": "Charmer",
     "slots": 1
   },
 
   "1872": {
     "name": "Blessing Jwl",
-    "skill": "",
+    "skill": "Whim",
     "slots": 1
   },
 
   "1873": {
     "name": "Fate Jwl",
-    "skill": "",
+    "skill": "Fate",
     "slots": 1
   },
 
   "1874": {
     "name": "Fate Jwl",
-    "skill": "",
+    "skill": "Fate",
     "slots": 3
   },
 
   "1875": {
     "name": "Carver Jwl",
-    "skill": "",
+    "skill": "Carving",
     "slots": 1
   },
 
   "1876": {
     "name": "Carver Jwl",
-    "skill": "",
+    "skill": "Carving",
     "slots": 3
   },
 
   "1877": {
     "name": "Capture Jwl",
-    "skill": "",
+    "skill": "Capturer",
     "slots": 1
   },
 
   "1878": {
     "name": "Capture Jwl",
-    "skill": "",
+    "skill": "Capturer",
     "slots": 3
   },
 
   "1879": {
     "name": "Bell Jwl",
-    "skill": "",
+    "skill": "Bherna",
     "slots": 1
   },
 
   "1880": {
     "name": "Novice Jwl",
-    "skill": "",
+    "skill": "Kokoto",
     "slots": 1
   },
 
   "1881": {
     "name": "Snowflake Jwl",
-    "skill": "",
+    "skill": "Pokke",
     "slots": 1
   },
 
   "1882": {
     "name": "Springs Jwl",
-    "skill": "",
+    "skill": "Yukumo",
     "slots": 1
   }
 }

@@ -128,9 +128,9 @@ const settingDescriptions = {
   decoImport: "<b>Import Decorations:</b> Whether to read or ignore decoration data when importing talismans.",
   decoImportOn: "<b>Import Decorations - On:</b> Adds decorations to the list of talisman properties to read and save. (By default: rarity, slots, skills, and skill values.)",
   decoImportOff: "<b>Import Decorations - Off:</b> Decoration data is <br>still exported when exporting talismans, but will be ignored when importing.",
-    decoCopy: "<b>Copy Decorations:</b> Whether to read or ignore decoration data when importing talismans.",
-  decoCopyOn: "<b>Copy Decorations - On:</b> Adds decorations to the list of talisman properties to read and save. (By default: rarity, slots, skills, and skill values.)",
-  decoCopyOff: "<b>Copy Decorations - Off:</b> Decoration data is <br>still exported when exporting talismans, but will be ignored when importing."
+    decoCopy: "<b>Copy Decorations:</b> Whether to copy decorations when copying talismans (click the paperclip icon next to a talisman, then click Add Talisman).",
+  decoCopyOn: "<b>Copy Decorations - On:</b> Decorations are copied when copying talismans.",
+  decoCopyOff: "<b>Copy Decorations - Off:</b> Decorations are ignored when copying talismans."
 }
 
 export default {
