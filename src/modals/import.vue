@@ -9,26 +9,35 @@
         <input type="file" class="import-upload upload" v-on:change='checkImportFile' />
       </div>
       <transition name="textbox-transition">
-        <textarea class="import-textbox" v-model="importText" />
+        <textarea class="import-textbox" v-model="importText" @keyup="setError(null)" />
+      </transition>
+      
+      <transition name="import-transition">
+        <div class="import-error" 
+           v-if="error">
+          <span v-html="error" />
+        </div>
       </transition>
     </div>
     <div slot="footer">
-      <button class="button" @click="close('confirm', false, importText)">Insert</button>
-      <button class="button" @click="close('confirm', true, importText)">Overwrite</button>
+      <button class="button" @click="submit(false)">Insert</button>
+      <button class="button warning" @click="submit(true)">Overwrite</button>
       <button class="button" @click="close">Cancel</button>
     </div>
   </modal>
 </template>
 
 <script>
+import { processDecorations, filterCharmData, getType } from '../utils'
 import modal from '../Modal.vue'
 
 export default {
   name: 'import',
-  //props: ['toDelete'],
+  props: ['props'],
   data () {
     return {
-      importText: null
+      importText: null,
+      error: null
     }
   },
   methods: {
@@ -37,15 +46,18 @@ export default {
     checkImportFile (event) {
       let file = event.target.files[0]
       if (file.type != "text/plain") {
-        alert("Error! Wrong filetype for import file!")
+        this.setError("<b>Error: Wrong filetype!</b> " +
+                      "Please import plaintext files only.")
         event.target.value = null
         return
       }
-      if (file.size > 500000) { // 500kb, should be plenty
-        console.log("Error! File size too big! (Max 500kb)")
+      if (file.size > 1000000) { // way more than anyone will ever need
+        this.setError("<b>Error: File too large!</b> " +
+                      "Please do not import files over 1 GB.")
         event.target.value = null
         return
       }
+      this.setError(null)
 
       let reader = new FileReader()
       
@@ -55,6 +67,50 @@ export default {
       }.bind(this)
       
       reader.readAsText(file)
+    },
+    
+    submit (ow) {
+      let importArr
+      try {
+        importArr = JSON.parse(this.importText)
+      }
+      catch (e) {
+        console.log(e)
+        this.setError (
+          "<b>Error: Invalid syntax!</b> Please make sure all brackets, " +
+          "commas, and quotes are in the right place, then try again."
+        )
+        return
+      }
+      // in case we only have one charm
+      if (!Array.isArray(importArr)) importArr = [importArr] 
+      
+      if (!ow && importArr.length > this.props.emptyCount) {
+        this.setError (
+          "<b>Error: Not enough space!</b> You are importing " +
+          importArr.length + 
+          " talismans, <br/>but have " + 
+          this.props.emptyCount + " equipment box slot" + 
+          (this.props.emptyCount == 1 ? "" : "s") + 
+          " available. Please " + 
+          (this.props.emptyCount > 0 ? "import fewer talismans or " : "") 
+          + "delete some talismans, then try again."
+        )
+        return
+      }
+      
+      let importCharms = filterCharmData(importArr, this.props.deco)
+      console.log(importCharms)
+      for (let i = 0; i < importArr.length; i++) {        
+        processDecorations(importCharms[i])
+        // no reason to export/import type if we can just get it from rarity
+        importCharms[i].type = getType(importCharms[i].rarity)
+      }
+      this.close('confirm', ow, importCharms)
+    },
+    
+    setError(err) {
+      this.error = err
     }
   },
   components: { modal }
@@ -63,7 +119,11 @@ export default {
 
 <style>
 .import .modal-container {
-  width: 560px;
+  width: 520px;
+}
+
+.import .modal-body {
+  overflow: hidden;
 }
 
 .import .upload, .import-text {
@@ -75,7 +135,8 @@ export default {
 .import-file {
   padding: 12px 20px;
   width: 100%;
-  border: 1px solid #eee;
+  //border: 1px solid #eee;
+  box-shadow: 0 0 1px 1px #eee;
   display: inline-block;
   margin: 1em auto;
   border-radius: 10px;
@@ -89,14 +150,47 @@ export default {
 
 .import-textbox {
   width: 100%;
-  height: 30vh;
+  height: calc((1.2em * 18) + 4px);
+  line-height: 1.2em;
+  font-size: 1rem;
   border: 0;
   box-shadow: 0 0 5px #ccc;
   transition: height 0.5s ease;
   margin: 0;
+  resize: none;
 }
 
 .textbox-transition-enter {
   height: 21px;
+}
+
+.import-error {
+  box-shadow: 0 0 1px 1px #ddd;
+  //border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.65em !important;
+  margin: 15px 0 5px 0 !important;
+  height: auto;
+  cursor: default;
+  color: #b95858;
+  width: 100%;
+  max-height: 100px;
+}
+
+.import-transition-enter, .import-transition-leave-to {
+  max-height: 1px;
+  margin: 0 !important;
+  padding: 0 0.5em !important;
+  opacity: 0;
+}
+
+.import-transition-enter-active { 
+  transition: max-height 0.6s, margin 0.3s, padding 0.3s, opacity 0.6s ;
+  transition-delay: 0s;
+}
+
+.import-transition-leave-active {
+  transition: max-height 0.4s, margin 0.4s, padding 0.6s, opacity 0.4s ;
+  transition-delay: 0s;
 }
 </style>

@@ -7,9 +7,15 @@ Vue.use(Vuex)
 const addTo = (arr, val) => {
   arr.splice(arr.length, 0, val)
 }
-
 const removeFrom = (arr, val) => {
   arr.splice(arr.indexOf(val), 1)
+}
+var hasChanged = false
+const setChangeWarning = () => {
+  if (!hasChanged) {
+    window.onbeforeunload = function() { return true }
+    hasChanged = true
+  }
 }
 
 export default new Vuex.Store({
@@ -88,21 +94,20 @@ export default new Vuex.Store({
       commit('LOAD_CHARMS', data.charms)
       commit('LOAD_OFFSETS', data.offsets)
       commit('SET_ACTIVE', data.active)
-    },
-    
-    loadFile ({ commit, state }, data) {
-    setTimeout(() => {
-        commit('LOAD_FILE', data)
+      setTimeout(() => {
+        commit('LOAD_FILE', data.file)
       }, 0)
     },
     
     edit ({commit, state}, data) {
+      setChangeWarning()
       setTimeout(() => {
         commit('EDIT_CHARM', data)
       }, 0)
     },
     
     remove ({commit, state}, data) {
+      setChangeWarning()
       setTimeout(() => {
         commit('DELETE_CHARMS', data)
       }, 0)
@@ -111,6 +116,7 @@ export default new Vuex.Store({
     // needs to be synchronous because the 
     // render relies on the add to be finished
     add ({commit, state}, data) {
+      setChangeWarning()
       commit('ADD_CHARMS', data)
     },
     

@@ -213,19 +213,7 @@ export const loadCharms = (file) => {
         ]
         
         /* calculated properties (not saved but still important) */
-        
-        let filled = 0
-        for (let i = 0; i < 3; i++) {
-          let decoration = charm.decorations[i]
-          if (decoration) filled += DECORATIONS[decoration].slots
-        } 
-        charm.filledSlots = filled
-        
-        // restrict the rarities the user can select to those which 
-        // have enough slots to accommodate all equipped decorations
-        if (this.filledSlots == 3) charm.minRarity = 5
-        else if (this.filledSlots == 2) charm.minRarity = 3
-        else charm.minRarity = 1
+        processDecorations(charm)
         
         charms[offset] = charm
       }
@@ -257,6 +245,10 @@ export const saveCharms = (file, charms) => {
 
       file.writeInt8(charm.skillValues[0], offset + SKILL1VALUE_OFFSET)
       file.writeInt8(charm.skillValues[1], offset + SKILL2VALUE_OFFSET)
+      
+      file.writeUInt16LE(charm.decorations[0], offset + DECORATION1_OFFSET)
+      file.writeUInt16LE(charm.decorations[1], offset + DECORATION2_OFFSET)
+      file.writeUInt16LE(charm.decorations[2], offset + DECORATION3_OFFSET)
     }
     else {
       // charm has been deleted
@@ -342,9 +334,38 @@ const getSortName = (skill, order) => {
   return (SKILLS[skill].name || (order == 1 ? '\uffff' : ''))
 }
 
+const validateCharm = (charm) => {
+  // validate type
+  if (charm.rarity > 4) charm.type = 327
+  else if (charm.rarity > 2) charm.type = 326
+  else charm.type = 325
+  
+  // validate skills
+  for (let slot = 0; slot < 2; slot++) {
+    let avail = AVAILABLE_SKILLS[TYPES[charm.type].name][slot]
+    if (avail.indexOf(charm.skills[slot]) == -1) {
+      charm.skills[slot] = avail[0]
+      let maxSkill = SKILLS[charm.skill][TYPES[charm.type].name][slot][1]
+      charm.skillValues[slot] = levels[0]
+    }
+    else {
+      let levels = getSkillLevelsForSlot(charm.type, charm.skills[slot], slot)
+      if (levels.indexOf(charm.skillValues[slot]) == -1) {
+        charm.skillValues[slot] = levels[0]
+      }
+    }
+  }
+}
+
 /* -----------------------------------------------
              C H A R M   M E T H O D S               
    ----------------------------------------------- */
+
+export const getType = (rarity) => {
+  if (rarity > 4) return 327
+  else if (rarity > 2) return 326
+  else return 325
+}
 
 export const getMaxSlots = (type) => {
   return TYPES[type].slots
@@ -404,4 +425,42 @@ const getAvailableSkillsForSlot = (type, slot, alph) => {
   else return skills.sort((a, b) => {
     return (a > b ? 1 : a < b ? -1 : 0)
   })
+}
+
+export const processDecorations = (charm) => {
+  if (charm.decorations && charm.decorations.length == 3) {
+    let filled = 0
+    for (let i = 0; i < 3; i++) {
+      let decoration = charm.decorations[i]
+      if (decoration && DECORATIONS[decoration])
+        filled += DECORATIONS[decoration].slots
+    } 
+    charm.filledSlots = filled
+
+    // restrict the rarities the user can select to those which 
+    // have enough slots to accommodate all equipped decorations
+    if (charm.filledSlots == 3) charm.minRarity = 5
+    else if (charm.filledSlots == 2) charm.minRarity = 3
+    else charm.minRarity = 1
+  }
+  else {
+    charm.decorations = [0, 0, 0]
+    charm.filledSlots = 0
+    charm.minRarity = 1
+  }
+}
+
+export const filterCharmData = (charms, useDeco) => {
+  let filtered = []
+  charms.forEach( charm => {
+    let nc = {}
+    nc.rarity = charm.rarity
+    nc.slots = charm.slots
+    nc.skills = charm.skills.slice()
+    nc.skillValues = charm.skillValues.slice()
+    if (useDeco) nc.decorations = charm.decorations.slice()
+    
+    filtered.push(nc)
+  })
+  return filtered
 }

@@ -9,7 +9,7 @@
         <li>Click <b>Choose File</b>, and locate your extdata file. Usually this is called <span class="inline-mono">system</span> with no extension.</li>
         <li>Edit your talismans and click <b>Save Changes</b> to download a new <span class="inline-mono">system</span> file.</li>
         <li><b>Move or rename the original extdata file on your SD card.</b> Take good care of it! As long as you have this backup, you can always restore your save if something goes wrong. <i>I am not liable if you forget to back up your save.</i></li>
-        <li>Copy or move the downloaded <span class="inline-mono">system</span> file into the <b>extdata</b> location on the SD card, and make sure it has the correct filename.</li>
+        <li>Copy or move the downloaded <code>system</code> file into the <b>extdata</b> location on the SD card, and make sure it has the correct filename.</li>
         <li>Unmount the SD card from your computer and insert it back into your 3DS.</li>
         <li>Use your homebrew save editor to import the edited <b>extdata</b> file to Monster Hunter Generations.</li>
       </ol>
@@ -23,7 +23,7 @@
       <h4>Which games does this support?</h4>
       <p>Only <b>Monster Hunter Generations</b> (the NA / EU release of Monster Hunter X). I don't plan to add support for MHX or the older games, but I do plan to support the English version of Monster Hunter XX when it eventually comes out.</p>
       <h4>What's wrong with <a href="https://gbatemp.net/threads/release-mh-talisman-editor-for-mhx-mhgen-mh4g-mh4u.411182/">jc28735250's talisman editor</a>?</h4>
-      <p>Nothing – in fact, since it supports MHX and MH4U, it's actually a lot better than mine. However, it's currently Windows-only, and tends to crash under Wine, so I decided to write a cross-platform editor.</p>
+      <p>Nothing – in fact, since it supports MHXX, MHX, and MH4U, it's actually a lot better than mine. However, it's currently Windows-only, and tends to crash under Wine, so I decided to write a cross-platform editor.</p>
       <h4>Isn't this cheating?</h4>
       <p>Well, yes, in that it allows you to modify your save file in ways that the game's developers did not intend. However, this tool very limited – <b>it only generates <i>legal</i> talismans</b>, meaning they are always possible (however unlikely) to obtain in-game without editing. Even the best talismans in the game will not turn a bad hunter into a good one.</p>
       <h4>Why does this exist?</h4>
@@ -36,9 +36,9 @@
       <h4>Why do my skills keep changing?</h4>
       <p>That's the legality checking at work. Different rarities of talisman have different skills (and different levels of those skills) available – for example, a lot of skills, like Critical Up, Evade Distance, and Handicraft, can only be found on talismans that come from a Timeworn Charm (Queen, King, and Dragon rarites). So, if you have a Queen Talisman with Handicraft and you change its rarity to Pawn, the Handicraft skill will be reset to something else.</p>
       <p>Skill compatibility information used in <b>☆'s MHGen Talisman Editor</b> was collected from <a href="https://docs.google.com/spreadsheets/d/1N7lqzdSzNl1o_W8JiYyQz_cXDXJEE_Ur4myI4Uf0F7E/">this spreadsheet</a>. You can view the actual datafile used in the app <a href="https://github.com/sand-bird/talismans/blob/master/src/skills.json">here</a>.</p>
-      <h4>Why don't my decorations get copied when I copy a charm?</h4>
-      <p>That would be going a little too far, don't you think?</p>
-      <p>(Actually, there <i>is</i> a sneaky way to create decorations using this editor, though you'll need to know the ID of the decoration you want. That's all I can say – the rest is up to you to figure out!)</p>
+      <h4>Where did my decorations go?</h4>
+      <p>Decorations can't be copied: if you copy a talisman, or if you export your talismans and then import them back again, the decorations are reset. This was my effort to draw a line between “circumventing obnoxious RNG” and plain old “cheating” – and, while the implementation here might be a little draconian, I still stand by it in principle.</p>
+      <p>But, well, hey – if you bothered to read (or scroll) through this whole thing, you're exactly the kind of person who makes this all worthwhile. So, by way of thanks, here's a little secret: open the settings menu, and type <code>cheatercheaterwimpwimp</code>. Enjoy!  
       <h4>You should add {feature}!</h4>
       <p>Sure! <a @click="open('contact')">Drop me a line.</a></p>
       <h4>I think I found a bug.</h4>
@@ -65,6 +65,12 @@ export default {
 
 <style>
 .faq .modal-container {
-  width: 680px;
+  width: 690px;
+  padding-right: 18px;
+}
+
+.faq .modal-body {
+  padding-right: 20px;
+  padding-left: 8px;
 }
 </style>

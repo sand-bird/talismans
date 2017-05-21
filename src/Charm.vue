@@ -72,7 +72,7 @@
 
 <script>
 import { getAvailableSkills, getSkillLevels, 
-         getSkillName, getRarityName,
+         getSkillName, getRarityName, getType,
          getMaxSlots, DEBUG } from './utils'
 
 export default {
@@ -232,12 +232,7 @@ export default {
        charm's rarity is changed (used for skills & slots)  */
     rarity (val) {
       this.debug("[watch] rarity: " + val)
-      let type = this.type
-      
-      if (val > 4) type = 327
-      else if (val > 2) type = 326
-      else type = 325
-     
+      let type = getType(val)
       if (type != this.type) this.type = type
     },
   

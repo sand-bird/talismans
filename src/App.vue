@@ -1,8 +1,9 @@
 <template>
   <div id="app">
 
-    <component :is="modal.current" :settings="settings" 
-      @close="closeModal" @update="update" @open="openModal" />
+    <component :is="modal.current" :props="modal.props" :settings="settings"
+               @close="closeModal" @update="update" @open="openModal"
+               @secret="settings.secret = true" />
    
     <div class="header" :class="{ loaded: renderFinished }"
          @scroll="alert('abcd')" >
@@ -36,7 +37,7 @@
         </li>
       </ul>
       
-      <div class="button" @click="clearCharms" v-show="charms">Clear Talismans</div>
+      <div class="button warning" @click="clearCharms" v-show="charms">Clear Talismans</div>
       <div class="button" @click="importCharms" v-show="file">Import Talismans</div>
       <div class="button" @click="exportCharms" v-show="file && charms">Export Talismans</div>
       
@@ -84,10 +85,11 @@
 
 <script>
 import fileSaver from 'file-saver'
+import stringify from 'json-stringify-pretty-compact'
 import { EventEmitter } from 'events'
 
-import { loadSaves, loadOffsets, loadCharms, DEBUG,
-         saveCharms, getRawCharm, compareCharms } from './utils'
+import { loadSaves, loadOffsets, loadCharms, processDecorations, DEBUG,
+         saveCharms, getRawCharm, compareCharms, filterCharmData } from './utils'
 import charm from './Charm.vue'
 import * as modals from './modals'
 
@@ -95,9 +97,11 @@ class Modal extends EventEmitter {
   constructor() {
     super()
     this.current = ''
-    this.on('open', function(modal) {
+    this.props = null
+    this.on('open', function(modal, props) {
       debug('[modal] open: ' + modal)
       this.current = modal
+      this.props = props
     })
     this.on('close', function() {
       debug('[modal] close: ' + this.current)
@@ -152,7 +156,10 @@ export default {
         skillSort: 1,
         skillMax: 1,
         decoWarn: 1,
-        decoClear: 1
+        decoClear: 1,
+        decoImport: 0,
+        decoCopy: 0,
+        secret: false
       },
       settingDescription: null,
       settingTimeout: null,
@@ -264,10 +271,12 @@ export default {
         })
         
         // initialize settings to user's localStorage
-        Object.keys(this.settings).forEach( key => {
+        let settings = ['skillSort', 'skillMax', 'decoWarn', 'decoClear']
+        settings.forEach( key => {
           if (localStorage.hasOwnProperty(key))
             this.settings[key] = parseInt(localStorage.getItem(key))
         })
+        console.log(this.settings)
       }.bind(this)
       reader.readAsArrayBuffer(file)
     },
@@ -294,17 +303,23 @@ export default {
     exportCharms () {
       debug("[methods] exportCharms")
       let charms = []
-      for (let i = 0; i < this.charmOffsets.length; i++)
-        charms.push(this.$store.state.charms[this.charmOffsets[i]])
+      
+      for (let i = 0; i < this.charmOffsets.length; i++) {
+        let charm = this.$store.state.charms[this.charmOffsets[i]]
+        charms.push(charm)
+      }
+      
+      let charmsToExport = filterCharmData(charms, true)
+      
       fileSaver.saveAs (
-        new Blob([JSON.stringify(charms, null, '  ')], {type: "text/json"}),
+        new Blob([stringify(charmsToExport)], {type: "text/json"}),
        'talismans_' + this.saves[this.$store.state.active] + '.txt', false
       )
     },
     
-    openModal (modal) {
+    openModal (modal, props) {
       debug("[methods] openModal: " + modal)
-      this.modal.emit('open', modal)
+      this.modal.emit('open', modal, props)
     },
     
     closeModal (...args) {
@@ -373,36 +388,36 @@ export default {
         type: sourceCharm.type,
         // why does js default to passing arrays by reference this is dumb
         skills: sourceCharm.skills.slice(),
-        skillValues: sourceCharm.skillValues.slice(),
-        decorations: [0, 0, 0],
-        minRarity: 1,
-        filledSlots: 0
+        skillValues: sourceCharm.skillValues.slice()
       }
       else newCharm = {
         rarity: 7,
         slots: 3,
         type: 327,
         skills: [36, 18],
-        skillValues: [5, 10],
-        decorations: [0, 0, 0],
-        minRarity: 1,
-        filledSlots: 0
+        skillValues: [5, 10]
       }
+      if (this.settings.decoCopy) newCharm.decorations = sourceCharm.decorations
+      processDecorations(newCharm)
+      
       this.$store.dispatch('add', newCharm)
     },
     
     importCharms () {
       debug("[methods] importCharms")
-      this.openModal('import')
+      this.openModal('import', {
+        emptyCount: this.emptyOffsets ? this.emptyOffsets.length : 0,
+        deco: this.settings.decoImport
+      })
       
-      this.modal.once('confirm', (ow, text) => {
-        if (ow) {
+      this.modal.once('confirm', (ow, obj) => {
+        if (ow && this.charmOffsets.length) {
           this.clearCharms().then((res) => {
-            this.$store.dispatch('add', JSON.parse(text))
+            this.$store.dispatch('add', obj)
           })
         }
         else {
-          this.$store.dispatch('add', JSON.parse(text))
+          this.$store.dispatch('add', obj)
         }
       })
     },
@@ -452,6 +467,11 @@ export default {
           // decoClear is Never: do nothing
           else resolve()
         }
+        // edge case: clear when there are no charms
+        // (right now this should only happen when selecting
+        // overwrite while importing charms; we still need 
+        // to resolve so such an import will succeed)
+        else resolve()
       })
     },
     
@@ -775,10 +795,11 @@ a:hover {
 
 #upload-holder {
   padding: 40px;
-  border: 1px solid #ccc;
+  //border: 1px solid #ccc;
+  box-shadow: 0 0 1px 1px #ccc;
   border-radius: 10px;
   width: 500px;
-  margin: 40px auto 0;
+  margin: 40px auto 10px;
 }
 
 .upload {
@@ -867,6 +888,26 @@ a:hover {
   border-color: #aaa;
   color: #000;
   background-color: #fefefe;
+}
+
+.button.warning {
+  background-color: #fefefe;
+  border-color: #e3b9b9;
+  color: #b95858; /* 17a563; */
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
+  //transition: all 0.1s;
+}
+
+.button.warning:hover {
+  background-color: #f7c7c7;
+  background-color: #fefefe;
+  border-color: #8b2020;
+  border-color: #d08d8d;
+  color: #6b1010;
+  color: #a03a3a;
+  box-shadow: inset 1px 1px 0 #ffd7d7, inset -1px -1px 0 #d8a3a3, 0 1px 2px #eee;
+  box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
+  //transition: all 0.1s;
 }
 
 #charms {

@@ -80,7 +80,7 @@ export default {
   overflow-y: auto;
 }
 
-.modal-body div > *:first-child:not(input) {
+.modal-body > div > *:first-child:not(input) {
   padding-top: 0;
   margin-top: 0.5em;
 }
@@ -120,7 +120,7 @@ export default {
   display: list-item;
   text-align: left;
   padding-left: 0.25em;
-  margin: 0.25em 10px;
+  margin: 0.35em 10px;
 }
 
 .modal p, .modal li {
@@ -155,7 +155,7 @@ export default {
   padding-top: 0.5em;
 }
 
-.inline-mono {
+code {
   font-family:monospace;
   font-size:1.1em;
   padding:0 0.2em;
