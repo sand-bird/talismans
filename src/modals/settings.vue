@@ -178,11 +178,6 @@ export default {
     }
   },
   components: { modal },
-  /*
-  beforeMount () {
-    if (localStorage.hasOwnProperty('decoImport')) this.showSecret = true
-  },
-  */
   mounted () {
     document.addEventListener("keydown", this.doSecret)
   },

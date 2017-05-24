@@ -85,6 +85,11 @@ export default {
   margin-top: 0.5em;
 }
 
+.modal-body > div > p:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0.75em;
+}
+
 /*
 .modal-body div > *:last-child:not(input) {
   padding-bottom: 0;

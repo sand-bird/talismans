@@ -53,10 +53,10 @@
           </div>
         </li>
         
-        <charm v-for="offset in charmOffsets" :offset="offset" :key="offset" 
+        <charm v-for="offset in charmOffsets" v-if="offset" :key="offset"
+               :offset="offset" :equipSet="equipSets[offset]"
                :skillSort="settings.skillSort" :skillMax="settings.skillMax"
                :class="{'active-charm': (activeCharm && activeCharm == offset)}"
-               v-if="offset"
                @remove="removeCharm"
                @active="setActiveCharm"
         />
@@ -88,8 +88,9 @@ import fileSaver from 'file-saver'
 import stringify from 'json-stringify-pretty-compact'
 import { EventEmitter } from 'events'
 
-import { loadSaves, loadOffsets, loadCharms, processDecorations, DEBUG,
-         saveCharms, getRawCharm, compareCharms, filterCharmData } from './utils'
+import { loadSaves, loadOffsets, loadCharms, loadEquipSets, 
+         processDecorations, filterCharmData, getRawCharm,
+         saveCharms, compareCharms, DEBUG } from './utils'
 import charm from './Charm.vue'
 import * as modals from './modals'
 
@@ -180,7 +181,8 @@ export default {
     'faq': modals.faq, 
     'contact': modals.contact, 
     'delete': modals.deleteModal, 
-    'import': modals.importModal
+    'import': modals.importModal,
+    'changelog': modals.changelog
   },
   mounted () {
     document.addEventListener("keydown", (e) => {
@@ -210,6 +212,10 @@ export default {
     emptyOffsets () {
       debug("[computed] emptyOffsets: get")
       return this.$store.getters.emptyOffsets
+    },
+    
+    equipSets () {
+      return this.$store.getters.equipSets
     }
   },
   
@@ -266,6 +272,7 @@ export default {
         this.$store.dispatch('init', {
           charms: loadCharms(file),
           offsets: loadOffsets(file),
+          equipSets: loadEquipSets(file),
           active: a,
           file: file
         })
@@ -276,7 +283,6 @@ export default {
           if (localStorage.hasOwnProperty(key))
             this.settings[key] = parseInt(localStorage.getItem(key))
         })
-        console.log(this.settings)
       }.bind(this)
       reader.readAsArrayBuffer(file)
     },
@@ -356,6 +362,8 @@ export default {
     
     removeCharm (offset) {
       debug("[methods] removeCharm: " + offset)
+      // make ABSOLUTELY SURE that equip set charms can't be deleted
+      if (this.equipSets[offset]) return
       // if we need a decoration warning, open the modal
       // and only delete if the modal emits a 'confirm' event
       if (this.settings.decoWarn &&
@@ -434,7 +442,7 @@ export default {
           if (this.settings.decoClear < 2 &&
               this.$store.state.charms[offset].filledSlots)
             filledCharmOffsets.push(offset)
-          else
+          else if (!this.equipSets[offset])
             // even if decoClear is Always, we still want to push 
             // each charm offset to a new array before clearing --
             // store freaks out and doesn't delete right otherwise

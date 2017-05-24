@@ -25,10 +25,16 @@ const SLOT_POINTER_OFFSET_SIZE = 4
 const NAME_OFFSET = 0x00
 const NAME_SIZE = 32  
 
+const EQUIPMENT_SETS_OFFSET = 0x16DB7
+const EQUIPMENT_SETS_SIZE = 5440
+const EQUIPMENT_SETS_SLOTS = 40
+const EQUIPMENT_SETS_SLOT_SIZE = 136
+// offset of charm used in set, relative to start of set
+const EQUIPMENT_SET_CHARM_OFFSET = 54
+
 const EQUIPMENT_BOX_OFFSET = 0x4667
-// dunno what the extra 15 bytes are for
-const EQUIPMENT_BOX_SIZE = 50415
-const EQUIPMENT_BOX_SLOTS = 1400 
+const EQUIPMENT_BOX_SIZE = 50400
+const EQUIPMENT_BOX_SLOTS = 1400
 const EQUIPMENT_BOX_SLOT_SIZE = 36
 
 
@@ -122,12 +128,41 @@ export const loadSaves = (file) => {
        we use readUInt8, which reads 1 byte  */
     if (checkSave(file, i)) {
       let nameOffset = getOffset(file, i, NAME_OFFSET)
-      saves[i] = file.toString('utf8', nameOffset, nameOffset + 32)
-                     .replace(/\0/g, '') // chrome now displays null
-    }                                    // characters as ugly boxes
+      let name = file.toString('utf8', nameOffset, nameOffset + 32)
+      saves[i] = name.slice(0, name.indexOf('\0'))
+    }
     else saves[i] = null
   }
   return saves
+}
+
+export const loadEquipSets = (file) => {
+  let equipSets = {}
+  
+  for (let slot = 0; slot < 3; slot++) {
+    if (!checkSave(file, slot)) continue
+    
+    let equipSetsOffset = getOffset(file, slot, EQUIPMENT_SETS_OFFSET)
+    
+    let equipSetsForSlot = {}
+    for (let i = 0; i < EQUIPMENT_SETS_SLOTS; i++) {
+      let offset = equipSetsOffset + (EQUIPMENT_SETS_SLOT_SIZE * i)
+      let charmBoxSlot = file.readUInt16LE(offset + EQUIPMENT_SET_CHARM_OFFSET)
+      if (charmBoxSlot == 0xFFFF) continue
+      let charmOffsetFromBox = charmBoxSlot * EQUIPMENT_BOX_SLOT_SIZE
+      let charmOffsetFromSave = EQUIPMENT_BOX_OFFSET + charmOffsetFromBox
+      let charmOffset = getOffset(file, slot, charmOffsetFromSave)
+      let equipSet = {}
+      let name =  file.toString('utf8', offset, offset + 10)
+      equipSet.name = name.slice(0, name.indexOf('\0'))
+      // we want to pad single digits with a 0 like it does in the game
+      equipSet.id = ('0' + (i+1)).slice(-2)
+      
+      equipSetsForSlot[charmOffset] = equipSet
+    }
+    equipSets[slot] = equipSetsForSlot
+  }
+  return equipSets
 }
 
 /* takes a save slot id and returns arrays of charmOffsets 

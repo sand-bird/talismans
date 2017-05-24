@@ -2,7 +2,7 @@
   <modal class="about modal" @close="close">    
     <h3 slot="header">About</h3>
     <div slot="body">
-      <p><b>☆'s MHGen Talisman Editor <small>(v. 1.01)</small></b> is a talisman editor for Monster Hunter Generations.</p>
+      <p><b>☆'s MHGen Talisman Editor <small>(<a @click="open('changelog')">v. 1.0.2</a>)</small></b> is a talisman editor for Monster Hunter Generations.</p>
       <p>Features:
       <ul>
         <li>Comprehensive legality checking</li>
@@ -53,7 +53,7 @@ export default {
   margin: 0.15em 10px;
 }
 
-small {
+small, small a {
   line-height: 1.25rem;
   vertical-align: top;
 }

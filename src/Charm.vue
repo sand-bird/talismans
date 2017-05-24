@@ -1,7 +1,6 @@
 <template>
 <transition name="charm-transition">
 <li class="charm-holder">
-  <a class="remove" v-on:click="removeCharm">✖</a>
   
   <div class="charm">
     <div class="rarity styled-select">
@@ -61,7 +60,11 @@
     
   </div>
   
-  <a class="active-charm-button" v-on:click="setActive"></a>
+  <a class="remove" v-if="!equipSet" @click="removeCharm"></a>
+  
+  <span class="equip-set" v-if="equipSet" :title="equipSet.name">E</span>
+  
+  <a class="active-charm-button" @click="setActive"></a>
   <div v-if="debugOn" style="overflow: hidden">
     <pre style="float:left">{{ offset }}<br>{{ origOffset != offset ? origOffset : null }}</pre>
     <pre style="float:right">{{ data }}</pre>
@@ -77,7 +80,7 @@ import { getAvailableSkills, getSkillLevels,
 
 export default {
   name: 'charm',
-  props: [ 'offset', 'skillSort', 'skillMax' ],
+  props: [ 'offset', 'skillSort', 'skillMax', 'equipSet' ],
   data () {
     return { 
       debugOn: DEBUG, 
@@ -142,6 +145,10 @@ export default {
     skillValues () { 
       this.debug("[computed] skillValues") 
       return this.get("skillValues") 
+    },
+    
+    decorations () {
+      return this.get("decorations")
     },
     
     // restrictions based on decorations attached to the charm.
@@ -477,23 +484,41 @@ html, * {
   transition: opacity .2s ease;
 }
 
-.remove {
+.remove, .equip-set, .active-charm-button {
   position: absolute;
-  left: -30px;
-  font-size: 24px;
-  height:50px;
-  line-height: 50px;
-  top: 6px;
+  text-align: center;
+  width: 20px;
+  height:52px;
+  line-height: 52px;
   cursor: pointer;
+  top: 0;
+}
+
+.remove, .equip-set {
+  left: -27px;
+  width: 20px;
+}
+
+.remove {
+  font-size: 20px;
+}
+
+.remove:before {
+  content: '✖';
+  content: '\e802';
+  font-family: 'icons';
+}
+
+.equip-set {
+  font-size: 15px;
+  top: 2px;
+  color: #797979;
+  cursor: help;
 }
 
 .active-charm-button {
-  position: absolute;
-  right: -24px;
-  font-size: 20px;
-  line-height: 50px;
-  top: 2px;
-  cursor: pointer;
+  right: -26px;
+  font-size: 18px;
 }
 
 .active-charm-button:before {

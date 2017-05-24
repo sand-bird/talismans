@@ -24,6 +24,7 @@ export default new Vuex.Store({
     charms: {},
     charmOffsets: {},
     emptyOffsets: {},
+    equipSets: {},
     active: null,
     loaded: false
   },
@@ -33,6 +34,9 @@ export default new Vuex.Store({
     },
     emptyOffsets: (state) => {
       return state.emptyOffsets[state.active]
+    },
+    equipSets: (state) => {
+      return state.equipSets[state.active]
     }
   },
   mutations: {
@@ -49,6 +53,10 @@ export default new Vuex.Store({
     LOAD_OFFSETS (state, offsets) {
       state.charmOffsets = offsets.charmOffsets
       state.emptyOffsets = offsets.emptyOffsets
+    },
+    
+    LOAD_EQUIPSETS (state, equipSets) {
+      state.equipSets = equipSets
     },
     
     SET_ACTIVE (state, a) {
@@ -93,6 +101,7 @@ export default new Vuex.Store({
     init ({ commit, state }, data) {
       commit('LOAD_CHARMS', data.charms)
       commit('LOAD_OFFSETS', data.offsets)
+      commit('LOAD_EQUIPSETS', data.equipSets)
       commit('SET_ACTIVE', data.active)
       setTimeout(() => {
         commit('LOAD_FILE', data.file)
