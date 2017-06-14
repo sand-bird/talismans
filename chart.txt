@@ -2,13 +2,16 @@
          C H A R M   P R O P E R T Y   D E P E N D E N C I E S        
 -----------------------------------------------------------------------
  
-TRICKLE ORDER:
+TRICKLE ORDER (not including decoration-related properties):
 
  
  rarity -> type -> maxSlots -> slots
             |
             '-> availableSkills -> skills -> skillLevels -> skillValues
-    
+
+(This is a rough guide. There are a couple of exceptions, such as that 
+setting a (second-slot) skillValue to 0 sets its skill to 0 (empty) as 
+well. That relationship is shown in the full dependency chart below.)
 
     
 
@@ -26,20 +29,22 @@ FULL DEPENDENCY CHART:
                 '--> availableSkills     |--> skillLevels
  minRarity**             |               |       |
                          '--> skills* ---'       '--> skillValues*
-                                 ^                       |
+                                 ^                       ^
  decorations*                    '-----------------------'
 
 
 
-LEGEND:
+DEPENDENCY CHART LEGEND:
 
- Many properties are watched; all are computed.
- Computed properties update automatically whenever
- a variable used in the property function changes.
+ Many properties are watched; all are computed. Computed properties 
+ update automatically whenever a variable used in the property's
+ compute function changes.
 
- parentProperty --> compute function depends on parentProperty
-     |
-     '--> updated manually inside a watcher for parentProperty
+                  .--> compute function depends on parentProperty
+ parentProperty --|
+       |          '--> compute function depends on parentProperty
+       |
+       '---> updated manually inside a watcher for parentProperty
  
   * properties corresponding to game data (all are integers)
  ** properties derived from game data but not mutated or saved
