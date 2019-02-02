@@ -30,7 +30,7 @@
       <ul id="files">
         <li v-for="(save, index) in saves" @click="setActive(index)"
             :class="[{ active: $store.state.active == index}, 
-                     { disabled : !save }]"
+                     { disabled : !save }]" v-bind:key="index"
         >
           <span>File {{ index + 1 }}:</span>
           <h3 :class="'name'">{{ save || "(none)" }}</h3>
@@ -48,7 +48,7 @@
                :class="[column.id, 
                    {'sort-down': column.id == lastSortKey && sortOrder == -1 },
                    {'sort-up': column.id == lastSortKey && sortOrder == 1 }]" 
-               @click="sortCharms(column.id)">
+               @click="sortCharms(column.id)"  v-bind:key="column.id">
             {{ column.name }}
           </div>
         </li>
@@ -803,7 +803,7 @@ a:hover {
 
 #upload-holder {
   padding: 40px;
-  //border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   box-shadow: 0 0 1px 1px #ccc;
   border-radius: 10px;
   width: 500px;
@@ -903,7 +903,7 @@ a:hover {
   border-color: #e3b9b9;
   color: #b95858; /* 17a563; */
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
-  //transition: all 0.1s;
+  /* transition: all 0.1s; */
 }
 
 .button.warning:hover {
@@ -915,7 +915,7 @@ a:hover {
   color: #a03a3a;
   box-shadow: inset 1px 1px 0 #ffd7d7, inset -1px -1px 0 #d8a3a3, 0 1px 2px #eee;
   box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
-  //transition: all 0.1s;
+  /* transition: all 0.1s; */
 }
 
 #charms {

@@ -6,7 +6,7 @@
     <div class="rarity styled-select">
       <select v-model="rarity"
               @change="blur">
-        <option v-for="rarity in 7" v-if="rarity >= minRarity" :value="rarity">
+        <option v-for="rarity in 7" v-if="rarity >= minRarity" :value="rarity" v-bind:key="rarity">
           {{ rarityName(rarity) }}
         </option>
       </select>
@@ -17,7 +17,7 @@
             v-if="canDecreaseSlots"
             @click="slots-=1">➖</a> 
         <span v-for="slot in slots" 
-              class="slot" :class="{ filled: filledSlots >= slot }" />
+              class="slot" :class="{ filled: filledSlots >= slot }" v-bind:key="slot" />
       <a class="plus-slots"
             v-if="canIncreaseSlots"
             @click="slots+=1">➕</a>
@@ -26,7 +26,7 @@
     <div class="skill1">
       <select v-model="skills[0]" @change="blur" 
               @focus="track(0)">
-        <option v-for="skillId in availableSkills[0]" :value="skillId">
+        <option v-for="skillId in availableSkills[0]" :value="skillId" v-bind:key="skillId">
           {{ skillName(skillId) }}
         </option>
       </select>
@@ -34,7 +34,7 @@
     
     <div class="skill1value">
       <select v-model="skillValues[0]" @change="blur">
-        <option v-for="value in skillLevels[0]" :value="value">
+        <option v-for="value in skillLevels[0]" :value="value" v-bind:key="value">
           {{ value }}
         </option>
       </select>
@@ -43,7 +43,7 @@
     <div class="skill2">
       <select v-model="skills[1]" @change="blur" 
               @focus="track(1)">
-        <option v-for="skillId in availableSkills[1]" :value="skillId">
+        <option v-for="skillId in availableSkills[1]" :value="skillId" v-bind:key="skillId">
           {{ skillName(skillId) }}
         </option>
       </select>
@@ -52,7 +52,7 @@
     <div class="skill2value">
       <select v-model="skillValues[1]" @change="blur"
               v-show="skillValues[1]">
-        <option v-for="value in skillLevels[1]" :value="value">
+        <option v-for="value in skillLevels[1]" :value="value" v-bind:key="value">
           {{ value }}
         </option>
       </select>
@@ -402,7 +402,7 @@ html, * {
 }
 
 .charm div, .charms-header div {
-  display: inline-block;
+  /* display: inline-block; */
   padding: 1px;
   float: left;
   height: 50px;
