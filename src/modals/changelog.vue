@@ -1,13 +1,20 @@
 <template>
-  <modal class="changelog modal" @close="close">    
+  <modal class="changelog modal" @close="close">
     <h3 slot="header">Changelog</h3>
     <div slot="body" class="body">
-      <h3>1.0.2</h3>
+      <h3>1.2.1</h3>
+      <ul>
+        <li>Updated dependencies and moved to <span class="inline-mono">vue-cli</span> for tooling</li>
+        <li>Removed Google Analytics (why did I ever put that in??)</li>
+        <li>Retconned previous version updates from patch to minor</li>
+        <li>Updated contact info</li>
+      </ul>
+      <h2>1.2.0</h2>
       <ul>
         <li>Added basic in-use handling – now checks for talismans used in equipment sets, and does not permit them to be deleted</li>
         <li>Added changelog</li>
       </ul>
-      <h3>1.0.1</h3>
+      <h2>1.1.0</h2>
       <ul>
         <li>Fixed bug with downloading saved changes</li>
         <li>Added secret decoration settings</li>
@@ -19,7 +26,7 @@
         <li>Added talisman import and export</li>
         <li>Added settings menu</li>
         <li>Added option to sort and display skills alphabetically</li>
-        <li>Added various links and documentation, including About and FAQ pages and <a href="http://github.com/sand-bird/talismans">download instructions</a></li></li>
+        <li>Added various links and documentation, including About and FAQ pages and <a href="http://github.com/sand-bird/talismans">download instructions</a></li>
       </ul>
     </div>
     <div slot="footer">

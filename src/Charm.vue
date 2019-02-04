@@ -1,37 +1,37 @@
 <template>
 <transition name="charm-transition">
 <li class="charm-holder">
-  
+
   <div class="charm">
     <div class="rarity styled-select">
       <select v-model="rarity"
               @change="blur">
-        <option v-for="rarity in 7" v-if="rarity >= minRarity" :value="rarity" v-bind:key="rarity">
+        <option v-for="rarity in 7 - (minRarity - 1)" :value="rarity + (minRarity - 1)" v-bind:key="rarity">
           {{ rarityName(rarity) }}
         </option>
       </select>
     </div>
-    
+
     <div class="slots">
-      <a class="minus-slots" 
+      <a class="minus-slots"
             v-if="canDecreaseSlots"
-            @click="slots-=1">➖</a> 
-        <span v-for="slot in slots" 
+            @click="slots-=1">➖</a>
+        <span v-for="slot in slots"
               class="slot" :class="{ filled: filledSlots >= slot }" v-bind:key="slot" />
       <a class="plus-slots"
             v-if="canIncreaseSlots"
             @click="slots+=1">➕</a>
     </div>
-    
+
     <div class="skill1">
-      <select v-model="skills[0]" @change="blur" 
+      <select v-model="skills[0]" @change="blur"
               @focus="track(0)">
         <option v-for="skillId in availableSkills[0]" :value="skillId" v-bind:key="skillId">
           {{ skillName(skillId) }}
         </option>
       </select>
     </div>
-    
+
     <div class="skill1value">
       <select v-model="skillValues[0]" @change="blur">
         <option v-for="value in skillLevels[0]" :value="value" v-bind:key="value">
@@ -39,16 +39,16 @@
         </option>
       </select>
     </div>
-    
+
     <div class="skill2">
-      <select v-model="skills[1]" @change="blur" 
+      <select v-model="skills[1]" @change="blur"
               @focus="track(1)">
         <option v-for="skillId in availableSkills[1]" :value="skillId" v-bind:key="skillId">
           {{ skillName(skillId) }}
         </option>
       </select>
     </div>
-    
+
     <div class="skill2value">
       <select v-model="skillValues[1]" @change="blur"
               v-show="skillValues[1]">
@@ -57,36 +57,36 @@
         </option>
       </select>
     </div>
-    
+
   </div>
-  
+
   <a class="remove" v-if="!equipSet" @click="removeCharm"></a>
-  
+
   <span class="equip-set" v-if="equipSet" :title="equipSet.name">E</span>
-  
+
   <a class="active-charm-button" @click="setActive"></a>
   <div v-if="debugOn" style="overflow: hidden">
     <pre style="float:left">{{ offset }}<br>{{ origOffset != offset ? origOffset : null }}</pre>
     <pre style="float:right">{{ data }}</pre>
   </div>
-</li> 
+</li>
 </transition>
 </template>
 
 <script>
-import { getAvailableSkills, getSkillLevels, 
-         getSkillName, getRarityName, getType,
-         getMaxSlots, DEBUG } from './utils'
+import { getAvailableSkills, getSkillLevels,
+  getSkillName, getRarityName, getType,
+  getMaxSlots, DEBUG } from './utils'
 
 export default {
   name: 'charm',
   props: [ 'offset', 'skillSort', 'skillMax', 'equipSet' ],
   data () {
-    return { 
-      debugOn: DEBUG, 
+    return {
+      debugOn: DEBUG,
       origOffset: this.offset,
-      
-      /* skill tracking values -- for knowing 
+
+      /* skill tracking values -- for knowing
          which skill slot we've just modified */
       currentSkillSlot: null,
       currentSkill: null,
@@ -96,162 +96,159 @@ export default {
   computed: {
 
     /* mutable properties fetched from state */
-    
+
     // integer from 0 (pawn) to 6 (dragon)
     rarity: {
-      get () { 
-        this.debug("[computed] rarity: get")
-        return this.get("rarity") 
+      get () {
+        this.debug('[computed] rarity: get')
+        return this.get('rarity')
       },
-      set (val) { 
-        this.debug("[computed] rarity: set")
-        this.set("rarity", val) 
+      set (val) {
+        this.debug('[computed] rarity: set')
+        this.set('rarity', val)
       }
     },
-    // integer representing the type of charm 
+    // integer representing the type of charm
     // corresponding to the talisman's rarity.
     // mystery: 325, shining: 326, timeworn: 327
     type: {
-      get () { 
-        this.debug("[computed] type: get")
-        return this.get("type") 
+      get () {
+        this.debug('[computed] type: get')
+        return this.get('type')
       },
-      set (val) { 
-        this.debug("[computed] type: set")
-        this.set("type", val) 
+      set (val) {
+        this.debug('[computed] type: set')
+        this.set('type', val)
       }
     },
     // integer from 0 to 3, just a counter
     slots: {
-      get () { 
-        this.debug("[computed] slots: get")
-        return this.get("slots") 
+      get () {
+        this.debug('[computed] slots: get')
+        return this.get('slots')
       },
-      set (val) { 
-        this.debug("[computed] slots: set")
-        this.set("slots", val) 
+      set (val) {
+        this.debug('[computed] slots: set')
+        this.set('slots', val)
       }
     },
-    
+
     /* immutable properties fetched from state */
-    
+
     // skill arrays won't accept computed setters; must be watched.
-    // each is an array of length 2, containing integers, whose indices 
+    // each is an array of length 2, containing integers, whose indices
     // correspond respectively to the two skill slots in a charm.
     skills () {
-      this.debug("[computed] skills")
-      return this.get("skills") 
+      this.debug('[computed] skills')
+      return this.get('skills')
     },
-    skillValues () { 
-      this.debug("[computed] skillValues") 
-      return this.get("skillValues") 
+    skillValues () {
+      this.debug('[computed] skillValues')
+      return this.get('skillValues')
     },
-    
+
     decorations () {
-      return this.get("decorations")
+      return this.get('decorations')
     },
-    
+
     // restrictions based on decorations attached to the charm.
     // set in utils when data is read (or in App when charm is created)
-    minRarity () { 
-      this.debug("[computed] minRarity") 
-      return this.get("minRarity") 
+    minRarity () {
+      this.debug('[computed] minRarity')
+      return this.get('minRarity')
     },
-    filledSlots () { 
-      this.debug("[computed] filledSlots") 
-      return this.get("filledSlots") 
+    filledSlots () {
+      this.debug('[computed] filledSlots')
+      return this.get('filledSlots')
     },
-    
+
     /* computed properties relying on functions stored in utils.js */
-    
+
     maxSlots () {
-      this.debug("[computed] maxSlots")
+      this.debug('[computed] maxSlots')
       return getMaxSlots(this.type)
     },
- 
+
     canIncreaseSlots () {
-      this.debug("[computed] canIncreaseSlots")
+      this.debug('[computed] canIncreaseSlots')
       return (this.slots < this.maxSlots)
     },
-    
+
     canDecreaseSlots () {
-      this.debug("[computed] canDecreaseSlots")
+      this.debug('[computed] canDecreaseSlots')
       return (this.slots > this.filledSlots)
     },
-    
+
     availableSkills () {
-      this.debug("[computed] availableSkills")
+      this.debug('[computed] availableSkills')
       return getAvailableSkills(this.type, this.skillSort)
     },
-    
+
     skillLevels () {
-      this.debug("[computed] skillLevels")
+      this.debug('[computed] skillLevels')
       return getSkillLevels(this.type, this.skills)
     },
-    
+
     // for debugging
     data () {
-      if (DEBUG) return this.get("data")
+      return DEBUG ? this.get('data') : null
     }
-    
+
   },
-  
+
   watch: {
-  
+
     /* skill array updaters */
     skills (val) {
-      this.debug("[watch] skills: " + val)
-      this.set("skills", val)
-      // settings skills[1] to something nonzero should also 
-      // set the skillValue to nonzero. this goes here instead 
+      this.debug('[watch] skills: ' + val)
+      this.set('skills', val)
+      // settings skills[1] to something nonzero should also
+      // set the skillValue to nonzero. this goes here instead
       // of the skillLevels watcher for consistency with the
-      // skillValues watcher below, and for edge cases where 
+      // skillValues watcher below, and for edge cases where
       // someone loads a save with already-illegal data.
       if (val[1] && !this.skillValues[1]) {
-        this.debug("[watch] skills: setting skillValue")
-        if (this.skillMax)
-          this.skillValues[1] = this.max(this.skillLevels[1])
-        else
-          this.skillValues[1] = 1
+        this.debug('[watch] skills: setting skillValue')
+        if (this.skillMax) { this.skillValues[1] = this.max(this.skillLevels[1]) }
+        else { this.skillValues[1] = 1 }
       }
-      
+
       if (this.skillMax) {
         let slot = this.currentSkillSlot
-        console.log("current slot: " + slot)
-        if (val[slot] > this.currentSkillValue)
-          this.skillValues[slot] = this.max(this.skillLevels[slot])
+        console.log('current slot: ' + slot)
+        if (val[slot] > this.currentSkillValue) { this.skillValues[slot] = this.max(this.skillLevels[slot]) }
       }
     },
-    skillValues (val) { 
-      this.debug("[watch] skillValues: " + val)
-      this.set("skillValues", val)
+    skillValues (val) {
+      this.debug('[watch] skillValues: ' + val)
+      this.set('skillValues', val)
       // setting skillValues[1] to 0 should set the skill to 0.
-      // nothing else updates based on skillValues, so this 
-      // must be done manually here. (uses val[1] because only 
+      // nothing else updates based on skillValues, so this
+      // must be done manually here. (uses val[1] because only
       // the second slot can have 0 (none) for a skill)
       if (!val[1] && this.skills[1]) {
-        this.debug("[watch] skillValues: setting skill")
+        this.debug('[watch] skillValues: setting skill')
         this.skills[1] = 0
       }
     },
-    
-    /* update the type (mystery, shining, timeworn) when the 
+
+    /* update the type (mystery, shining, timeworn) when the
        charm's rarity is changed (used for skills & slots)  */
     rarity (val) {
-      this.debug("[watch] rarity: " + val)
+      this.debug('[watch] rarity: ' + val)
       let type = getType(val)
-      if (type != this.type) this.type = type
+      if (type !== this.type) this.type = type
     },
-  
-    /* when the available skills change, checks if our current skill 
-       is valid and chooses a default one if not. also updates the 
+
+    /* when the available skills change, checks if our current skill
+       is valid and chooses a default one if not. also updates the
        skillValue in that case (though i think this is redundant)  */
     availableSkills (val) {
-      this.debug("[watch] availableSkills: " + val)
+      this.debug('[watch] availableSkills: ' + val)
       for (let slot = 0; slot < 2; slot++) {
         // if the available skills for the slot no longer contain
         // the current skill selected for that slot:
-        if (val[slot].indexOf(this.skills[slot]) == -1) {
+        if (val[slot].indexOf(this.skills[slot]) === -1) {
           // set the skill to the first available skill
           // (should be 0 (no skill) if this is slot 2)
           this.skills[slot] = val[slot][0]
@@ -260,89 +257,87 @@ export default {
         }
       }
     },
-    
+
     /* when the available skillLevels change, checks if our
        skillValues are valid and changes them if necessary  */
     skillLevels (val) {
-      this.debug("[watch] skillLevels: " + val)
+      this.debug('[watch] skillLevels: ' + val)
       for (let slot = 0; slot < 2; slot++) {
-        // i really wanted to use Math.min(...arr), but i 
+        // i really wanted to use Math.min(...arr), but i
         // figured there'd be too much of a performance hit :(
         let minLevel = this.min(val[slot])
         let maxLevel = this.max(val[slot])
-        
-        // force skillvalue to minimum for negative 
+
+        // force skillvalue to minimum for negative
         // skillValues in excess of new skillLevels
         // (should only happen in 2nd slot)
-        if (this.skillValues[slot] < minLevel)
-          this.skillValues[slot] = minLevel
-          
-        // if skillvalue is already valid, do nothing 
-        else if (this.skillValues[slot] <= maxLevel)
-          continue
-        
+        if (this.skillValues[slot] < minLevel) { this.skillValues[slot] = minLevel }
+
+        // if skillvalue is already valid, do nothing
+        else if (this.skillValues[slot] <= maxLevel) { continue }
+
         // otherwise, just force skillValue to maximum
         else this.skillValues[slot] = maxLevel
       }
     },
-    
+
     maxSlots (val) {
-      this.debug("[watch] maxSlots: " + val)
+      this.debug('[watch] maxSlots: ' + val)
       if (this.slots > val) this.slots = val
     }
-  
+
   },
-  
+
   methods: {
-  
+
     debug (msg) {
-      if (DEBUG) console.log(this.offset + " " + msg)
+      if (DEBUG) console.log(this.offset + ' ' + msg)
     },
-  
+
     get (prop) {
-      this.debug("[methods] get: " + prop)
+      this.debug('[methods] get: ' + prop)
       return this.$store.state.charms[this.offset][prop]
     },
-    
+
     set (key, value) {
-      this.debug("[methods] set: " + key + ", " + value)
+      this.debug('[methods] set: ' + key + ', ' + value)
       this.$store.dispatch('edit', {
         offset: this.offset,
         key: key,
         value: value
       })
     },
-  
+
     skillName (skillId) {
       return getSkillName(skillId)
     },
-    
+
     rarityName (rarityId) {
       return getRarityName(rarityId)
     },
-    
+
     removeCharm (event) {
       this.$emit('remove', this.offset)
     },
-    
+
     setActive (event) {
       this.$emit('active', this.offset)
     },
-    
-    track (i) { 
-      this.debug("[methods] track: " + i)
-      this.currentSkillSlot = i 
+
+    track (i) {
+      this.debug('[methods] track: ' + i)
+      this.currentSkillSlot = i
       this.currentSkill = this.skills[i]
       this.currentSkillValue = this.skillValues[i]
     },
-    
+
     min (arr) { return arr.slice(-1)[0] },
-    
+
     max (arr) { return arr[0] },
-    
+
     blur (e) { e.target.blur() }
-    
-  } 
+
+  }
 }
 </script>
 
@@ -438,7 +433,7 @@ html, * {
 }
 
 .charms-header div:after {
-  /* styling */ 
+  /* styling */
   width: 0;
   height: 5px;
   display: inline-block;
@@ -563,11 +558,10 @@ select {
   padding: 5px 20px 5px 5px;
   border-radius: 5px;
   border: 0;
-  
 
   /* reset */
 
-  margin: 0;      
+  margin: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -597,7 +591,7 @@ background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   left: 50%;
   margin-left: -1.3em;
   padding: 5px 10px 5px 5px;
-  
+
   background-position:
     calc(100% - 5px) calc(50% + 2px);
   background-size: 8px;

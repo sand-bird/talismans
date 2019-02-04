@@ -1,7 +1,7 @@
 <template>
-  <modal class="faq modal" @close="close">    
+  <modal class="faq modal" @close="close">
     <h3 slot="header">FAQ</h3>
-    <div slot="body">    
+    <div slot="body">
       <h4>How do I use this?</h4>
       <ol>
         <li>Using a homebrew save editor like <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>, dump your Monster Hunter Generations <b>extdata</b> to your 3DS's SD card.</li>
@@ -16,7 +16,7 @@
       <h4>Can I use it offline?</h4>
       <p>Yes! Instructions for downloading and running the app locally are available on the <a href="http://github.com/sand-bird/talismans">github page</a>. You will need to have <a href="https://nodejs.org/en/">node.js</a> and <a href="http://blog.npmjs.org/post/85484771375/how-to-install-npm">npm</a> installed first.</p>
       <h4>What's an extdata file?</h4>
-      <p>An extdata file is a save file from the 3DS's SD card (as opposed to the game cartridge), decrypted by a 3DS homebrew save editor such as <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>.</p> 
+      <p>An extdata file is a save file from the 3DS's SD card (as opposed to the game cartridge), decrypted by a 3DS homebrew save editor such as <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>.</p>
       <p>For more information on how to generate an extdata file, the <a href="https://smealum.github.io/3ds/" >official homebrew channel site</a> and the communities on <a href="https://www.reddit.com/r/3dshacks/wiki/index" >reddit</a> and <a href="https://gbatemp.net/forums/3ds-homebrew-development-and-emulators.275/">gbatemp</a> are good places to start learning about 3DS homebrew.</p>
       <h4>Does this overwrite my save?</h4>
       <p>No. Clicking "Save Changes" will download a fresh copy of your save file with the changes you have made. You will need to manually place this downloaded save file in the correct place on your SD card in order to load the modified data into Monster Hunter Generations.</p>
@@ -38,7 +38,7 @@
       <p>Skill compatibility information used in <b>☆'s MHGen Talisman Editor</b> was collected from <a href="https://docs.google.com/spreadsheets/d/1N7lqzdSzNl1o_W8JiYyQz_cXDXJEE_Ur4myI4Uf0F7E/">this spreadsheet</a>. You can view the actual datafile used in the app <a href="https://github.com/sand-bird/talismans/blob/master/src/skills.json">here</a>.</p>
       <h4>Where did my decorations go?</h4>
       <p>Decorations can't be copied: if you copy a talisman, or if you export your talismans and then import them back again, the decorations are reset. This was my effort to draw a line between “circumventing obnoxious RNG” and plain old “cheating” – and, while the implementation here might be a little draconian, I still stand by it in principle.</p>
-      <p>But, well, hey – if you bothered to read (or scroll) through this whole thing, you're exactly the kind of person who makes this all worthwhile. So, by way of thanks, here's a little secret: open the settings menu, and type <code>cheatercheaterwimpwimp</code>. Enjoy!  
+      <p>But, well, hey – if you bothered to read (or scroll) through this whole thing, you're exactly the kind of person who makes this all worthwhile. So, by way of thanks, here's a little secret: open the settings menu, and type <code>cheatercheaterwimpwimp</code>. Enjoy!
       <h4>You should add {feature}!</h4>
       <p>Sure! <a @click="open('contact')">Drop me a line.</a></p>
       <h4>I think I found a bug.</h4>
@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="css">
 .faq .modal-container {
   width: 690px;
   padding-right: 18px;

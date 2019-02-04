@@ -28,7 +28,7 @@ export default {
   name: 'modal',
   props: [],
   data () {
-    return { 
+    return {
     }
   },
   methods: {
@@ -138,20 +138,20 @@ export default {
 
 .modal-body::-webkit-scrollbar-track
 {
-	border-radius: 4px;
-	background-color: #eee;
+  border-radius: 4px;
+  background-color: #eee;
 }
 
 .modal-body::-webkit-scrollbar
 {
-	width: 12px;
-	background-color: #F5F5F5;
+  width: 12px;
+  background-color: #F5F5F5;
 }
 
 .modal-body::-webkit-scrollbar-thumb
 {
-	border-radius: 4px;
-	background-color: #ccc;
+  border-radius: 4px;
+  background-color: #ccc;
 }
 
 .modal h4 {

@@ -4,7 +4,7 @@
     <component :is="modal.current" :props="modal.props" :settings="settings"
                @close="closeModal" @update="update" @open="openModal"
                @secret="settings.secret = true" />
-   
+
     <div class="header" :class="{ loaded: renderFinished }"
          @scroll="alert('abcd')" >
       <div class="outer">
@@ -17,59 +17,59 @@
         </div>
       </transition>
     </div>
-    
+
     <div id="upload-holder" v-show="renderDelay">
       <div class="font-test"></div>
-      Please select your extdata file: 
+      Please select your extdata file:
       <input class="upload" type="file" @change='init' v-show="!loading" />
       <div id="loading" v-show="loading">Loading...</div>
     </div>
-    
+
     <transition name="app-transition" @after-enter="setRenderFinished">
     <div v-if="!renderDelay" class="app-body">
       <ul id="files">
         <li v-for="(save, index) in saves" @click="setActive(index)"
-            :class="[{ active: $store.state.active == index}, 
+            :class="[{ active: $store.state.active == index},
                      { disabled : !save }]" v-bind:key="index"
         >
           <span>File {{ index + 1 }}:</span>
           <h3 :class="'name'">{{ save || "(none)" }}</h3>
         </li>
       </ul>
-      
+
       <div class="button warning" @click="clearCharms" v-show="charms">Clear Talismans</div>
       <div class="button" @click="importCharms" v-show="file">Import Talismans</div>
       <div class="button" @click="exportCharms" v-show="file && charms">Export Talismans</div>
-      
+
       <ul id="charms">
-        
+
         <li class="charms-header">
-          <div v-for="column in columns" 
-               :class="[column.id, 
+          <div v-for="column in columns"
+               :class="[column.id,
                    {'sort-down': column.id == lastSortKey && sortOrder == -1 },
-                   {'sort-up': column.id == lastSortKey && sortOrder == 1 }]" 
+                   {'sort-up': column.id == lastSortKey && sortOrder == 1 }]"
                @click="sortCharms(column.id)"  v-bind:key="column.id">
             {{ column.name }}
           </div>
         </li>
-        
-        <charm v-for="offset in charmOffsets" v-if="offset" :key="offset"
+
+        <charm v-for="offset in charmOffsets" :key="offset"
                :offset="offset" :equipSet="equipSets[offset]"
                :skillSort="settings.skillSort" :skillMax="settings.skillMax"
                :class="{'active-charm': (activeCharm && activeCharm == offset)}"
                @remove="removeCharm"
                @active="setActiveCharm"
         />
-      
+
         <li class="add-charm" @click='newCharm' v-show="file && emptyOffsets.length">
           <span class="add">➕</span> Add Talisman
         </li>
-        
+
       </ul>
-      
+
     </div>
     </transition>
-    
+
     <div id="footer" :class="{loaded: renderFinished}">
       <ul class="menu">
         <li><a @click="openModal('about')">About</a></li>·
@@ -77,9 +77,10 @@
         <li><a href="http://github.com/sand-bird/talismans">Source</a></li>·
         <li><a @click="openModal('contact')">Contact</a></li>
       </ul>
-      <div class="copy">© 2017 <a href="http://github.com/sand-bird">sand bird</a></div>
+      <div class="copy">© 2017 <a href="http://github.com/sand-bird">sand bird</a>&nbsp;
+          <span style="font-size: 0.9em; cursor:pointer;">(v. <a @click="openModal('changelog')">1.2.1</a></span>)</div>
     </div>
-    
+
   </div>
 </template>
 
@@ -88,28 +89,28 @@ import fileSaver from 'file-saver'
 import stringify from 'json-stringify-pretty-compact'
 import { EventEmitter } from 'events'
 
-import { loadSaves, loadOffsets, loadCharms, loadEquipSets, 
-         processDecorations, filterCharmData, getRawCharm,
-         saveCharms, compareCharms, DEBUG } from './utils'
+import { loadSaves, loadOffsets, loadCharms, loadEquipSets,
+  processDecorations, filterCharmData, compareCharms,
+  DEBUG } from './utils'
 import charm from './Charm.vue'
 import * as modals from './modals'
 
 class Modal extends EventEmitter {
-  constructor() {
+  constructor () {
     super()
     this.current = ''
     this.props = null
-    this.on('open', function(modal, props) {
+    this.on('open', function (modal, props) {
       debug('[modal] open: ' + modal)
       this.current = modal
       this.props = props
     })
-    this.on('close', function() {
+    this.on('close', function () {
       debug('[modal] close: ' + this.current)
       this.current = ''
     })
-    this.on('confirm', function(...args) {
-      debug (
+    this.on('confirm', function (...args) {
+      debug(
         '[modal] confirm: ' + this.current + (args.length ? ' ' + args : '')
       )
     })
@@ -118,7 +119,7 @@ class Modal extends EventEmitter {
 var modal = new Modal()
 
 const debug = (msg) => {
-  if (DEBUG) console.log("App " + msg)
+  if (DEBUG) console.log('App ' + msg)
 }
 
 export default {
@@ -126,31 +127,31 @@ export default {
   data () {
     return {
       modal: modal,
-      
+
       /* render control flags */
-      
+
       // controls display of "loading..." animation
       loading: false,
-      // ensures nothing is rendered until charms 
+      // ensures nothing is rendered until charms
       // are loaded in the store
       renderDelay: true,
       // when the charms are done rendering we animate
       // the header (otherwise it's choppy)
       renderFinished: false,
-    
+
       /* saved offsets */
- 
+
       // offset of charm in "clipboard"
       activeCharm: null,
       // used by the delete warning modal
       charmToRemove: null,
-      
+
       /* sorting state info */
 
       sortOrder: 1,
       // if same as next sortKey, flip sort order
       lastSortKey: null,
-      
+
       /* settings */
 
       settings: {
@@ -164,7 +165,7 @@ export default {
       },
       settingDescription: null,
       settingTimeout: null,
-      
+
       saves: [],
       columns: [
         { name: 'Rarity', id: 'rarity' },
@@ -175,18 +176,18 @@ export default {
     }
   },
   components: {
-    charm, 
-    'about': modals.about, 
-    'settings': modals.settings, 
-    'faq': modals.faq, 
-    'contact': modals.contact, 
-    'delete': modals.deleteModal, 
+    charm,
+    'about': modals.about,
+    'settings': modals.settings,
+    'faq': modals.faq,
+    'contact': modals.contact,
+    'delete': modals.deleteModal,
     'import': modals.importModal,
     'changelog': modals.changelog
   },
   mounted () {
-    document.addEventListener("keydown", (e) => {
-      if (e.keyCode == 27) {
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === 27) {
         this.closeModal()
       }
     })
@@ -194,57 +195,57 @@ export default {
   computed: {
     // flag that store sets when it's done initializing
     loaded () { return this.$store.state.loaded },
-    
+
     // flag used by "clear charms" button
     charms () { return this.charmOffsets && this.charmOffsets.length },
-    
+
     charmOffsets: {
-      get () { 
-        debug("[computed] charmOffsets: get")
+      get () {
+        debug('[computed] charmOffsets: get')
         return this.$store.getters.charmOffsets
       },
       set (val) {
-        debug("[computed] charmOffsets: set")
+        debug('[computed] charmOffsets: set')
         this.$store.commit('UPDATE_CHARMOFFSETS', val)
       }
     },
-    
+
     emptyOffsets () {
-      debug("[computed] emptyOffsets: get")
+      debug('[computed] emptyOffsets: get')
       return this.$store.getters.emptyOffsets
     },
-    
+
     equipSets () {
       return this.$store.getters.equipSets
     }
   },
-  
+
   watch: {
     loaded (val) {
-      debug("[watch] loaded: " + val)
+      debug('[watch] loaded: ' + val)
       if (val && this.renderDelay) {
         setTimeout(() => {
           this.renderDelay = false
-          console.log("ready to render")
+          console.log('ready to render')
         }, 0)
       }
     }
   },
-  
+
   methods: {
-  
+
     setRenderFinished () {
-      debug("[methods] setRenderFinished")
+      debug('[methods] setRenderFinished')
       setTimeout(() => {
-        console.log("render finished")
+        console.log('render finished')
         this.renderFinished = true
       }, 0)
     },
-    
+
     init (event) {
-      debug("[methods] init")
-      if (event.target.files[0].size != 4000815) {
-        alert("Error: wrong file size!")
+      debug('[methods] init')
+      if (event.target.files[0].size !== 4000815) {
+        alert('Error: wrong file size!')
         event.target.value = null
         return
       }
@@ -254,15 +255,15 @@ export default {
       let reader = new FileReader()
 
       reader.onload = function (e) {
-        let file = Buffer.from(e.target.result)        
+        let file = Buffer.from(e.target.result)
         this.file = true
-        
+
         this.saves = loadSaves(file)
         // finds first occupied file and inits it to active
         let a = this.saves.findIndex((n) => { return n != null })
-        if (a == -1) {
+        if (a === -1) {
           // no saves on file - edge case but still
-          alert("Error: no saves on file!")
+          alert('Error: no saves on file!')
           event.target.value = null
           this.file = false
           this.loading = false
@@ -276,69 +277,67 @@ export default {
           active: a,
           file: file
         })
-        
+
         // initialize settings to user's localStorage
         let settings = ['skillSort', 'skillMax', 'decoWarn', 'decoClear']
-        settings.forEach( key => {
-          if (localStorage.hasOwnProperty(key))
-            this.settings[key] = parseInt(localStorage.getItem(key))
+        settings.forEach(key => {
+          if (localStorage.hasOwnProperty(key)) { this.settings[key] = parseInt(localStorage.getItem(key)) }
         })
       }.bind(this)
       reader.readAsArrayBuffer(file)
     },
-    
+
     setActive (index) {
-      debug("[methods] setActive: " + index)
-      if (this.saves[index] && this.active != index) {
+      debug('[methods] setActive: ' + index)
+      if (this.saves[index] && this.active !== index) {
         this.$store.dispatch('setActive', index)
         this.activeCharm = null
       }
     },
-    
+
     download () {
-      debug("[methods] download")
+      debug('[methods] download')
       this.$store.commit('SAVE_CHARMS')
       var binaryData = []
       binaryData.push(this.$store.state.file)
-      fileSaver.saveAs (
-        new Blob(binaryData, {type: "application/octet-stream"}), 
+      fileSaver.saveAs(
+        new Blob(binaryData, { type: 'application/octet-stream' }),
         'system', false
       )
     },
-    
+
     exportCharms () {
-      debug("[methods] exportCharms")
+      debug('[methods] exportCharms')
       let charms = []
-      
+
       for (let i = 0; i < this.charmOffsets.length; i++) {
         let charm = this.$store.state.charms[this.charmOffsets[i]]
         charms.push(charm)
       }
-      
+
       let charmsToExport = filterCharmData(charms, true)
-      
-      fileSaver.saveAs (
-        new Blob([stringify(charmsToExport)], {type: "text/json"}),
-       'talismans_' + this.saves[this.$store.state.active] + '.txt', false
+
+      fileSaver.saveAs(
+        new Blob([stringify(charmsToExport)], { type: 'text/json' }),
+        'talismans_' + this.saves[this.$store.state.active] + '.txt', false
       )
     },
-    
+
     openModal (modal, props) {
-      debug("[methods] openModal: " + modal)
+      debug('[methods] openModal: ' + modal)
       this.modal.emit('open', modal, props)
     },
-    
+
     closeModal (...args) {
-      debug("[methods] closeModal: " + args)
+      debug('[methods] closeModal: ' + args)
       this.modal.emit('close')
-      if (args.length && typeof args[0] === 'string') 
-        this.modal.emit(...args)
+      if (args.length && typeof args[0] === 'string') { this.modal.emit(...args) }
     },
-    
+
     update (...args) {
-      debug("[methods] update: " + args)
+      debug('[methods] update: ' + args)
       if (args.length < 2) {
-        console.log("[App.update] Error: Not enough arguments!")
+        console.log('[App.update] Error: Not enough arguments!')
         return
       }
       let val = args[args.length - 1]
@@ -349,19 +348,19 @@ export default {
         for (let i = 0; i < args.length - 2; i++) {
           if (args[i] in obj) obj = obj[args[i]]
           else {
-            console.log("[App.update] Error: Key " + args[i] + " not found!")
+            console.log('[App.update] Error: Key ' + args[i] + ' not found!')
             return
           }
         }
       }
       if (key in obj) obj[key] = val
       else {
-        console.log("[App.update] Error: Key " + args[i] + " not found!")
+        console.log('[App.update] Error: Key ' + key + ' not found!')
       }
     },
-    
+
     removeCharm (offset) {
-      debug("[methods] removeCharm: " + offset)
+      debug('[methods] removeCharm: ' + offset)
       // make ABSOLUTELY SURE that equip set charms can't be deleted
       if (this.equipSets[offset]) return
       // if we need a decoration warning, open the modal
@@ -375,49 +374,52 @@ export default {
       }
       else this.$store.dispatch('remove', offset)
     },
-    
+
     setActiveCharm (offset) {
-      debug("[methods] setActiveCharm: " + offset)
-      if (this.activeCharm && this.activeCharm == offset) 
-        this.activeCharm = null
+      debug('[methods] setActiveCharm: ' + offset)
+      if (this.activeCharm && this.activeCharm === offset) { this.activeCharm = null }
       else this.activeCharm = offset
     },
-    
+
     // new charms will be placed at the last available place
     // in the equipment box, then in slots created by deleting
     // charms as a last resort
     newCharm () {
-      debug("[methods] newCharm: " + this.activeCharm)
+      debug('[methods] newCharm: ' + this.activeCharm)
       let newCharm = {}
       let sourceCharm = this.$store.state.charms[this.activeCharm] || null
-      if (this.activeCharm && sourceCharm) newCharm = {
-        rarity: sourceCharm.rarity,
-        slots: sourceCharm.slots,
-        type: sourceCharm.type,
-        // why does js default to passing arrays by reference this is dumb
-        skills: sourceCharm.skills.slice(),
-        skillValues: sourceCharm.skillValues.slice()
+      if (this.activeCharm && sourceCharm) {
+        newCharm = {
+          rarity: sourceCharm.rarity,
+          slots: sourceCharm.slots,
+          type: sourceCharm.type,
+          // why does js default to passing arrays by reference this is dumb
+          skills: sourceCharm.skills.slice(),
+          skillValues: sourceCharm.skillValues.slice()
+        }
       }
-      else newCharm = {
-        rarity: 7,
-        slots: 3,
-        type: 327,
-        skills: [36, 18],
-        skillValues: [5, 10]
+      else {
+        newCharm = {
+          rarity: 7,
+          slots: 3,
+          type: 327,
+          skills: [36, 18],
+          skillValues: [5, 10]
+        }
       }
       if (this.settings.decoCopy) newCharm.decorations = sourceCharm.decorations
       processDecorations(newCharm)
-      
+
       this.$store.dispatch('add', newCharm)
     },
-    
+
     importCharms () {
-      debug("[methods] importCharms")
+      debug('[methods] importCharms')
       this.openModal('import', {
         emptyCount: this.emptyOffsets ? this.emptyOffsets.length : 0,
         deco: this.settings.decoImport
       })
-      
+
       this.modal.once('confirm', (ow, obj) => {
         if (ow && this.charmOffsets.length) {
           this.clearCharms().then((res) => {
@@ -429,24 +431,26 @@ export default {
         }
       })
     },
-    
+
     // all: when set, clearCharms does not track charms with
     // decorations, and deletes indiscriminately instead
     clearCharms () {
-      debug("[methods] clearCharms: " + this.settings.decoClear)
+      debug('[methods] clearCharms: ' + this.settings.decoClear)
       return new Promise((resolve, reject) => {
         let emptyCharmOffsets = []
         let filledCharmOffsets = []
-        
+
         this.charmOffsets.forEach((offset) => {
           if (this.settings.decoClear < 2 &&
-              this.$store.state.charms[offset].filledSlots)
+              this.$store.state.charms[offset].filledSlots) {
             filledCharmOffsets.push(offset)
-          else if (!this.equipSets[offset])
-            // even if decoClear is Always, we still want to push 
-            // each charm offset to a new array before clearing --
-            // store freaks out and doesn't delete right otherwise
+          }
+          // even if decoClear is Always, we still want to push
+          // each charm offset to a new array before clearing --
+          // store freaks out and doesn't delete right otherwise
+          else if (!this.equipSets[offset]) {
             emptyCharmOffsets.push(offset)
+          }
         })
         // if we have empty charms, our work is done
         if (emptyCharmOffsets.length) {
@@ -460,7 +464,7 @@ export default {
             // decoWarn is On: we need a modal
             if (this.settings.decoWarn) {
               this.openModal('delete')
-              
+
               this.modal.once('confirm', () => {
                 this.$store.dispatch('remove', filledCharmOffsets)
                 resolve()
@@ -477,14 +481,14 @@ export default {
         }
         // edge case: clear when there are no charms
         // (right now this should only happen when selecting
-        // overwrite while importing charms; we still need 
+        // overwrite while importing charms; we still need
         // to resolve so such an import will succeed)
         else resolve()
       })
     },
-    
-    sortCharms (sortKey) {   
-      debug("[methods] sortCharms: " + sortKey)
+
+    sortCharms (sortKey) {
+      debug('[methods] sortCharms: ' + sortKey)
       let sortKeys = [
         'rarity',
         'slots',
@@ -496,17 +500,17 @@ export default {
       ]
       // flips sortOrder if sorting again on the same key;
       // on a new key, sortOrder should always be 1
-      if (this.lastSortKey == sortKey) this.sortOrder *= -1
+      if (this.lastSortKey === sortKey) this.sortOrder *= -1
       else this.sortOrder = 1
       this.lastSortKey = sortKey
-      
-      if (sortKey == 'skill1' || sortKey == 'skill2') {
+
+      if (sortKey === 'skill1' || sortKey === 'skill2') {
         // grab index off the '1' or '2' in the sortKey
         let index = parseInt(sortKey.slice(-1)) - 1
         sortKeys = [
-          ['skills', index], 
-          ['skillValues', index], 
-          ['skills', 1 - index], 
+          ['skills', index],
+          ['skillValues', index],
+          ['skills', 1 - index],
           ['skillValues', 1 - index],
           'rarity',
           'slots',
@@ -517,12 +521,12 @@ export default {
         sortKeys.splice(sortKeys.indexOf(sortKey), 1)
         sortKeys.unshift(sortKey)
       }
-      
+
       let sortFn = (a, b) => {
-        return compareCharms ( 
+        return compareCharms(
           this.$store.state.charms[a],
           this.$store.state.charms[b],
-          sortKeys, 
+          sortKeys,
           this.settings.skillSort, this.sortOrder
         )
       }
@@ -533,12 +537,18 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'icons';
+  src: url('assets/icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .font-test:before {
   content: '\e800 \e801 \e802 \e803 \e804 \e805 \e806 \f02e \f0c5 \f10c \f192';
   display: none;
   font-family: 'icons';
 }
-
 
 .icon-ok-circled2:before { content: '\e800'; }
 .icon-ok-circled:before { content: '\e801'; }
@@ -552,19 +562,20 @@ export default {
 .icon-attach-1:before { content: '\e806'; }
 .icon-download:before { content: '\f02e'; }
 
-
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
+  /*
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  */
 }
 
 .modal-body * {
@@ -728,18 +739,18 @@ h1, h2 {
   position: absolute;
   right: 0;
   bottom: 20px;
- 
+
   background-color: #fefefe;
   color: #999;
   /*17a563; */
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #eaeaea, 0 1px 2px #eee;
   transition: all 0.25s;
-  
+
 }
 
 .settings.button:hover {
   background-color: #fefefe;
-  color: #666; 
+  color: #666;
 }
 
 .app-body .button {
@@ -752,7 +763,6 @@ h1, h2 {
   width: 2em;
   display: inline-block;
 }
-
 
 ul {
   list-style-type: none;
@@ -839,13 +849,13 @@ a:hover {
 .active {
   background-color: #94ebc2 !important;
   border-color: #25c178 !important;
-  box-shadow: inset 1px 1px 0 #bff3da, inset 0 -1px 0 #54de9b, 0 2px 1px #ddd !important;  
+  box-shadow: inset 1px 1px 0 #bff3da, inset 0 -1px 0 #54de9b, 0 2px 1px #ddd !important;
 }
 
 .active:hover {
   background-color: #a9efcd !important;
   border-color: #21ab68 !important;
-  box-shadow: inset 1px 1px 0 #d4f7e6, inset 0 -1px 0 #69e2a8, 0 2px 1px #ddd !important;  
+  box-shadow: inset 1px 1px 0 #d4f7e6, inset 0 -1px 0 #69e2a8, 0 2px 1px #ddd !important;
 }
 
 #files li:hover {
@@ -860,7 +870,6 @@ a:hover {
   box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #fafafa, 0 2px 1px #fafafa !important;
   border-color: #ccc !important;
 }
-
 
 .name {
   font-size: 20px;
@@ -877,7 +886,6 @@ a:hover {
 .active .name {
   font-weight: bold;
 }
-
 
 .button {
   display: inline-block;
@@ -979,22 +987,22 @@ a:hover {
 }
 
 body::-webkit-scrollbar-track {
-	border-radius: 0px;
-	background-color: transparent;
+  border-radius: 0px;
+  background-color: transparent;
 }
 
 body::-webkit-scrollbar {
   border-radius: 10px;
-	width: 16px;
-	background-color: #fff;
+  width: 16px;
+  background-color: #fff;
 }
 
 body::-webkit-scrollbar-thumb {
-	border-radius: 6px;
-	width: 10px;
-	background-clip: padding-box;
-	border: 2px solid transparent;
-	background-color: #ccc;
+  border-radius: 6px;
+  width: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  background-color: #ccc;
 }
 
 body::-webkit-scrollbar-button {

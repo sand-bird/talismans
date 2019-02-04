@@ -1,5 +1,5 @@
 <template>
-  <modal class="import modal" @close="close">    
+  <modal class="import modal" @close="close">
     <h3 slot="header">Import Talismans</h3>
     <div slot="body">
       <div class="import-description">
@@ -11,9 +11,9 @@
       <transition name="textbox-transition">
         <textarea class="import-textbox" v-model="importText" @keyup="setError(null)" />
       </transition>
-      
+
       <transition name="import-transition">
-        <div class="import-error" 
+        <div class="import-error"
            v-if="error">
           <span v-html="error" />
         </div>
@@ -42,33 +42,33 @@ export default {
   },
   methods: {
     close (...args) { this.$emit('close', ...args) },
-    
+
     checkImportFile (event) {
       let file = event.target.files[0]
-      if (file.type != "text/plain") {
-        this.setError("<b>Error: Wrong filetype!</b> " +
-                      "Please import plaintext files only.")
+      if (file.type !== 'text/plain') {
+        this.setError('<b>Error: Wrong filetype!</b> ' +
+                      'Please import plaintext files only.')
         event.target.value = null
         return
       }
       if (file.size > 1000000) { // way more than anyone will ever need
-        this.setError("<b>Error: File too large!</b> " +
-                      "Please do not import files over 1 GB.")
+        this.setError('<b>Error: File too large!</b> ' +
+                      'Please do not import files over 1 GB.')
         event.target.value = null
         return
       }
       this.setError(null)
 
       let reader = new FileReader()
-      
+
       reader.onload = function (e) {
         this.importText = e.target.result
         console.log(file)
       }.bind(this)
-      
+
       reader.readAsText(file)
     },
-    
+
     submit (ow) {
       let importArr
       try {
@@ -76,40 +76,40 @@ export default {
       }
       catch (e) {
         console.log(e)
-        this.setError (
-          "<b>Error: Invalid syntax!</b> Please make sure all brackets, " +
-          "commas, and quotes are in the right place, then try again."
+        this.setError(
+          '<b>Error: Invalid syntax!</b> Please make sure all brackets, ' +
+          'commas, and quotes are in the right place, then try again.'
         )
         return
       }
       // in case we only have one charm
-      if (!Array.isArray(importArr)) importArr = [importArr] 
-      
+      if (!Array.isArray(importArr)) importArr = [importArr]
+
       if (!ow && importArr.length > this.props.emptyCount) {
-        this.setError (
-          "<b>Error: Not enough space!</b> You are importing " +
-          importArr.length + 
-          " talismans, <br/>but have " + 
-          this.props.emptyCount + " equipment box slot" + 
-          (this.props.emptyCount == 1 ? "" : "s") + 
-          " available. Please " + 
-          (this.props.emptyCount > 0 ? "import fewer talismans or " : "") 
-          + "delete some talismans, then try again."
+        this.setError(
+          '<b>Error: Not enough space!</b> You are importing ' +
+          importArr.length +
+          ' talismans, <br/>but have ' +
+          this.props.emptyCount + ' equipment box slot' +
+          (this.props.emptyCount === 1 ? '' : 's') +
+          ' available. Please ' +
+          (this.props.emptyCount > 0 ? 'import fewer talismans or ' : '') +
+          'delete some talismans, then try again.'
         )
         return
       }
-      
+
       let importCharms = filterCharmData(importArr, this.props.deco)
       console.log(importCharms)
-      for (let i = 0; i < importArr.length; i++) {        
+      for (let i = 0; i < importArr.length; i++) {
         processDecorations(importCharms[i])
         // no reason to export/import type if we can just get it from rarity
         importCharms[i].type = getType(importCharms[i].rarity)
       }
       this.close('confirm', ow, importCharms)
     },
-    
-    setError(err) {
+
+    setError (err) {
       this.error = err
     }
   },
@@ -135,7 +135,7 @@ export default {
 .import-file {
   padding: 12px 20px;
   width: 100%;
-  //border: 1px solid #eee;
+  /* border: 1px solid #eee; */
   box-shadow: 0 0 1px 1px #eee;
   display: inline-block;
   margin: 1em auto;
@@ -166,7 +166,7 @@ export default {
 
 .import-error {
   box-shadow: 0 0 1px 1px #ddd;
-  //border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   border-radius: 10px;
   padding: 0.65em !important;
   margin: 15px 0 5px 0 !important;
@@ -184,7 +184,7 @@ export default {
   opacity: 0;
 }
 
-.import-transition-enter-active { 
+.import-transition-enter-active {
   transition: max-height 0.6s, margin 0.3s, padding 0.3s, opacity 0.6s ;
   transition-delay: 0s;
 }
