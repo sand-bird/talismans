@@ -38,8 +38,8 @@
       </ul>
 
       <div class="button warning" @click="clearCharms" v-show="charms">Clear Talismans</div>
-      <div class="button" @click="importCharms" v-show="file">Import Talismans</div>
-      <div class="button" @click="exportCharms" v-show="file && charms">Export Talismans</div>
+      <div class="button" @click="importCharms" >Import Talismans</div>
+      <div class="button" @click="exportCharms" v-show="charms">Export Talismans</div>
 
       <ul id="charms">
 
@@ -61,7 +61,7 @@
                @active="setActiveCharm"
         />
 
-        <li class="add-charm" @click='newCharm' v-show="file && emptyOffsets.length">
+        <li class="add-charm" @click='newCharm' v-show="emptyOffsets.length">
           <span class="add">➕</span> Add Talisman
         </li>
 
@@ -166,7 +166,6 @@ export default {
       settingDescription: null,
       settingTimeout: null,
 
-      saves: [],
       columns: [
         { name: 'Rarity', id: 'rarity' },
         { name: 'Slots', id: 'slots' },
@@ -193,6 +192,9 @@ export default {
     })
   },
   computed: {
+
+    saves () { return this.$store.state.saves },
+
     // flag that store sets when it's done initializing
     loaded () { return this.$store.state.loaded },
 
@@ -258,9 +260,9 @@ export default {
         let file = Buffer.from(e.target.result)
         this.file = true
 
-        this.saves = loadSaves(file)
+        let saves = loadSaves(file)
         // finds first occupied file and inits it to active
-        let a = this.saves.findIndex((n) => { return n != null })
+        let a = saves.findIndex((n) => { return n != null })
         if (a === -1) {
           // no saves on file - edge case but still
           alert('Error: no saves on file!')
@@ -274,6 +276,7 @@ export default {
           charms: loadCharms(file),
           offsets: loadOffsets(file),
           equipSets: loadEquipSets(file),
+          saves: saves,
           active: a,
           file: file
         })
@@ -377,7 +380,9 @@ export default {
 
     setActiveCharm (offset) {
       debug('[methods] setActiveCharm: ' + offset)
-      if (this.activeCharm && this.activeCharm === offset) { this.activeCharm = null }
+      if (this.activeCharm && this.activeCharm === offset) {
+        this.activeCharm = null
+      }
       else this.activeCharm = offset
     },
 

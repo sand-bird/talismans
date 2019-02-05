@@ -20,10 +20,29 @@ const setChangeWarning = () => {
 
 export default new Vuex.Store({
   state: {
+    // array[3] of strings representing player names.
+    // a null value means the save slot is empty.
+    saves: [],
+
+    // raw file data (UIntArray8)
     file: null,
+
+    // after data is loaded, will contain a key for every valid offset,
+    // with either a charm object or a null value. the null keys are
+    // necessary for vuex to watch & update properties on any charm that
+    // might exist in that offset later on.
     charms: {},
+
+    // denormalized keys for occupied and unoccupied offsets. used to
+    // display and sort charms more efficiently. these days, there's
+    // probably a vue equivalent of reselect that could do it better
     charmOffsets: {},
     emptyOffsets: {},
+
+    // if you try to access an equipment set that contains a nonexistent
+    // charm, it crashes the game, so we need to prevent the user from
+    // deleting any charm that's being used in a set. key is the equip
+    // set's offset, and value is an object containing its name and id.
     equipSets: {},
     active: null,
     loaded: false
@@ -42,6 +61,10 @@ export default new Vuex.Store({
   mutations: {
     LOAD_FILE (state, file) {
       state.file = file
+    },
+
+    LOAD_SAVES (state, saves) {
+      state.saves = saves
     },
 
     LOAD_CHARMS (state, charms) {
@@ -65,7 +88,7 @@ export default new Vuex.Store({
 
     EDIT_CHARM (state, data) {
       let charm = state.charms[data.offset]
-      charm[data.key] = data.value
+      if (charm) charm[data.key] = data.value
     },
 
     // accepts an array of offsets or a single offset
@@ -97,25 +120,27 @@ export default new Vuex.Store({
       state.charmOffsets[state.active] = charmOffsets
     }
   },
+
   actions: {
-    init ({ commit, state }, data) {
+    init ({ commit }, data) {
       commit('LOAD_CHARMS', data.charms)
       commit('LOAD_OFFSETS', data.offsets)
       commit('LOAD_EQUIPSETS', data.equipSets)
       commit('SET_ACTIVE', data.active)
+      commit('LOAD_SAVES', data.saves)
       setTimeout(() => {
         commit('LOAD_FILE', data.file)
       }, 0)
     },
 
-    edit ({ commit, state }, data) {
+    edit ({ commit }, data) {
       setChangeWarning()
       setTimeout(() => {
         commit('EDIT_CHARM', data)
       }, 0)
     },
 
-    remove ({ commit, state }, data) {
+    remove ({ commit }, data) {
       setChangeWarning()
       setTimeout(() => {
         commit('DELETE_CHARMS', data)
@@ -124,16 +149,16 @@ export default new Vuex.Store({
 
     // needs to be synchronous because the
     // render relies on the add to be finished
-    add ({ commit, state }, data) {
+    add ({ commit }, data) {
       setChangeWarning()
       commit('ADD_CHARMS', data)
     },
 
-    save ({ commit, state }, data) {
+    save ({ commit }) {
       commit('SAVE_CHARMS')
     },
 
-    setActive ({ commit, state }, data) {
+    setActive ({ commit }, data) {
       setTimeout(() => {
         commit('SET_ACTIVE', data)
       }, 0)
