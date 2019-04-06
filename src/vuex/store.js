@@ -124,7 +124,7 @@ export default new Vuex.Store({
   actions: {
     init ({ commit }, data) {
       commit('LOAD_CHARMS', data.charms)
-      commit('LOAD_OFFSETS', data.offsets)
+      commit('LOAD_OFFSETS', { charmOffsets: data.charmOffsets, emptyOffsets: data.emptyOffsets })
       commit('LOAD_EQUIPSETS', data.equipSets)
       commit('SET_ACTIVE', data.active)
       commit('LOAD_SAVES', data.saves)

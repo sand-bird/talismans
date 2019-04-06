@@ -2,9 +2,16 @@
   <modal class="changelog modal" @close="close">
     <h3 slot="header">Changelog</h3>
     <div slot="body" class="body">
+      <h2>1.3.0</h2>
+      <ul>
+        <li>Added demo mode! 🎉</li>
+        <li>Updated launch information in <code>README.md</code></li>
+        <li>Added MIT license</li>
+        <li>Removed references to MHXX support (RIP)</li>
+      </ul>
       <h3>1.2.1</h3>
       <ul>
-        <li>Updated dependencies and moved to <span class="inline-mono">vue-cli</span> for tooling</li>
+        <li>Updated dependencies and moved to <code>vue-cli</code> for tooling</li>
         <li>Removed Google Analytics (why did I ever put that in??)</li>
         <li>Retconned previous version updates from patch to minor</li>
         <li>Updated contact info</li>

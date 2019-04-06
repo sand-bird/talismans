@@ -6,8 +6,8 @@
       <ol>
         <li>Using a homebrew save editor like <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>, dump your Monster Hunter Generations <b>extdata</b> to your 3DS's SD card.</li>
         <li>Power off your 3DS, remove the SD card, and connect it to your computer.</li>
-        <li>Click <b>Choose File</b>, and locate your extdata file. Usually this is called <span class="inline-mono">system</span> with no extension.</li>
-        <li>Edit your talismans and click <b>Save Changes</b> to download a new <span class="inline-mono">system</span> file.</li>
+        <li>Click <b>Choose File</b>, and locate your extdata file. Usually this is called <code>system</code> with no extension.</li>
+        <li>Edit your talismans and click <b>Save Changes</b> to download a new <code>system</code> file.</li>
         <li><b>Move or rename the original extdata file on your SD card.</b> Take good care of it! As long as you have this backup, you can always restore your save if something goes wrong. <i>I am not liable if you forget to back up your save.</i></li>
         <li>Copy or move the downloaded <code>system</code> file into the <b>extdata</b> location on the SD card, and make sure it has the correct filename.</li>
         <li>Unmount the SD card from your computer and insert it back into your 3DS.</li>
@@ -17,11 +17,11 @@
       <p>Yes! Instructions for downloading and running the app locally are available on the <a href="http://github.com/sand-bird/talismans">github page</a>. You will need to have <a href="https://nodejs.org/en/">node.js</a> and <a href="http://blog.npmjs.org/post/85484771375/how-to-install-npm">npm</a> installed first.</p>
       <h4>What's an extdata file?</h4>
       <p>An extdata file is a save file from the 3DS's SD card (as opposed to the game cartridge), decrypted by a 3DS homebrew save editor such as <a href="https://gbatemp.net/threads/release-jks-savemanager-homebrew-cia-save-manager.413143/">JKSM</a>.</p>
-      <p>For more information on how to generate an extdata file, the <a href="https://smealum.github.io/3ds/" >official homebrew channel site</a> and the communities on <a href="https://www.reddit.com/r/3dshacks/wiki/index" >reddit</a> and <a href="https://gbatemp.net/forums/3ds-homebrew-development-and-emulators.275/">gbatemp</a> are good places to start learning about 3DS homebrew.</p>
+      <p>For more information on how to generate an extdata file, the <a href="https://smealum.github.io/3ds/" >official homebrew channel site</a> and the communities on <a href="https://www.reddit.com/r/3dshacks/wiki/index" >Reddit</a> and <a href="https://gbatemp.net/forums/3ds-homebrew-development-and-emulators.275/">GBAtemp</a> are good places to start learning about 3DS homebrew.</p>
       <h4>Does this overwrite my save?</h4>
       <p>No. Clicking "Save Changes" will download a fresh copy of your save file with the changes you have made. You will need to manually place this downloaded save file in the correct place on your SD card in order to load the modified data into Monster Hunter Generations.</p>
       <h4>Which games does this support?</h4>
-      <p>Only <b>Monster Hunter Generations</b> (the NA / EU release of Monster Hunter X). I don't plan to add support for MHX or the older games, but I do plan to support the English version of Monster Hunter XX when it eventually comes out.</p>
+      <p>Only <b>Monster Hunter Generations</b> (the NA / EU release of Monster Hunter X).</p>
       <h4>What's wrong with <a href="https://gbatemp.net/threads/release-mh-talisman-editor-for-mhx-mhgen-mh4g-mh4u.411182/">jc28735250's talisman editor</a>?</h4>
       <p>Nothing – in fact, since it supports MHXX, MHX, and MH4U, it's actually a lot better than mine. However, it's currently Windows-only, and tends to crash under Wine, so I decided to write a cross-platform editor.</p>
       <h4>Isn't this cheating?</h4>

@@ -12,7 +12,8 @@
       </div>
       <transition name="download-transition">
         <div class="dl-transition-holder" v-if="renderFinished">
-          <div class="download button" @click="download">Save Changes</div>
+          <div class="download button" @click="download" v-show="!isDemo">Save Changes</div>
+          <div class="download button disabled" v-show="isDemo">Save Changes</div>
           <a class="settings button" @click="openModal('settings')"></a>
         </div>
       </transition>
@@ -23,6 +24,7 @@
       Please select your extdata file:
       <input class="upload" type="file" @change='init' v-show="!loading" />
       <div id="loading" v-show="loading">Loading...</div>
+      <div class="demo button" @click="initDemo" >Demo Mode!</div>
     </div>
 
     <transition name="app-transition" @after-enter="setRenderFinished">
@@ -77,8 +79,16 @@
         <li><a href="http://github.com/sand-bird/talismans">Source</a></li>·
         <li><a @click="openModal('contact')">Contact</a></li>
       </ul>
-      <div class="copy">© 2017 <a href="http://github.com/sand-bird">sand bird</a>&nbsp;
-          <span style="font-size: 0.9em; cursor:pointer;">(v. <a @click="openModal('changelog')">1.2.1</a></span>)</div>
+      <div class="copy">
+          <a href="https://github.com/sand-bird/talismans/blob/master/LICENSE.md">
+            <span style="font-size: 0.9em;">©</span>
+          </a>
+          2017-2019
+          <a href="http://github.com/sand-bird">sand-bird</a>
+          <span style="font-size: 0.9em;">
+            (v. <a @click="openModal('changelog')">{{require('../package.json').version}}</a>
+            </span>)
+          </div>
     </div>
 
   </div>
@@ -94,6 +104,7 @@ import { loadSaves, loadOffsets, loadCharms, loadEquipSets,
   DEBUG } from './utils'
 import charm from './Charm.vue'
 import * as modals from './modals'
+import DEMO_STATE from '../demo.json'
 
 class Modal extends EventEmitter {
   constructor () {
@@ -127,6 +138,8 @@ export default {
   data () {
     return {
       modal: modal,
+
+      isDemo: false,
 
       /* render control flags */
 
@@ -244,6 +257,13 @@ export default {
       }, 0)
     },
 
+    initDemo () {
+      debug('[methods] initDemo')
+      console.log(DEMO_STATE)
+      this.$store.dispatch('init', DEMO_STATE)
+      this.isDemo = true
+    },
+
     init (event) {
       debug('[methods] init')
       if (event.target.files[0].size !== 4000815) {
@@ -274,7 +294,7 @@ export default {
 
         this.$store.dispatch('init', {
           charms: loadCharms(file),
-          offsets: loadOffsets(file),
+          ...loadOffsets(file),
           equipSets: loadEquipSets(file),
           saves: saves,
           active: a,
@@ -707,12 +727,20 @@ h1, h2 {
 */
 
 .button.download {
-  padding: 10px 32px;
-  line-height: 20px;
-  height: 42px;
   position: absolute;
   right: 40px;
   bottom: 20px;
+}
+
+.button.demo {
+  margin-top: 24px;
+  margin-bottom: 0px;
+}
+
+.button.download, .button.demo {
+  padding: 10px 32px;
+  line-height: 20px;
+  height: 42px;
   background-color: #fefefe;
   border-color: #25c178;
   color: #25c178; /* 17a563; */
@@ -720,7 +748,7 @@ h1, h2 {
   transition: all 0.25s;
 }
 
-.button.download:hover {
+.button.download:hover, .button.demo:hover {
   border-color: #1c975b;
   color: #146c41;
   background-color: #b8f5d8;
@@ -870,6 +898,7 @@ a:hover {
 }
 
 .disabled, .disabled:hover {
+  cursor: not-allowed !important;
   color: inherit !important;
   background-color: #eee !important;
   box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #fafafa, 0 2px 1px #fafafa !important;

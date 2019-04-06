@@ -21,8 +21,8 @@ Features:
 3. If you downloaded the repository as a zip file, unzip it somewhere handy.
 4. Open a terminal window and use the console to navigate to the directory you just created. (The specific method for doing this depends on what operating system you are using. If you are unfamiliar with the console interface and need extra help, please feel free to contact me! I'll do my best to assist you.)
 5. From inside the directory, enter `npm install` in the console. This will install the dependencies that the app needs to run locally.
-6. After the install has completed successfully, enter `node server.js` in the console to launch the application in a browser window.
-7. This should open a tab in your default browser automatically; if not, you can access the editor by entering `localhost:5000` in your browser's address bar.
+6. After the install has completed successfully, enter `npm run serve` in the console to launch the application in a browser window.
+7. This should open a tab in your default browser automatically; if not, you can access the editor by entering [`localhost:8080`](http://localhost:8080/) in your browser's address bar.
 8. You're done! The offline version works exactly the same as it does online -- the only difference is that your machine is serving it especially for you. Simply close the console window when you don't need it anymore, and the webpage will become inaccessible.
 
 Please contact me if you find any issues, and enjoy!
